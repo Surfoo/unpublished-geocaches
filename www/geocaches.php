@@ -40,7 +40,7 @@ if(preg_match('/<span id="ctl00_ContentBody_CoordInfoLinkControl1_uxCoordInfoCod
     $cache['name'] = $gccode[1];
 }
 else {
-    renderAjax(array('success' => false, 'guid' => $cache['guid'], 'messages' => 'Unable to retrieve the GC code.'));
+    renderAjax(array('success' => false, 'guid' => $cache['guid'], 'message' => 'Unable to retrieve the GC code.'));
 }
 
 $ch = curl_init();
@@ -57,8 +57,8 @@ if(!$json_content) {
 }
 curl_close($ch);
 $infos = json_decode($json_content);
-if(!$infos->status) {
-    renderAjax(array('success' => false, 'guid' => $cache['guid'], 'messages' => 'Unable to retrieve some informations.'));
+if(!$infos || !$infos->status) {
+    renderAjax(array('success' => false, 'guid' => $cache['guid'], 'message' => 'Unable to retrieve some informations.'));
 }
 
 $cache['difficulty'] = $infos->data[0]->difficulty->text;
@@ -154,7 +154,7 @@ fwrite($hd, $gpx_file);
 fclose($hd);
 
 if(!empty($errors)) {
-    renderAjax(array('success' => false, 'guid' => $cache['guid'], 'messages' => implode(' ', $errors)));
+    renderAjax(array('success' => false, 'guid' => $cache['guid'], 'message' => implode('<br />', $errors)));
 }
 
 renderAjax(array('success' => true, 'guid' => $cache['guid']));

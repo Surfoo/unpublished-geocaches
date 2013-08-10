@@ -40,6 +40,11 @@ $('#login').click(function() {
     if ($(this).text() == "Sign in") {
         btn.button('loading');
 
+        if ($('#username').val() == '' || $('#password').val() == '') {
+            btn.button('reset');
+            return false;
+        }
+
         $.ajax({
             url: "login.php",
             type: "POST",
@@ -139,15 +144,20 @@ $('#create-gpx').click(function() {
                 if (data && data.success) {
                     gpx.push(data.guid);
                     $('.' + data.guid).addClass('success');
-                    $('.' + data.guid + ' .status').html('<span class="glyphicon glyphicon-ok" ></span>');
+                    $('.' + data.guid + ' .status').html('<span class="glyphicon glyphicon-ok"></span>');
                 } else {
-                    console.log(data.messages);
                     $('.' + data.guid).addClass('danger');
-                    $('.' + data.guid + ' .status').html('<span class="glyphicon glyphicon-remove" title="' + data.messages + '"></span>');
+                    $('.' + data.guid + ' .status').html('<span class="glyphicon glyphicon-remove" data-content="' + data.message + '"></span>');
                 }
             },
             failure: function() {}
         });
+    });
+
+    $('tbody span').popover({
+        trigger: 'hover',
+        animation: false,
+        html: true
     });
 
     $(this).button('reset');
