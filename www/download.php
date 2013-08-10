@@ -23,9 +23,13 @@ foreach($_POST['guid'] as $guid) {
 $loader = new Twig_Loader_Filesystem(array(ROOT . '/waypoints/', TEMPLATE_DIR));
 $twig   = new Twig_Environment($loader, array('debug' => true, 'cache' => TEMPLATE_COMPILED_DIR));
 
-$gpx_file = $twig->render('geocaches.gpx', array('waypoints' => $waypoints));
+$twig_vars['time'] = date('c');
+$twig_vars['username'] = $_SESSION['username'];
+$twig_vars['waypoints'] = $waypoints;
 
-$gpx_filename = sprintf(GPX_FILENAME, md5($_SESSION['username'] . SALT));
+$gpx_file = $twig->render('geocaches.gpx', $twig_vars);
+
+$gpx_filename = sprintf(GPX_FILENAME, substr(md5($_SESSION['username'] . SALT), 0, 8));
 $hd = fopen($gpx_filename, 'w');
 fwrite($hd, $gpx_file);
 fclose($hd);

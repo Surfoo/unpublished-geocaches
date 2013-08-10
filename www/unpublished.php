@@ -15,9 +15,14 @@ $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, URL_QUICKVIEW);
 curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
+curl_setopt($ch, CURLOPT_TIMEOUT, 30);
 curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie_filename);
 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 $content = curl_exec($ch);
+if(!$content) {
+    renderAjax(array('success' => false, 'message' => 'Request error: ' . curl_error($ch)));
+}
 curl_close($ch);
 
 $dom = new DOMDocument();

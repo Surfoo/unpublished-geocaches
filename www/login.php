@@ -30,11 +30,16 @@ $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, URL_LOGIN);
 curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
+curl_setopt($ch, CURLOPT_TIMEOUT, 30);
 curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie_filename);
 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postdata));
 $res = curl_exec($ch);
+if(!$res) {
+    renderAjax(array('success' => false, 'message' => 'Request error: ' . curl_error($ch)));
+}
 curl_close($ch);
 
 if(!preg_match('/ctl00_ContentBody_lbUsername">.*<strong>(.*)<\/strong>/', $res, $username)) {

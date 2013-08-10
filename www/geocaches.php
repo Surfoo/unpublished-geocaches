@@ -21,9 +21,14 @@ $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, sprintf(URL_GEOCACHE, $cache['guid']));
 curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
+curl_setopt($ch, CURLOPT_TIMEOUT, 30);
 curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie_filename);
 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 $content = curl_exec($ch);
+if(!$content) {
+    renderAjax(array('success' => false, 'message' => 'Request error: ' . curl_error($ch)));
+}
 curl_close($ch);
 
 /**
@@ -42,9 +47,14 @@ $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, sprintf(URL_TILE, mt_rand(1, 4), $cache['name']));
 curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
+curl_setopt($ch, CURLOPT_TIMEOUT, 30);
 curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie_filename);
 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 $json_content = curl_exec($ch);
+if(!$json_content) {
+    renderAjax(array('success' => false, 'message' => 'Request error: ' . curl_error($ch)));
+}
 curl_close($ch);
 $infos = json_decode($json_content);
 if(!$infos->status) {
@@ -122,7 +132,7 @@ else {
 }
 
 //Attributes
-if(preg_match_all('/attributes\/(\w+)-(yes|no).gif/', $content, $attributes)) {
+if(preg_match_all('/attributes\/([a-z-_]+)-(yes|no).gif/i', $content, $attributes)) {
     foreach ($attributes[1] as $key => $attribute) {
         if(!array_key_exists($attribute, $list_attributes)) {
             $errors[] = 'Problems with  '. $attribute . ' attribute';

@@ -19,12 +19,12 @@
         </header>
         <form id="gc-form-login" class="form-inline">
             {% if logged == 'false' %}
-                <input type="text" id="username" class="form-control" placeholder="Geocaching Username" required>
-                <input type="password" id="password" class="form-control" placeholder="Geocaching Password" autocomplete="on" required>
-                <button type="button" data-loading-text="Loading..." data-signout-text="Sign out" class="btn btn-default" id="login">Sign in</button>
+                <input type="text" id="username" class="form-control input-small" placeholder="Geocaching Username" required>
+                <input type="password" id="password" class="form-control input-small" placeholder="Geocaching Password" autocomplete="on" required>
+                <button type="button" data-loading-text="Loading..." data-signout-text="Sign out" class="btn btn-default btn-small" id="login">Sign in</button>
             {% else %}
                 <span id="signin" >Hello {{ username }}!</span>
-                <button type="button" data-loading-text="Loading..." class="btn btn-default" id="login">Sign out</button>
+                <button type="button" data-loading-text="Loading..." class="btn btn-default btn-small" id="login">Sign out</button>
             {% endif %}
         </form>
         <hr />

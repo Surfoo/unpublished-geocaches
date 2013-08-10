@@ -1,29 +1,30 @@
-<wpt lat="{{ lat }}" lon="{{ lng }}">
-  <time>{{ date }}</time>
-  <name>{{ name }}</name>
-  <desc>{{ urlname }} by {{ owner }}, {{ type }} ({{ difficulty }}/{{ terrain }})</desc>
-  <url>{{ url }}</url>
-  <urlname>{{ urlname }}</urlname>
-  <sym>Geocache</sym>
-  <type>Geocache|{{ type }}</type>
-  <groundspeak:cache id="{{ cache_id }}" available="True" archived="False" xmlns:groundspeak="http://www.groundspeak.com/cache/1/0/1">
-    <groundspeak:name>{{ urlname }}</groundspeak:name>
-    <groundspeak:placed_by>{{ placed_by }}</groundspeak:placed_by>
-    <groundspeak:owner id="{{ owner_id }}">{{ owner }}</groundspeak:owner>
-    <groundspeak:type>{{ type }}</groundspeak:type>
-    <groundspeak:container>{{ container }}</groundspeak:container>
-{% if attributes is defined %}
-    <groundspeak:attributes>
-      {% for attribute in attributes %}
-      <groundspeak:attribute id="{{ attribute.id }}" inc="{{ attribute.inc }}">{{ attribute.text }}</groundspeak:attribute>
-      {% endfor %}
-    </groundspeak:attributes>{% endif %}
-    <groundspeak:difficulty>{{ difficulty }}</groundspeak:difficulty>
-    <groundspeak:terrain>{{ terrain }}</groundspeak:terrain>
-    <groundspeak:country>{{ country }}</groundspeak:country>
-    <groundspeak:state>{{ state }}</groundspeak:state>
-    <groundspeak:short_description html="True">{{ short_description }}</groundspeak:short_description>
-    <groundspeak:long_description html="True">{{ long_description }}</groundspeak:long_description>
-    <groundspeak:encoded_hints>{{ encoded_hints }}</groundspeak:encoded_hints>
-  </groundspeak:cache>
-</wpt>
+  <wpt lat="{{ lat }}" lon="{{ lng }}">
+    <time>{{ date }}</time>
+    <name>{{ name }}</name>
+    <desc>{{ urlname }} by {{ owner }}, {{ type }} ({{ difficulty }}/{{ terrain }})</desc>
+    <url>{{ url }}</url>
+    <urlname>{{ urlname }}</urlname>
+    <sym>Geocache</sym>
+    <type>Geocache|{{ type }}</type>
+    <groundspeak:cache id="{{ cache_id }}" available="True" archived="False" xmlns:groundspeak="http://www.groundspeak.com/cache/1/0/1">
+      <groundspeak:name>{{ urlname }}</groundspeak:name>
+      <groundspeak:placed_by>{{ placed_by }}</groundspeak:placed_by>
+      <groundspeak:owner id="{{ owner_id }}">{{ owner }}</groundspeak:owner>
+      <groundspeak:type>{{ type }}</groundspeak:type>
+      <groundspeak:container>{{ container }}</groundspeak:container>
+  {% if attributes is defined %}
+      <groundspeak:attributes>
+  {% for attribute in attributes %}
+        <groundspeak:attribute id="{{ attribute.id }}" inc="{{ attribute.inc }}">{{ attribute.text }}</groundspeak:attribute>
+  {% endfor %}
+      </groundspeak:attributes>
+  {% endif %}
+      <groundspeak:difficulty>{{ difficulty }}</groundspeak:difficulty>
+      <groundspeak:terrain>{{ terrain }}</groundspeak:terrain>
+      <groundspeak:country>{{ country }}</groundspeak:country>
+      <groundspeak:state>{{ state }}</groundspeak:state>
+      <groundspeak:short_description html="True">{{ short_description }}</groundspeak:short_description>
+      <groundspeak:long_description html="True">{{ long_description }}</groundspeak:long_description>
+      <groundspeak:encoded_hints>{{ encoded_hints }}</groundspeak:encoded_hints>
+    </groundspeak:cache>
+  </wpt>
