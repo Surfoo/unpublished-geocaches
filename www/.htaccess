@@ -1,0 +1,10 @@
+AddOutputFilterByType DEFLATE text/javascript application/javascript text/css application/xhtml+xml text/html
+
+Options -Indexes
+
+<Files *.gpx>
+ForceType application/force-download
+Header set Content-Disposition attachment
+Header set Content-Description File-Transfer
+Header set Cache-Control "store, no-cache, must-revalidate"
+</Files>

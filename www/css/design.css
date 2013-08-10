@@ -1,0 +1,36 @@
+body {
+    margin: 1em;
+}
+label {
+    font-weight: normal;
+    margin-bottom: 0;
+}
+#signin {
+    display: inline-block;
+}
+#table-caches {
+    width: 500px;
+}
+#head-pick {
+    width: 50px;
+}
+#head-status {
+    width: 50px;
+}
+#head-pick, #table-caches tbody td:first-child, #table-caches tbody td:last-child {
+    text-align: center;
+}
+#unpublishedCachesBlock, #table-unpublished-caches {
+    display: none;
+}
+#fetching-unpublished-caches {
+    background: url('../loader.gif') no-repeat left center;
+    padding-left: 22px;
+}
+#gc-form-login {
+    width: 500px;
+}
+
+#gc-form-login input[type="text"], #gc-form-login input[type="password"] {
+    width: 180px;
+}
