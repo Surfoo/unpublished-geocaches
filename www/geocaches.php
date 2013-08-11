@@ -147,7 +147,7 @@ if(preg_match_all('/attributes\/([a-z-_]+)-(yes|no).gif/i', $content, $attribute
 $loader = new Twig_Loader_Filesystem(TEMPLATE_DIR);
 $twig   = new Twig_Environment($loader, array('debug' => true, 'cache' => TEMPLATE_COMPILED_DIR));
 
-$gpx_file = $twig->render('waypoint.gpx', $cache);
+$gpx_file = $twig->render('waypoint.xml', $cache);
 
 $hd = fopen(sprintf(WAYPOINT_FILENAME, $cache['guid']), 'w');
 fwrite($hd, $gpx_file);

@@ -27,7 +27,7 @@ $twig_vars['time'] = date('c');
 $twig_vars['username'] = $_SESSION['username'];
 $twig_vars['waypoints'] = $waypoints;
 
-$gpx_file = $twig->render('geocaches.gpx', $twig_vars);
+$gpx_file = $twig->render('geocaches.xml', $twig_vars);
 
 $gpx_filename = sprintf(GPX_FILENAME, substr(md5($_SESSION['username'] . SALT), 0, 8));
 $hd = fopen($gpx_filename, 'w');
