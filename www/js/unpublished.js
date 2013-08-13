@@ -38,12 +38,13 @@ function fetchUnpublishedCaches() {
 $('#login').click(function() {
     var btn = $(this);
     if ($(this).text() == "Sign in") {
-        btn.button('loading');
 
         if ($('#username').val() == '' || $('#password').val() == '') {
             btn.button('reset');
             return false;
         }
+
+        btn.button('loading');
 
         $.ajax({
             url: "login.php",

@@ -15,17 +15,21 @@ if(array_key_exists('signout', $_POST)) {
     renderAjax(array('success' => true, 'redirect' => true));
 }
 
+if(!array_key_exists('username', $_POST) || !array_key_exists('username', $_POST)) {
+    header("HTTP/1.0 400 Bad Request");
+    exit(0);
+}
 
 $cookie_filename = sprintf(COOKIE_FILENAME, md5($_POST['username']));
 
 $hd = fopen($cookie_filename, 'w');
 fclose($hd);
-$postdata = array('__EVENTTARGET' => '',
-                  '__EVENTARGUMENT' => '',
-                  'ctl00$tbUsername' => $_POST['username'],
-                  'ctl00$tbPassword' => $_POST['password'],
+$postdata = array('__EVENTTARGET'      => '',
+                  '__EVENTARGUMENT'    => '',
+                  'ctl00$tbUsername'   => $_POST['username'],
+                  'ctl00$tbPassword'   => $_POST['password'],
                   'ctl00$cbRememberMe' => 'On',
-                  'ctl00$btnSignIn' => 'Login');
+                  'ctl00$btnSignIn'    => 'Login');
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, URL_LOGIN);
 curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
@@ -49,4 +53,4 @@ if(!preg_match('/ctl00_ContentBody_lbUsername">.*<strong>(.*)<\/strong>/', $res,
 
 $_SESSION['username'] = trim($username[1]);
 
-renderAjax(array('success' => true, 'username' => trim($username[1])));
+renderAjax(array('success' => true, 'username' => $_SESSION['username']));
