@@ -5,7 +5,7 @@
         <title>Unpublished Geocaches</title>
         <meta name="description" content="Fetch your unpublished Geocaches and create a GPX with.">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc2/css/bootstrap.min.css">
         <link rel="stylesheet" href="css/bootstrap-glyphicons.css">
         <link rel="stylesheet" href="css/design.css">
         <script type="text/javascript">
@@ -21,18 +21,18 @@
                 </header>
                 <form id="gc-form-login" class="form-inline">
                     {% if logged == 'false' %}
-                        <input type="text" id="username" class="form-control input-small" placeholder="Geocaching Username" required>
-                        <input type="password" id="password" class="form-control input-small" placeholder="Geocaching Password" autocomplete="on" required>
-                        <button type="button" data-loading-text="Loading..." data-signout-text="Sign out" class="btn btn-default btn-small" id="login">Sign in</button>
+                        <input type="text" id="username" class="form-control input-sm" placeholder="Geocaching Username" required>
+                        <input type="password" id="password" class="form-control input-sm" placeholder="Geocaching Password" autocomplete="on" required>
+                        <button type="button" data-loading-text="Loading..." data-signout-text="Sign out" class="btn btn-primary btn-sm" id="login">Sign in</button>
                     {% else %}
                         <span id="signin" >Hello {{ username }}!</span>
-                        <button type="button" data-loading-text="Loading..." class="btn btn-default btn-small" id="login">Sign out</button>
+                        <button type="button" data-loading-text="Loading..." class="btn btn-primary btn-sm" id="login">Sign out</button>
                     {% endif %}
                 </form>
                 <hr />
 
                 <div id="unpublishedCachesBlock">
-                    <div id="fetching-unpublished-caches">Fetching your unpublished caches...</div>
+                    <div id="fetching-unpublished-caches" class="well well-sm"><img src="loader.gif" alt="" /> Fetching your unpublished caches...</div>
                     <div id="table-unpublished-caches">
                         <h3>Your unpublished geocaches</h3>
                         <table id="table-caches" class="table table-hover table-condensed">
@@ -54,7 +54,7 @@
             </div>
         </div>
         <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-        <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/js/bootstrap.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc2/js/bootstrap.min.js"></script>
         <script src="js/unpublished.js"></script>
     </body>
 </html>

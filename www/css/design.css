@@ -23,10 +23,6 @@ label {
 #unpublishedCachesBlock, #table-unpublished-caches {
     display: none;
 }
-#fetching-unpublished-caches {
-    background: url('../loader.gif') no-repeat left center;
-    padding-left: 22px;
-}
 #gc-form-login {
     width: 500px;
 }
