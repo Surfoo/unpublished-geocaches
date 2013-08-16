@@ -8,19 +8,22 @@ label {
 #signin {
     display: inline-block;
 }
+#help {
+    font-size: 2em;
+}
 #table-caches {
     width: 500px;
 }
-#head-pick {
+.head-pick, .head-status {
     width: 50px;
 }
-#head-status {
-    width: 50px;
-}
-#head-pick, #table-caches tbody td:first-child, #table-caches tbody td:last-child {
+
+.head-pick, #table-caches tbody td:first-child, #table-caches tbody td:last-child,
+#table-caches-gm tbody td:first-child, #table-caches-gm tbody td:last-child, {
     text-align: center;
 }
-#unpublishedCachesBlock, #table-unpublished-caches {
+#table-unpublished-caches, #table-unpublished-caches-gm,
+#fetching-unpublished-caches {
     display: none;
 }
 #gc-form-login {

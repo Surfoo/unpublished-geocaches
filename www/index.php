@@ -10,4 +10,5 @@ if(array_key_exists('username', $_SESSION) && file_exists(sprintf(COOKIE_FILENAM
     $twig_vars['logged'] = 'true';
     $twig_vars['username'] = $_SESSION['username'];
 }
+
 echo $twig->render('index.tpl', $twig_vars);

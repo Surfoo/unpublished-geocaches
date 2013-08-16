@@ -14,6 +14,7 @@ define('URL_QUICKVIEW',  URL_GEOCACHING . 'my/');
 define('URL_GEOCACHE',   URL_GEOCACHING . 'seek/cache_details.aspx?guid=%s');
 define('URL_TILE',       'http://tiles%02d.geocaching.com/map.details?i=%s');
 define('SALT',           'kequahmo4tainai1da9M');
+define('SALT_GM',        'ooNa2aitejeipaiw8iet');
 
 define('WAYPOINT_FILENAME', ROOT . '/waypoints/%s.gpx');
 define('GPX_FILENAME',      ROOT . '/www/gpx/%s.gpx');
@@ -21,6 +22,8 @@ define('COOKIE_FILENAME',   ROOT . '/cookies/cookie_%s');
 define('MAX_RETENTION',     3600 * 24);
 
 require ROOT . '/vendor/autoload.php';
+require ROOT . '/helper.php';
+require ROOT . '/lib/Geocaching/Unpublished/Unpublished.php';
 
 session_start();
 
@@ -32,18 +35,3 @@ $header[] = "Accept-Language: fr,fr-fr;q=0.8,en-us;q=0.5,en;q=0.3";
 $header[] = "Keep-Alive: 115";
 $header[] = "Connection: keep-alive";
 $header[] = "Content-type: application/x-www-form-urlencoded;";
-
-function renderAjax($data) {
-    if (!is_array($data)) {
-        exit();
-    }
-    $content = json_encode($data);
-
-    if (!headers_sent()) {
-        header('Pragma: no-cache');
-        header('Cache-Control: no-cache, must-revalidate');
-        header('Content-Type: application/json; charset=UTF-8');
-    }
-    echo $content;
-    exit(0);
-}

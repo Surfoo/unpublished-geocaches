@@ -1,9 +1,14 @@
 $().ready(function() {
+
+    fetchUnpublishedCachesFromGM();
+
     if (logged == 'true') {
         $('#unpublishedCachesBlock').show();
+        $('#fetching-unpublished-caches').show();
         $('#refresh-cache').trigger('click');
         $('#fetching-unpublished-caches').hide();
     }
+
 });
 
 function fetchUnpublishedCaches() {
@@ -22,14 +27,46 @@ function fetchUnpublishedCaches() {
             $('#table-unpublished-caches').show();
             $('#table-caches tbody').html('');
 
-            $.each(data.unpublishedCaches, function(key, value) {
+            $.each(data.unpublishedCaches, function(guid, title) {
                 $('#table-caches tbody')
-                    .append('<tr class="' + key + '">\n' +
-                        '   <td><input type="checkbox" name="cache" class="unpublished-geocache" value="' + key + '" id="' + key + '" /></td>\n' +
-                        '   <td><label for="' + key + '">' + value + '</label></td>\n' +
+                .append('<tr class="' + guid + '">\n' +
+                    '   <td><input type="checkbox" name="cache" class="unpublished-geocache" value="' + guid + '" id="' + guid + '" /></td>\n' +
+                    '   <td><label for="' + guid + '">' + title + '</label></td>\n' +
+                    '   <td class="status"> </td>\n' +
+                    '</tr>\n');
+                    });
+        },
+        failure: function() {}
+    });
+}
+
+function fetchUnpublishedCachesFromGM() {
+
+    //$('#unpublishedCachesBlock-gm').show();
+
+    $.ajax({
+        url: "unpublished-gm.php",
+        success: function(data) {
+            if (!data || data === "" || typeof data != 'object') {
+                return false;
+            }
+            if (data && !data.success) {
+                alert(data.message);
+                return false;
+            }
+            if(data.unpublishedCaches) {
+                $('#table-unpublished-caches-gm').show();
+                $('#table-caches-gm tbody').html('');
+
+                $.each(data.unpublishedCaches, function(guid, title) {
+                    $('#table-caches-gm tbody')
+                    .append('<tr>\n' +
+                        '   <td><input type="checkbox" name="cache-gm" class="unpublished-geocache-gm" value="' + guid + '" id="' + guid + '-gm" /></td>\n' +
+                        '   <td><label for="' + guid + '-gm">' + title + '</label></td>\n' +
                         '   <td class="status"> </td>\n' +
                         '</tr>\n');
-            });
+                        });
+            }
         },
         failure: function() {}
     });
@@ -70,6 +107,7 @@ $('#login').click(function() {
                 btn.button('signout');
 
                 $('#unpublishedCachesBlock').show();
+                $('#fetching-unpublished-caches').show();
                 fetchUnpublishedCaches();
                 $('#fetching-unpublished-caches').hide();
             },
@@ -103,6 +141,9 @@ $('#login').click(function() {
 $('#select-all').click(function() {
     $('.unpublished-geocache').prop('checked', $(this).is(":checked"));
 })
+$('#select-all-gm').click(function() {
+    $('.unpublished-geocache-gm').prop('checked', $(this).is(":checked"));
+})
 
 $('#refresh-cache').click(function() {
     $(this).button('loading');
@@ -111,6 +152,12 @@ $('#refresh-cache').click(function() {
     $(this).button('reset');
 })
 
+$('#refresh-cache-gm').click(function() {
+    $(this).button('loading');
+    fetchUnpublishedCachesFromGM();
+    $('#select-all-gm').prop('checked', false);
+    $(this).button('reset');
+})
 
 $('#create-gpx').click(function() {
     var list = [];
@@ -124,11 +171,10 @@ $('#create-gpx').click(function() {
         return false;
     }
 
-    $('#downloadLink').html('');
+    $('#download-gpx').remove();
     $('#table-caches tbody tr').removeClass('success');
     $('#table-caches tbody tr').removeClass('danger');
     $('#table-caches .status').html('');
-    $('#download-gpx').remove();
     $(this).button('loading');
 
     var gpx = [];
@@ -161,8 +207,6 @@ $('#create-gpx').click(function() {
         html: true
     });
 
-    $(this).button('reset');
-
     if (gpx.length > 0) {
         $.ajax({
             url: "download.php",
@@ -177,8 +221,42 @@ $('#create-gpx').click(function() {
             },
             failure: function() {}
         });
-
     }
 
-    return false;
+    $(this).button('reset');
+});
+
+$('#create-gpx-gm').click(function() {
+    var list = [];
+
+    $('input[name=cache-gm]:checked').each(function() {
+        list.push(this.value);
+    });
+
+    if (list.length <= 0) {
+        alert('You must choose at least one cache.');
+        return false;
+    }
+
+    $('#download-gpx-gm').remove();
+    $(this).button('loading');
+
+    if (list.length > 0) {
+        $.ajax({
+            url: "download.php",
+            type: "POST",
+            data: {
+                'guid': list,
+                'greasemonkey': true
+            },
+            success: function(data) {
+                if (data && data.success) {
+                    $('#table-unpublished-caches-gm').append(data.link);
+                }
+            },
+            failure: function() {}
+        });
+    }
+    $(this).button('reset');
+
 });

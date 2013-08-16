@@ -2,31 +2,15 @@
 
 require dirname(__DIR__) . '/config.php';
 
-if (!array_key_exists('HTTP_X_REQUESTED_WITH', $_SERVER) || $_SERVER['HTTP_X_REQUESTED_WITH'] != 'XMLHttpRequest' || 
-    !array_key_exists('username', $_SESSION)) {
-    header("HTTP/1.0 400 Bad Request");
-    exit(0);
+if(!array_key_exists('content', $_POST)) {
+    renderAjax(array('success' => false, 'message' => 'Request empty.'));
 }
-
-$cookie_filename = sprintf(COOKIE_FILENAME, md5($_SESSION['username']));
-
-$errors = [];
 
 $unpublished = new Unpublished();
-$cache['guid'] = $_POST['guid'];
-$unpublished->guid = $_POST['guid'];
-
-$content = $unpublished->getCacheDetails();
-if(!$content) {
-    renderAjax(array('success' => false, 'message' => 'Request error: ' . curl_error($ch)));
-}
-
-if(!$unpublished->setGcCode()) {
-    renderAjax(array('success' => false, 'guid' => $cache['guid'], 'message' => 'Unable to retrieve the GC code.'));
-}
-
+$unpublished->raw_html = $_POST['content'];
+$unpublished->setGuid();
+$unpublished->setGcCode();
 $unpublished->setSomeBasicInformations();
-
 $unpublished->setCoordinates();
 $unpublished->setCacheId();
 $unpublished->setLocationUsername();
@@ -37,7 +21,9 @@ $unpublished->setEncodedHints();
 $unpublished->setAttributes();
 
 if(!empty($unpublished->errors)) {
-    renderAjax(array('success' => false, 'guid' => $unpublished->guid, 'message' => implode('<br />', $unpublished->errors)));
+    $message = count($unpublished->errors) > 1 ? 'Errors:' : 'Error:';
+    $message.= "\n" . implode("\n", $unpublished->errors);
+    renderAjax(array('success' => false, 'guid' => $unpublished->guid, 'message' => $message));
 }
 
 $loader = new Twig_Loader_Filesystem(TEMPLATE_DIR);
@@ -48,5 +34,15 @@ $gpx_file = $twig->render('waypoint.xml', $unpublished->getGeocacheDatas());
 $hd = fopen(sprintf(WAYPOINT_FILENAME, $unpublished->guid), 'w');
 fwrite($hd, $gpx_file);
 fclose($hd);
+
+$list = array();
+if(array_key_exists('unpublished', $_COOKIE)) {
+    $list = json_decode($_COOKIE['unpublished'], true);
+}
+
+$list[$unpublished->guid] = $unpublished->urlname;
+
+setcookie('ownerid', $unpublished->owner_id, time() + 3600 * 48);
+setcookie('unpublished', json_encode($list), time() + 3600 * 48);
 
 renderAjax(array('success' => true, 'guid' => $unpublished->guid));
