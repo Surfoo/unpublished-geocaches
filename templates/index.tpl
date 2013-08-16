@@ -18,22 +18,25 @@
                 <div class="col-md-12">
                     <header>
                         <h1>Unpublished Geocaches</h1>
-                        <p class="alert">If you don't trust this application, please don't use it, <a href="https://github.com/Surfoo/unpublished-geocaches">download the code on github</a> and use it on your own server.</p>
-
-                    <form id="gc-form-login" class="form-inline">
-                        {% if logged == 'false' %}
-                            <input type="text" id="username" class="form-control input-sm" placeholder="Geocaching Username" required>
-                            <input type="password" id="password" class="form-control input-sm" placeholder="Geocaching Password" autocomplete="on" required>
-                            <button type="button" data-loading-text="Loading..." data-signout-text="Sign out" class="btn btn-primary btn-sm" id="login">Sign in</button>
-                        {% else %}
-                            <span id="signin" >Hello {{ username }}!</span>
-                            <button type="button" data-loading-text="Loading..." class="btn btn-primary btn-sm" id="login">Sign out</button>
-                        {% endif %}
-                    </form>
-                    <div class="pull-right">
-                        <span id="" href="#help" data-toggle="modal" title="Need help?" class="glyphicon glyphicon-question-sign"></span>
-                    </div>
+                        <div class="alert fade in">
+                            <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                            Please, read <a href="#help" data-toggle="modal">the help section</a> before you use this web app.
+                        </div>
+                        <div class="pull-right">
+                            <a id="glyphicon-help" href="#help" data-toggle="modal" title="Need help?" class="glyphicon glyphicon-question-sign"></a>
+                        </div>
+                        <form id="gc-form-login" class="form-inline">
+                            {% if logged == 'false' %}
+                                <input type="text" id="username" class="form-control input-sm" placeholder="Geocaching Username" required>
+                                <input type="password" id="password" class="form-control input-sm" placeholder="Geocaching Password" autocomplete="on" required>
+                                <button type="button" data-loading-text="Loading..." data-signout-text="Sign out" class="btn btn-primary btn-sm" id="login">Sign in</button>
+                            {% else %}
+                                <span id="signin" >Hello {{ username }}!</span>
+                                <button type="button" data-loading-text="Loading..." class="btn btn-primary btn-sm" id="login">Sign out</button>
+                            {% endif %}
+                        </form>
                     </header>
+
                     <hr />
 
                     <h3>Your unpublished geocaches</h3>
@@ -88,17 +91,28 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title">Modal title</h4>
+                        <h4 class="modal-title">Need help?</h4>
                     </div>
                     <div class="modal-body">
-                        <p>One fine body&hellip;</p>
+                        <p>Unpublished Geocaches allows you to create a GPX file from your unpublished geocaches.<br />
+                        There are 2 ways to use this web app : </p>
+                        <h5><strong>1st method:</strong></h5>
+                        <div class="method">
+                            <p>You can retrieve all your unpublished geocaches by logging with your username and password, your infos are not saved.</p>
+                            <p class="alert">If you don't trust this application, <strong>please don't use it</strong>, <a href="https://github.com/Surfoo/unpublished-geocaches">download the code on github</a> and use it on your own server or use the second method.</p>
+                        </div>
+                        <h5><strong>2nd method:</strong></h5>
+                        <div class="method">
+                            <p>This method is slower than the first, but doesn't require your password.<br />
+                                You must use <a href="https://addons.mozilla.org/fr/firefox/addon/greasemonkey/" onclick="window.open(this.href);return false;">the greasemonkey addon</a> (For Firefox) and install the <a href="http://userscripts.org/scripts/show/175875" onclick="window.open(this.href);return false;">Unpublished Geocaches script</a>.
+                            </p>
+                            <p>After installation, a "send to Unpublished Geocache" button appears on your caches listing, just click it, and the content of the webpage will be sent to this web app.<br />
+                            Refresh the page, and titles of your sent caches appears.</p>
+                        </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    </div>
-                </div><!-- /.modal-content -->
-            </div><!-- /.modal-dialog -->
-        </div><!-- /.modal -->
+                </div>
+            </div>
+        </div>
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
         <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc2/js/bootstrap.min.js"></script>

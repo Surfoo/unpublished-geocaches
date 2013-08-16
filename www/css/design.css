@@ -8,8 +8,12 @@ label {
 #signin {
     display: inline-block;
 }
-#help {
+#glyphicon-help {
     font-size: 2em;
+    color: #000;
+}
+#glyphicon-help:hover {
+    text-decoration: none;
 }
 #table-caches {
     width: 500px;
@@ -32,4 +36,7 @@ label {
 
 #gc-form-login input[type="text"], #gc-form-login input[type="password"] {
     width: 180px;
+}
+.method {
+    padding-left: 1em;
 }
