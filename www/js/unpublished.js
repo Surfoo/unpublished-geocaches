@@ -15,29 +15,28 @@ function fetchUnpublishedCaches() {
         url: "unpublished.php",
         async: false,
         success: function(data) {
+            $('#fetching-unpublished-caches').hide();
+            $('#select-all').prop('checked', false);
+            $('#refresh-cache').button('reset');
             if (!data || data === "" || typeof data != 'object') {
                 return false;
             }
             if (data && !data.success) {
                 alert(data.message);
-                return false;
             }
+            else {
+                $('#table-unpublished-caches').show();
+                $('#table-caches tbody').html('');
 
-            $('#table-unpublished-caches').show();
-            $('#table-caches tbody').html('');
-
-            $.each(data.unpublishedCaches, function(guid, title) {
-                $('#table-caches tbody')
-                .append('<tr class="' + guid + '">\n' +
-                    '   <td><input type="checkbox" name="cache" class="unpublished-geocache" value="' + guid + '" id="' + guid + '" /></td>\n' +
-                    '   <td><label for="' + guid + '">' + title + '</label></td>\n' +
-                    '   <td class="status"> </td>\n' +
-                    '</tr>\n');
-                    });
-
-            $('#fetching-unpublished-caches').hide();
-            $('#select-all').prop('checked', false);
-            $('#refresh-cache').button('reset');
+                $.each(data.unpublishedCaches, function(guid, title) {
+                    $('#table-caches tbody')
+                    .append('<tr class="' + guid + '">\n' +
+                        '   <td><input type="checkbox" name="cache" class="unpublished-geocache" value="' + guid + '" id="' + guid + '" /></td>\n' +
+                        '   <td><label for="' + guid + '">' + title + '</label></td>\n' +
+                        '   <td class="status"> </td>\n' +
+                        '</tr>\n');
+                        });
+            }
         },
         failure: function() {}
     });
@@ -66,7 +65,6 @@ function fetchUnpublishedCachesFromGM() {
                     .append('<tr>\n' +
                         '   <td><input type="checkbox" name="cache-gm" class="unpublished-geocache-gm" value="' + guid + '" id="' + guid + '-gm" /></td>\n' +
                         '   <td><label for="' + guid + '-gm">' + title + '</label></td>\n' +
-                        '   <td class="status"> </td>\n' +
                         '</tr>\n');
                         });
             }
@@ -141,21 +139,22 @@ $('#login').click(function() {
 
 $('#select-all').click(function() {
     $('.unpublished-geocache').prop('checked', $(this).is(":checked"));
-})
+});
+
 $('#select-all-gm').click(function() {
     $('.unpublished-geocache-gm').prop('checked', $(this).is(":checked"));
-})
+});
 
 $('#refresh-cache').click(function() {
     fetchUnpublishedCaches();
-})
+});
 
 $('#refresh-cache-gm').click(function() {
     $(this).button('loading');
     fetchUnpublishedCachesFromGM();
     $('#select-all-gm').prop('checked', false);
     $(this).button('reset');
-})
+});
 
 $('#create-gpx').click(function() {
     var list = [];
@@ -203,8 +202,7 @@ $('#create-gpx').click(function() {
 
     $('tbody span').popover({
         trigger: 'hover',
-        animation: false,
-        html: true
+        animation: false
     });
 
     if (gpx.length > 0) {
@@ -259,4 +257,36 @@ $('#create-gpx-gm').click(function() {
     }
     $(this).button('reset');
 
+});
+
+var cookieRegistry = [];
+
+function readCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+}
+
+function listenCookieChange(cookieName, callback) {
+    setInterval(function() {
+        if (cookieRegistry[cookieName]) {
+            if (readCookie(cookieName) != cookieRegistry[cookieName]) {
+                // update registry so we dont get triggered again
+                cookieRegistry[cookieName] = readCookie(cookieName);
+                return callback();
+            }
+        } else {
+            cookieRegistry[cookieName] = readCookie(cookieName);
+        }
+    }, 1000);
+}
+
+// bind the listener
+listenCookieChange('unpublished', function() {
+    $('#refresh-cache-gm').trigger('click');
 });

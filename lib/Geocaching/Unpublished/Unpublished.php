@@ -163,7 +163,6 @@ class Unpublished
         else {
             $this->errors[] = 'Unable to retrieve Cache ID.';
         }
-
     }
 
     public function setLocationUsername() {

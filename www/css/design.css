@@ -2,31 +2,40 @@ label {
     font-weight: normal;
     margin-bottom: 0;
 }
+
 #signin {
     display: inline-block;
 }
+
 #glyphicon-help {
     font-size: 2em;
     color: #000;
 }
+
 #glyphicon-help:hover {
     text-decoration: none;
 }
-#table-caches {
-    width: 500px;
-}
+
 .head-pick, .head-status {
     width: 50px;
 }
 
-.head-pick, #table-caches tbody td:first-child, #table-caches tbody td:last-child,
-#table-caches-gm tbody td:first-child, #table-caches-gm tbody td:last-child, {
+tr th {
+    background-color: #D0E3F0;
+}
+
+.head-pick,
+#table-caches tbody td:first-child,
+#table-caches tbody td:last-child,
+#table-caches-gm tbody td:first-child {
     text-align: center;
 }
+
 #table-unpublished-caches, #table-unpublished-caches-gm,
 #fetching-unpublished-caches {
     display: none;
 }
+
 #gc-form-login {
     width: 500px;
 }
