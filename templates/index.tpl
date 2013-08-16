@@ -116,6 +116,6 @@
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
         <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc2/js/bootstrap.min.js"></script>
-        <script src="js/unpublished.js"></script>
+        <script src="js/unpublished.js?20130815"></script>
     </body>
 </html>
