@@ -7,7 +7,7 @@ if(!array_key_exists('content', $_POST)) {
 }
 
 $unpublished = new Unpublished();
-$unpublished->raw_html = $_POST['content'];
+$unpublished->setRawHtml($_POST['content']);
 $unpublished->setGuid();
 $unpublished->setGcCode();
 $unpublished->setSomeBasicInformations();

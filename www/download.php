@@ -8,7 +8,7 @@ if (!array_key_exists('HTTP_X_REQUESTED_WITH', $_SERVER) || $_SERVER['HTTP_X_REQ
 }
 
 if(!array_key_exists('guid', $_POST) || empty($_POST['guid'])) {
-    renderAjax(array('success' => false));
+    renderAjax(array('success' => false, 'message' => 'No caches found.'));
 }
 
 $waypoints = [];

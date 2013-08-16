@@ -34,9 +34,6 @@ button.addEventListener('click', function() {
         }
         alert('Geocache added to your list!');
         return true;
-    },
-    onerror: function(response) {
-        console.log("error: ", response);
     }
 });
 }, true);

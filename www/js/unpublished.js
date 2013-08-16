@@ -3,15 +3,14 @@ $().ready(function() {
     fetchUnpublishedCachesFromGM();
 
     if (logged == 'true') {
-        $('#unpublishedCachesBlock').show();
-        $('#fetching-unpublished-caches').show();
         $('#refresh-cache').trigger('click');
-        $('#fetching-unpublished-caches').hide();
     }
 
 });
 
 function fetchUnpublishedCaches() {
+    $('#refresh-cache').button('loading');
+    $('#fetching-unpublished-caches').show();
     $.ajax({
         url: "unpublished.php",
         async: false,
@@ -35,6 +34,10 @@ function fetchUnpublishedCaches() {
                     '   <td class="status"> </td>\n' +
                     '</tr>\n');
                     });
+
+            $('#fetching-unpublished-caches').hide();
+            $('#select-all').prop('checked', false);
+            $('#refresh-cache').button('reset');
         },
         failure: function() {}
     });
@@ -107,9 +110,7 @@ $('#login').click(function() {
                 btn.button('signout');
 
                 $('#unpublishedCachesBlock').show();
-                $('#fetching-unpublished-caches').show();
                 fetchUnpublishedCaches();
-                $('#fetching-unpublished-caches').hide();
             },
             failure: function() {}
         });
@@ -121,7 +122,7 @@ $('#login').click(function() {
         $.ajax({
             url: "login.php",
             type: "POST",
-            async: false,
+            async: true,
             data: {
                 signout: true,
             },
@@ -146,10 +147,7 @@ $('#select-all-gm').click(function() {
 })
 
 $('#refresh-cache').click(function() {
-    $(this).button('loading');
     fetchUnpublishedCaches();
-    $('#select-all').prop('checked', false);
-    $(this).button('reset');
 })
 
 $('#refresh-cache-gm').click(function() {
@@ -179,13 +177,15 @@ $('#create-gpx').click(function() {
 
     var gpx = [];
     $.each(list, function(index, guid) {
-        $('.' + guid + ' .status').html('<img src="loader.gif" alt="">');
         $.ajax({
             url: "geocaches.php",
             type: "POST",
             async: false,
             data: {
                 'guid': guid
+            },
+            beforeSend: function() {
+                $('.' + guid + ' .status').html('<img src="loader.gif" alt="">');
             },
             success: function(data) {
                 if (data && data.success) {

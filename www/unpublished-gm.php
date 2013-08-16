@@ -16,7 +16,6 @@ if(array_key_exists('unpublished', $_COOKIE) && !empty($_COOKIE['unpublished']))
             if(!file_exists($waypoint_filename)) {
                 unset($gm_list[$guid]);
             }
-
         }
         setcookie('unpublished', json_encode($gm_list), time() + 3600 * 48);
         renderAjax(array('success' => true, 'unpublishedCaches' => $gm_list));

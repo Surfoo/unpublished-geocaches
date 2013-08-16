@@ -2,35 +2,37 @@
 
 class Unpublished
 {
-    public $raw_html = null;
+    protected $raw_html       = null;
 
-    public $guid     = null;
-    public $cache_id     = null;
-    public $difficulty     = null;
-    public $terrain     = null;
-    public $container     = null;
-    public $type     = null;
-    public $owner     = null;
-    public $owner_id     = null;
-    public $urlname     = null;
-    public $url     = null;
-    public $name     = null;
-    public $lat     = null;
-    public $lng     = null;
-    public $state     = null;
-    public $country     = null;
-    public $placed_by     = null;
-    public $short_description     = null;
-    public $long_description     = null;
+    public $guid              = null;
+    public $cache_id          = null;
+    public $difficulty        = null;
+    public $terrain           = null;
+    public $container         = null;
+    public $type              = null;
+    public $owner             = null;
+    public $owner_id          = null;
+    public $urlname           = null;
+    public $url               = null;
+    public $name              = null;
+    public $lat               = null;
+    public $lng               = null;
+    public $state             = null;
+    public $country           = null;
+    public $placed_by         = null;
+    public $short_description = null;
+    public $long_description  = null;
     public $encoded_hints     = null;
-    public $attributes     = null;
-
-    public $data   = array();
+    public $attributes        = null;
 
     public $errors = array();
 
     public function __construct() {
         $this->list_attributes = json_decode(file_get_contents(ROOT . '/attributes.json'));
+    }
+
+    public function setRawHtml($content) {
+        $this->raw_html = $content;
     }
 
     public function getCacheDetails() {
@@ -43,14 +45,14 @@ class Unpublished
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
         curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie_filename);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        $this->raw_html = curl_exec($ch);
-        if(!$this->raw_html) {
+        $result = curl_exec($ch);
+        if(!$result) {
             renderAjax(array('success' => false, 'message' => 'Request error: ' . curl_error($ch)));
         }
         curl_close($ch);
-        if(!$this->raw_html) {
-            return false;
-        }
+
+        $this->setRawHtml($result);
+
         return $this->raw_html;
     }
 
@@ -218,7 +220,7 @@ class Unpublished
         if(!$this->raw_html) {
             return false;
         }
-        if(preg_match('/<div id="div_hint" class="span-8 WrapFix">\s*(.*)\s*<\/div>/msU', $this->raw_html, $hint)) {
+        if(preg_match('/<div.*?id="div_hint" class="span-8 WrapFix">\s*(.*)\s*<\/div>/msU', $this->raw_html, $hint)) {
             $this->encoded_hints = str_ireplace("\x0D", "", trim($hint[1]));
         }
         else {
