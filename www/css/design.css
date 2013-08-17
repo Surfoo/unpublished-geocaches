@@ -1,3 +1,18 @@
+@media screen and (max-width: 768px) {
+    h1 {
+        font-size: 1.4em;
+    }
+    .alert {
+        padding: 8px;
+    }
+    #gc-form-login input {
+        margin: 5px 0;
+    }
+    #download-gpx, #download-gpx-gm {
+        margin-top: 5px;
+    }
+}
+
 label {
     font-weight: normal;
     margin-bottom: 0;
