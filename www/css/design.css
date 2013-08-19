@@ -2,6 +2,9 @@
     h1 {
         font-size: 1.4em;
     }
+    h3 {
+        margin: 0px;
+    }
     .alert {
         padding: 8px;
     }
@@ -10,6 +13,9 @@
     }
     #download-gpx, #download-gpx-gm {
         margin-top: 5px;
+    }
+    hr {
+        margin: 10px 0;
     }
 }
 
