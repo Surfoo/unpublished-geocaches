@@ -94,20 +94,26 @@
                         <h4 class="modal-title">Need help?</h4>
                     </div>
                     <div class="modal-body">
-                        <p>Unpublished Geocaches allows you to create a GPX file from your unpublished geocaches.<br />
-                        There are 2 ways to use this web app : </p>
+                        <p>The "Unpublished Geocaches" app allows you to create a GPX file from your unpublished geocaches, to prepare an event for example<br />
+                        There are 3 ways to use this web app : </p>
                         <h5><strong>1st method:</strong></h5>
                         <div class="method">
-                            <p>You can retrieve all your unpublished geocaches by logging with your username and password, your infos are not saved.</p>
-                            <p class="alert">If you don't trust this application, <strong>please don't use it</strong>, <a href="https://github.com/Surfoo/unpublished-geocaches">download the code on github</a> and use it on your own server or use the second method.</p>
+                            <p>You can retrieve all your unpublished geocaches by logging with your username and password.</p>
+                            <p class="alert">Your name and password info is not saved by this app. <br />
+                            If you don't trust this application, <strong>please don't use it</strong>. Instead use the 2nd method. 
                         </div>
+
                         <h5><strong>2nd method:</strong></h5>
+                        <div class="method">The "Unpublished Geocaches" app is free and open source, you can <a href="https://github.com/Surfoo/unpublished-geocaches">download the code from GitHub</a> and use it on your own server.</p>
+                        </div>
+
+                        <h5><strong>3rd method:</strong></h5>
                         <div class="method">
                             <p>This method is slower than the first, but doesn't require your password.<br />
                                 You must use <a href="https://addons.mozilla.org/fr/firefox/addon/greasemonkey/" onclick="window.open(this.href);return false;">the greasemonkey addon</a> (For Firefox) and install the <a href="http://userscripts.org/scripts/show/175875" onclick="window.open(this.href);return false;">Unpublished Geocaches script</a>.
                             </p>
-                            <p>After installation, a "send to Unpublished Geocache" button appears on your caches listing, just click it, and the content of the webpage will be sent to this web app.<br />
-                            Refresh the page, and titles of your sent caches appears.</p>
+                            <p>After installation, a "Send to Unpublished Geocache" button appears on your caches listing, just click it, and the content of the webpage will be sent to this web app.<br />
+                            Refresh the page, and titles of your sent caches appear.</p>
                         </div>
                     </div>
                 </div>
@@ -115,7 +121,7 @@
         </div>
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-        <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc2/js/bootstrap.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
         <script src="js/unpublished.min.js?20130815"></script>
     </body>
 </html>
