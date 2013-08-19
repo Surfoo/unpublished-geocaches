@@ -18,7 +18,7 @@
                 <div class="col-md-12">
                     <header>
                         <h1>Unpublished Geocaches</h1>
-                        <div class="alert fade in">
+                        <div class="alert alert-warning alert-dismissable fade in">
                             <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
                             Please, read <a href="#help" data-toggle="modal">the help section</a> before you use this web app.
                         </div>
