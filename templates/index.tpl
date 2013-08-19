@@ -98,7 +98,7 @@
                         <h5><strong>1st method:</strong></h5>
                         <div class="method">
                             <p>You can retrieve all your unpublished geocaches by logging with your username and password.</p>
-                            <p class="alert">Your name and password info is not saved by this app. <br />
+                            <p class="alert alert-warning">Your name and password info is not saved by this app. <br />
                             If you don't trust this application, <strong>please don't use it</strong>. Instead use the 2nd method. 
                         </div>
 
