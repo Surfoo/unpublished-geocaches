@@ -2,7 +2,7 @@
 
 require dirname(__DIR__) . '/config.php';
 
-if (!array_key_exists('HTTP_X_REQUESTED_WITH', $_SERVER) || $_SERVER['HTTP_X_REQUESTED_WITH'] != 'XMLHttpRequest' || 
+if (!array_key_exists('HTTP_X_REQUESTED_WITH', $_SERVER) || $_SERVER['HTTP_X_REQUESTED_WITH'] != 'XMLHttpRequest' ||
     !array_key_exists('username', $_SESSION)) {
     header("HTTP/1.0 400 Bad Request");
     exit(0);
@@ -19,7 +19,7 @@ curl_setopt($ch, CURLOPT_TIMEOUT, 30);
 curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie_filename);
 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 $content = curl_exec($ch);
-if(!$content) {
+if (!$content) {
     renderAjax(array('success' => false, 'message' => 'Request error: ' . curl_error($ch)));
 }
 curl_close($ch);
@@ -30,7 +30,7 @@ if(!preg_match_all('#<li>\s*<img src="https?://www.geocaching.com/images/wpttype
 }
 $unpublishedCaches = array_map('trim', array_combine($elements[1], $elements[2]));
 
-if(empty($unpublishedCaches)) {
+if (empty($unpublishedCaches)) {
     renderAjax(array('success' => false, 'message' => 'Problem during recovery unpublished caches'));
 }
 

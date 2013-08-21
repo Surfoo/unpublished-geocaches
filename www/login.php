@@ -8,14 +8,14 @@ if (!array_key_exists('HTTP_X_REQUESTED_WITH', $_SERVER) || $_SERVER['HTTP_X_REQ
 }
 
 // Sign out
-if(array_key_exists('signout', $_POST)) {
+if (array_key_exists('signout', $_POST)) {
     @unlink(sprintf(COOKIE_FILENAME, md5($_SESSION['username'])));
     $_SESSION = array();
     session_destroy();
     renderAjax(array('success' => true, 'redirect' => true));
 }
 
-if(!array_key_exists('username', $_POST) || !array_key_exists('username', $_POST)) {
+if (!array_key_exists('username', $_POST) || !array_key_exists('username', $_POST)) {
     header("HTTP/1.0 400 Bad Request");
     exit(0);
 }
@@ -41,12 +41,12 @@ curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postdata));
 $res = curl_exec($ch);
-if(!$res) {
+if (!$res) {
     renderAjax(array('success' => false, 'message' => 'Request error: ' . curl_error($ch)));
 }
 curl_close($ch);
 
-if(!preg_match('/ctl00_ContentBody_lbUsername">.*<strong>(.*)<\/strong>/', $res, $username)) {
+if (!preg_match('/ctl00_ContentBody_lbUsername">.*<strong>(.*)<\/strong>/', $res, $username)) {
     @unlink($cookie_filename);
     renderAjax(array('success' => false, 'message' => 'Your username/password combination does not match. Make sure you entered your information correctly.'));
 }

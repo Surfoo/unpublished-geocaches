@@ -7,14 +7,14 @@ if (!array_key_exists('HTTP_X_REQUESTED_WITH', $_SERVER) || $_SERVER['HTTP_X_REQ
     exit(0);
 }
 
-if(!array_key_exists('guid', $_POST) || empty($_POST['guid'])) {
+if (!array_key_exists('guid', $_POST) || empty($_POST['guid'])) {
     renderAjax(array('success' => false, 'message' => 'No caches found.'));
 }
 
 $waypoints = [];
-foreach($_POST['guid'] as $guid) {
+foreach ($_POST['guid'] as $guid) {
     $waypoint_filename = sprintf(WAYPOINT_FILENAME, $guid);
-    if(file_exists($waypoint_filename)) {
+    if (file_exists($waypoint_filename)) {
         $waypoints[] = basename($waypoint_filename);
     }
 }
@@ -24,7 +24,7 @@ $twig   = new Twig_Environment($loader, array('debug' => true, 'cache' => TEMPLA
 
 $twig_vars['time'] = date('c');
 $twig_vars['username'] = 'greasemonkey';
-if(array_key_exists('username', $_SESSION)) {
+if (array_key_exists('username', $_SESSION)) {
     $twig_vars['username'] = $_SESSION['username'];
 }
 
@@ -32,12 +32,11 @@ $twig_vars['waypoints'] = $waypoints;
 
 $gpx_file = $twig->render('geocaches.xml', $twig_vars);
 
-if(array_key_exists('greasemonkey', $_POST)) {
+if (array_key_exists('greasemonkey', $_POST)) {
     $gpx_prefix = array_key_exists('ownerid', $_COOKIE) ? (int) $_COOKIE['ownerid'] : uniqid(sha1(rand()), true);
     $gpx_suffix = SALT_GM;
     $id_link    = 'download-gpx-gm';
-}
-else {
+} else {
     $gpx_prefix = $_SESSION['username'];
     $gpx_suffix = SALT;
     $id_link    = 'download-gpx';

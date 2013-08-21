@@ -2,7 +2,7 @@
 
 require dirname(__DIR__) . '/config.php';
 
-if (!array_key_exists('HTTP_X_REQUESTED_WITH', $_SERVER) || $_SERVER['HTTP_X_REQUESTED_WITH'] != 'XMLHttpRequest' || 
+if (!array_key_exists('HTTP_X_REQUESTED_WITH', $_SERVER) || $_SERVER['HTTP_X_REQUESTED_WITH'] != 'XMLHttpRequest' ||
     !array_key_exists('username', $_SESSION)) {
     header("HTTP/1.0 400 Bad Request");
     exit(0);
@@ -19,11 +19,11 @@ $cache['guid'] = $_POST['guid'];
 $unpublished->guid = $_POST['guid'];
 
 $content = $unpublished->getCacheDetails();
-if(!$content) {
+if (!$content) {
     renderAjax(array('success' => false, 'message' => 'Request error: ' . curl_error($ch)));
 }
 
-if(!$unpublished->setGcCode()) {
+if (!$unpublished->setGcCode()) {
     renderAjax(array('success' => false, 'guid' => $cache['guid'], 'message' => 'Unable to retrieve the GC code.'));
 }
 
@@ -38,7 +38,7 @@ $unpublished->setLongDescription();
 $unpublished->setEncodedHints();
 $unpublished->setAttributes();
 
-if(!empty($unpublished->errors)) {
+if (!empty($unpublished->errors)) {
     renderAjax(array('success' => false, 'guid' => $unpublished->guid, 'message' => implode('<br />', $unpublished->errors)));
 }
 
