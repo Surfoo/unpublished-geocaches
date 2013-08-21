@@ -93,13 +93,13 @@
                         <h4 class="modal-title">Need help?</h4>
                     </div>
                     <div class="modal-body">
-                        <p>The "Unpublished Geocaches" app allows you to create a GPX file from your unpublished geocaches, to prepare an event for example<br />
+                        <p>The "Unpublished Geocaches" app allows you to create a GPX file from your unpublished geocaches, to prepare an event for example.<br />
                         There are 3 ways to use this web app : </p>
                         <h5><strong>1st method:</strong></h5>
                         <div class="method">
                             <p>You can retrieve all your unpublished geocaches by logging with your username and password.</p>
-                            <p class="alert alert-warning">Your name and password info is not saved by this app. <br />
-                            If you don't trust this application, <strong>please don't use it</strong>. Instead use the 2nd method. 
+                            <p class="alert alert-warning">Your username and password info is not saved by this app.<br />
+                            If you don't trust this application, <strong>please don't use it</strong>. Instead use the 2nd method.
                         </div>
 
                         <h5><strong>2nd method:</strong></h5>
