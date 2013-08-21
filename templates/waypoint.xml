@@ -23,8 +23,8 @@
       <groundspeak:terrain>{{ terrain }}</groundspeak:terrain>
       <groundspeak:country>{{ country }}</groundspeak:country>
       <groundspeak:state>{{ state }}</groundspeak:state>
-      <groundspeak:short_description html="True">{{ short_description }}</groundspeak:short_description>
-      <groundspeak:long_description html="True">{{ long_description }}</groundspeak:long_description>
+      <groundspeak:short_description html="{{ short_desc_html }}">{{ short_description }}</groundspeak:short_description>
+      <groundspeak:long_description html="{{ long_desc_html }}">{{ long_description }}</groundspeak:long_description>
       <groundspeak:encoded_hints>{{ encoded_hints }}</groundspeak:encoded_hints>
     </groundspeak:cache>
   </wpt>

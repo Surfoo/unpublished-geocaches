@@ -2,9 +2,9 @@
 // @name            Unpublished-Geocaches
 // @namespace       http://www.geocaching.com
 // @description     Fetch unpublished geocaches
-// @include         http://www.geocaching.com/seek/cache_details*
+// @include         http://www.geocaching.com/geocache/*
 // @updateURL       http://unpublished.vaguelibre.net/unpublished.user.js
-// @version         1.0
+// @version         1.1
 // @grant           GM_xmlhttpRequest
 // ==/UserScript==
 
