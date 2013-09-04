@@ -169,6 +169,7 @@ $('#create-gpx').click(function() {
     }
 
     $('#download-gpx').remove();
+    $('#download-wpts').remove();
     $('#table-caches tbody tr').removeClass('success');
     $('#table-caches tbody tr').removeClass('danger');
     $('#table-caches .status').html('');
@@ -215,6 +216,7 @@ $('#create-gpx').click(function() {
             success: function(data) {
                 if (data && data.success) {
                     $('#table-unpublished-caches').append(data.link);
+                    $('#table-unpublished-caches').append('&nbsp;' + data.link_wpts);
                 }
             },
             failure: function() {}
@@ -237,6 +239,7 @@ $('#create-gpx-gm').click(function() {
     }
 
     $('#download-gpx-gm').remove();
+    $('#download-wpts-gm').remove();
     $(this).button('loading');
 
     if (list.length > 0) {

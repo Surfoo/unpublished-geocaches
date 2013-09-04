@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<gpx xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" creator="Groundspeak, Inc. All Rights Reserved. http://www.groundspeak.com" xsi:schemaLocation="http://www.topografix.com/GPX/1/0 http://www.topografix.com/GPX/1/0/gpx.xsd http://www.groundspeak.com/cache/1/0 http://www.groundspeak.com/cache/1/0/cache.xsd" xmlns="http://www.topografix.com/GPX/1/0">
+  <name>Waypoints for Cache Listings Generated from http://unpublished.vaguelibre.net</name>
+  <desc>This is a list of supporting waypoints for caches generated from http://unpublished.vaguelibre.net</desc>
+  <author>Various users from Geocaching.com</author>
+  <url>http://unpublished.vaguelibre.net</url>
+  <urlname>Create a GPX file from your unpublished geocaches</urlname>
+  <time>{{ time }}</time>
+  <keywords>cache, geocache, waypoints</keywords>
+{% for waypoint in additional_waypoints %}
+{% include waypoint %}
+{% endfor %}
+</gpx>

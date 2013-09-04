@@ -35,6 +35,7 @@ class Unpublished
     public $long_description  = null;
     public $encoded_hints     = null;
     public $attributes        = null;
+    public $waypoints         = null;
 
     public $errors = array();
 
@@ -267,4 +268,42 @@ class Unpublished
         }
     }
 
+    public function setWaypoints()
+    {
+        if (!$this->raw_html || !preg_match('/<table class="Table" id="ctl00_ContentBody_Waypoints">\s*(.*)\s*<\/table>/msU',
+                                            $this->raw_html, $waypoint_html)) {
+            return false;
+        }
+
+        $wpBegin = strrpos($waypoint_html[1], '<tbody>');
+        $wpEnd = strrpos($waypoint_html[1], '</tbody>');
+        $waypoint_html = substr($waypoint_html[1], $wpBegin+7, $wpEnd - $wpBegin + 7);
+
+        preg_match_all('/<tr.*>(.*)<\/tr>/msU', $waypoint_html, $lines);
+        $counter = 0;
+        foreach ($lines[1] as $key => $line) {
+            preg_match_all('/<td.*>(.*)<\/td>/msU', $line, $cells);
+            $cells = array_map('trim', $cells[1]);
+            if($key % 2 == 0) {
+                $counter++;
+                if(strpos($cells[6], '???') === 0) {
+                    continue;
+                }
+                preg_match('/lat=([\d.]*)&amp;lng=([\d.]*)/', $cells[7], $wptcoord);
+                preg_match('/\((.*)\)/', $cells[5], $wpttype);
+                preg_match('/>(.*)<\/a>/', $cells[5], $wptname);
+                preg_match('/wpt.aspx\?WID=([a-z0-9-]*)/i', $cells[5], $wptwid);
+
+                $waypoints[$counter]['lat']  = trim($wptcoord[1]);
+                $waypoints[$counter]['lng']  = trim($wptcoord[2]);
+                $waypoints[$counter]['type'] = trim($wpttype[1]);
+                $waypoints[$counter]['name'] = trim($wptname[1]);
+                $waypoints[$counter]['wid']  = trim($wptwid[1]);
+            }
+            elseif(array_key_exists($counter, $waypoints)) {
+                $waypoints[$counter]['note'] = trim($cells[2]);
+            }
+        }
+        $this->waypoints = $waypoints;
+    }
 }

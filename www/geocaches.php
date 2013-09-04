@@ -37,6 +37,7 @@ $unpublished->setShortDescription();
 $unpublished->setLongDescription();
 $unpublished->setEncodedHints();
 $unpublished->setAttributes();
+$unpublished->setWaypoints();
 
 if (!empty($unpublished->errors)) {
     renderAjax(array('success' => false, 'guid' => $unpublished->guid, 'message' => implode('<br />', $unpublished->errors)));
@@ -51,4 +52,12 @@ $hd = fopen(sprintf(WAYPOINT_FILENAME, $unpublished->guid), 'w');
 fwrite($hd, $gpx_file);
 fclose($hd);
 
-renderAjax(array('success' => true, 'guid' => $unpublished->guid));
+$additional_waypoints = false;
+if(is_array($unpublished->waypoints)) {
+    $waypoint_file = $twig->render('additional_waypoint.xml', array('additional_waypoints' => $unpublished->waypoints, 'time' => date('c')));
+    $hd = fopen(sprintf(ADDITIONAL_WAYPOINT_FILENAME, $unpublished->guid), 'w');
+    fwrite($hd, $waypoint_file);
+    fclose($hd);
+    $additional_waypoints = true;
+}
+renderAjax(array('success' => true, 'guid' => $unpublished->guid, 'additional_waypoints' => $additional_waypoints));

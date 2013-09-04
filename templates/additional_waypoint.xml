@@ -1,0 +1,12 @@
+{% for waypoint in additional_waypoints %}
+  <wpt lat="{{ waypoint.lat }}" lon="{{ waypoint.lng }}">
+    <time>{{ time }}</time>
+    <name>{{ waypoint.name }}</name>
+    <cmt>{{ waypoint.note }}</cmt>
+    <desc>{{ waypoint.name }}</desc>
+    <url>http://www.geocaching.com/seek/wpt.aspx?WID={{ waypoint.wid }}</url>
+    <urlname>{{ waypoint.name }}</urlname>
+    <sym>{{ waypoint.type }}</sym>
+    <type>Waypoint|{{ waypoint.type }}</type>
+  </wpt>
+{% endfor %}
