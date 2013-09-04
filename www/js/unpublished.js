@@ -253,6 +253,7 @@ $('#create-gpx-gm').click(function() {
             success: function(data) {
                 if (data && data.success) {
                     $('#table-unpublished-caches-gm').append(data.link);
+                    $('#table-unpublished-caches-gm').append('&nbsp;' + data.link_wpts);
                 }
             },
             failure: function() {}

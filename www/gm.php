@@ -21,6 +21,7 @@ $unpublished->setShortDescription();
 $unpublished->setLongDescription();
 $unpublished->setEncodedHints();
 $unpublished->setAttributes();
+$unpublished->setWaypoints();
 
 if (!empty($unpublished->errors)) {
     $message = count($unpublished->errors) > 1 ? 'Errors:' : 'Error:';
@@ -36,6 +37,15 @@ $gpx_file = $twig->render('waypoint.xml', $unpublished->getGeocacheDatas());
 $hd = fopen(sprintf(WAYPOINT_FILENAME, $unpublished->guid), 'w');
 fwrite($hd, $gpx_file);
 fclose($hd);
+
+$additional_waypoints = false;
+if(is_array($unpublished->waypoints)) {
+    $waypoint_file = $twig->render('additional_waypoint.xml', array('additional_waypoints' => $unpublished->waypoints, 'time' => date('c')));
+    $hd = fopen(sprintf(ADDITIONAL_WAYPOINT_FILENAME, $unpublished->guid), 'w');
+    fwrite($hd, $waypoint_file);
+    fclose($hd);
+    $additional_waypoints = true;
+}
 
 $list = array();
 if (array_key_exists('unpublished', $_COOKIE)) {
