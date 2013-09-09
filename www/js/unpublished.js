@@ -23,19 +23,18 @@ function fetchUnpublishedCaches() {
             }
             if (data && !data.success) {
                 alert(data.message);
-            }
-            else {
+            } else {
                 $('#table-unpublished-caches').show();
                 $('#table-caches tbody').html('');
 
                 $.each(data.unpublishedCaches, function(guid, title) {
                     $('#table-caches tbody')
-                    .append('<tr class="' + guid + '">\n' +
-                        '   <td><input type="checkbox" name="cache" class="unpublished-geocache" value="' + guid + '" id="' + guid + '" /></td>\n' +
-                        '   <td><label for="' + guid + '">' + title + '</label></td>\n' +
-                        '   <td class="status"> </td>\n' +
-                        '</tr>\n');
-                        });
+                        .append('<tr class="' + guid + '">\n' +
+                            '   <td><input type="checkbox" name="cache" class="unpublished-geocache" value="' + guid + '" id="' + guid + '" /></td>\n' +
+                            '   <td><label for="' + guid + '">' + title + '</label></td>\n' +
+                            '   <td class="status"> </td>\n' +
+                            '</tr>\n');
+                });
             }
         },
         failure: function() {}
@@ -56,17 +55,17 @@ function fetchUnpublishedCachesFromGM() {
                 alert(data.message);
                 return false;
             }
-            if(data.unpublishedCaches) {
+            if (data.unpublishedCaches) {
                 $('#table-unpublished-caches-gm').show();
                 $('#table-caches-gm tbody').html('');
 
                 $.each(data.unpublishedCaches, function(guid, title) {
                     $('#table-caches-gm tbody')
-                    .append('<tr>\n' +
-                        '   <td><input type="checkbox" name="cache-gm" class="unpublished-geocache-gm" value="' + guid + '" id="' + guid + '-gm" /></td>\n' +
-                        '   <td><label for="' + guid + '-gm">' + title + '</label></td>\n' +
-                        '</tr>\n');
-                        });
+                        .append('<tr>\n' +
+                            '   <td><input type="checkbox" name="cache-gm" class="unpublished-geocache-gm" value="' + guid + '" id="' + guid + '-gm" /></td>\n' +
+                            '   <td><label for="' + guid + '-gm">' + title + '</label></td>\n' +
+                            '</tr>\n');
+                });
             }
         },
         failure: function() {}
@@ -216,7 +215,9 @@ $('#create-gpx').click(function() {
             success: function(data) {
                 if (data && data.success) {
                     $('#table-unpublished-caches').append(data.link);
-                    $('#table-unpublished-caches').append('&nbsp;' + data.link_wpts);
+                    if (data.link_wpts) {
+                        $('#table-unpublished-caches').append('&nbsp;' + data.link_wpts);
+                    }
                 }
             },
             failure: function() {}
@@ -253,7 +254,9 @@ $('#create-gpx-gm').click(function() {
             success: function(data) {
                 if (data && data.success) {
                     $('#table-unpublished-caches-gm').append(data.link);
-                    $('#table-unpublished-caches-gm').append('&nbsp;' + data.link_wpts);
+                    if (data.link_wpts) {
+                        $('#table-unpublished-caches-gm').append('&nbsp;' + data.link_wpts);
+                    }
                 }
             },
             failure: function() {}

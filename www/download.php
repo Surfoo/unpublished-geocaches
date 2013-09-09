@@ -39,9 +39,10 @@ $twig_vars['waypoints'] = $waypoints;
 $gpx_file = $twig->render('geocaches.xml', $twig_vars);
 
 // Additional waypoints
-$twig_vars2['additional_waypoints'] = $additional_waypoint;
-$additional_waypoints = $twig->render('additional_waypoints.xml', $twig_vars2);
-
+if(!empty($additional_waypoint)) {
+    $twig_vars2['additional_waypoints'] = $additional_waypoint;
+    $additional_waypoints = $twig->render('additional_waypoints.xml', $twig_vars2);
+}
 if (array_key_exists('greasemonkey', $_POST)) {
     $gpx_prefix    = array_key_exists('ownerid', $_COOKIE) ? (int) $_COOKIE['ownerid'] : uniqid(sha1(rand()), true);
     $gpx_suffix    = SALT_GM;
@@ -58,12 +59,16 @@ $gpx_filename = sprintf(GPX_FILENAME, substr(md5($gpx_prefix . $gpx_suffix), 0, 
 $hd = fopen($gpx_filename, 'w');
 fwrite($hd, $gpx_file);
 fclose($hd);
+$link = '<a href="gpx/' . basename($gpx_filename) . '" class="btn btn-success" id="' . $id_link .'">Download GPX</a>';
 
-$additional_wpts_filename = sprintf(ADDITIONAL_GPX_FILENAME, substr(md5($gpx_prefix . $gpx_suffix), 0, 12));
-$hd = fopen($additional_wpts_filename, 'w');
-fwrite($hd, $additional_waypoints);
-fclose($hd);
-
+$link_wpts = false;
+if(!empty($additional_waypoint)) {
+    $additional_wpts_filename = sprintf(ADDITIONAL_GPX_FILENAME, substr(md5($gpx_prefix . $gpx_suffix), 0, 12));
+    $hd = fopen($additional_wpts_filename, 'w');
+    fwrite($hd, $additional_waypoints);
+    fclose($hd);
+    $link_wpts = '<a href="gpx/' . basename($additional_wpts_filename) . '" class="btn btn-success" id="' . $id_link_wpts .'">Download Waypoints</a>';
+}
 renderAjax(array('success' => true,
-                 'link' => '<a href="gpx/' . basename($gpx_filename) . '" class="btn btn-success" id="' . $id_link .'">Download GPX</a>',
-                 'link_wpts' => '<a href="gpx/' . basename($additional_wpts_filename) . '" class="btn btn-success" id="' . $id_link_wpts .'">Download Waypoints</a>'));
+                 'link' => $link,
+                 'link_wpts' => $link_wpts));
