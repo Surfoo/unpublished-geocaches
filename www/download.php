@@ -11,7 +11,8 @@ if (!array_key_exists('guid', $_POST) || empty($_POST['guid'])) {
     renderAjax(array('success' => false, 'message' => 'No caches found.'));
 }
 
-$waypoints = [];
+$waypoints           = array();
+$additional_waypoint = array();
 foreach ($_POST['guid'] as $guid) {
     $waypoint_filename = sprintf(WAYPOINT_FILENAME, $guid);
     if (file_exists($waypoint_filename)) {

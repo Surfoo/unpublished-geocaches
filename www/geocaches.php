@@ -12,7 +12,7 @@ use Geocaching\Unpublished\Unpublished;
 
 $cookie_filename = sprintf(COOKIE_FILENAME, md5($_SESSION['username']));
 
-$errors = [];
+$errors = array();
 
 $unpublished = new Unpublished();
 $cache['guid'] = $_POST['guid'];
