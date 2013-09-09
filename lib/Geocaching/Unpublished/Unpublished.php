@@ -294,16 +294,15 @@ class Unpublished
                 preg_match('/>(.*)<\/a>/', $cells[5], $wptname);
                 preg_match('/wpt.aspx\?WID=([a-z0-9-]*)/i', $cells[5], $wptwid);
 
-                $waypoints[$counter]['lat']  = trim($wptcoord[1]);
-                $waypoints[$counter]['lng']  = trim($wptcoord[2]);
-                $waypoints[$counter]['type'] = trim($wpttype[1]);
-                $waypoints[$counter]['name'] = trim($wptname[1]);
-                $waypoints[$counter]['wid']  = trim($wptwid[1]);
+                $this->waypoints[$counter]['lat']  = trim($wptcoord[1]);
+                $this->waypoints[$counter]['lng']  = trim($wptcoord[2]);
+                $this->waypoints[$counter]['type'] = trim($wpttype[1]);
+                $this->waypoints[$counter]['name'] = trim($wptname[1]);
+                $this->waypoints[$counter]['wid']  = trim($wptwid[1]);
             }
-            elseif(array_key_exists($counter, $waypoints)) {
-                $waypoints[$counter]['note'] = trim($cells[2]);
+            elseif(is_array($this->waypoints) && array_key_exists($counter, $this->waypoints)) {
+                $this->waypoints[$counter]['note'] = trim($cells[2]);
             }
         }
-        $this->waypoints = $waypoints;
     }
 }
