@@ -10,8 +10,6 @@ if (!array_key_exists('HTTP_X_REQUESTED_WITH', $_SERVER) || $_SERVER['HTTP_X_REQ
 
 use Geocaching\Unpublished\Unpublished;
 
-$cookie_filename = sprintf(COOKIE_FILENAME, md5($_SESSION['username']));
-
 $errors = array();
 
 $unpublished = new Unpublished();

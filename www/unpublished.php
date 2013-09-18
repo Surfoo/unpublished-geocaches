@@ -8,15 +8,13 @@ if (!array_key_exists('HTTP_X_REQUESTED_WITH', $_SERVER) || $_SERVER['HTTP_X_REQ
     exit(0);
 }
 
-$cookie_filename = sprintf(COOKIE_FILENAME, md5($_SESSION['username']));
-
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, URL_QUICKVIEW);
 curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
 curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie_filename);
+curl_setopt($ch, CURLOPT_COOKIEFILE, $_SESSION['cookie']);
 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 $content = curl_exec($ch);
 if (!$content) {

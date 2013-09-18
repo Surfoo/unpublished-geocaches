@@ -51,14 +51,14 @@ class Unpublished
 
     public function getCacheDetails()
     {
-        global $header, $cookie_filename;
+        global $header;
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, sprintf(URL_GEOCACHE, $this->guid));
         curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-        curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie_filename);
+        curl_setopt($ch, CURLOPT_COOKIEFILE, $_SESSION['cookie']);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         $result = curl_exec($ch);
         if (!$result) {
@@ -104,7 +104,7 @@ class Unpublished
         if (!$this->name) {
             return false;
         }
-        global $header; //, $cookie_filename;
+        global $header;
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, sprintf(URL_TILE, mt_rand(1, 4), $this->name));
         curl_setopt($ch, CURLOPT_HTTPHEADER, $header);

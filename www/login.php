@@ -20,9 +20,9 @@ if (!array_key_exists('username', $_POST) || !array_key_exists('username', $_POS
     exit(0);
 }
 
-$cookie_filename = sprintf(COOKIE_FILENAME, md5($_POST['username']));
+$_SESSION['cookie'] = sprintf(COOKIE_FILENAME, md5(strtolower(trim($_POST['username']))));
 
-$hd = fopen($cookie_filename, 'w');
+$hd = fopen($_SESSION['cookie'], 'w');
 fclose($hd);
 $postdata = array('__EVENTTARGET'      => '',
                   '__EVENTARGUMENT'    => '',
@@ -36,7 +36,7 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
 curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie_filename);
+curl_setopt($ch, CURLOPT_COOKIEJAR, $_SESSION['cookie']);
 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postdata));
@@ -47,7 +47,7 @@ if (!$res) {
 curl_close($ch);
 
 if (!preg_match('/ctl00_ContentBody_lbUsername">.*<strong>(.*)<\/strong>/', $res, $username)) {
-    @unlink($cookie_filename);
+    @unlink($_SESSION['cookie']);
     renderAjax(array('success' => false, 'message' => 'Your username/password combination does not match. Make sure you entered your information correctly.'));
 }
 
