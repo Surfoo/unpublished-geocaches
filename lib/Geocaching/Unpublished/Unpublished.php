@@ -281,6 +281,9 @@ class Unpublished
 
         preg_match_all('/<tr.*>(.*)<\/tr>/msU', $waypoint_html, $lines);
         $counter = 0;
+
+        $this->long_description .= "\n" . '<p>Additional Hidden Waypoints</p>';
+
         foreach ($lines[1] as $key => $line) {
             preg_match_all('/<td.*>(.*)<\/td>/msU', $line, $cells);
             $cells = array_map('trim', $cells[1]);
@@ -289,6 +292,7 @@ class Unpublished
                 if(strpos($cells[6], '???') === 0) {
                     continue;
                 }
+
                 preg_match('/lat=([\d.]*)&amp;lng=([\d.]*)/', $cells[7], $wptcoord);
                 preg_match('/\((.*)\)/', $cells[5], $wpttype);
                 preg_match('/>(.*)<\/a>/', $cells[5], $wptname);
@@ -299,9 +303,15 @@ class Unpublished
                 $this->waypoints[$counter]['type'] = trim($wpttype[1]);
                 $this->waypoints[$counter]['name'] = trim($wptname[1]);
                 $this->waypoints[$counter]['wid']  = trim($wptwid[1]);
+
+                $coordinates = trim(html_entity_decode($cells[6]));
+
+                $this->long_description .= $this->waypoints[$counter]['type'] . ' - ' . $this->waypoints[$counter]['name'] . '<br />';
+                $this->long_description .= $coordinates . '<br />';
             }
             elseif(is_array($this->waypoints) && array_key_exists($counter, $this->waypoints)) {
                 $this->waypoints[$counter]['note'] = trim($cells[2]);
+                $this->long_description .= $this->waypoints[$counter]['note'] . '<br />';
             }
         }
     }
