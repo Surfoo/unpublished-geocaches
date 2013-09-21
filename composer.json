@@ -1,5 +1,24 @@
 {
+    "name": "Geocaching/Unpublished",
+    "license": "Apache-2.0",
+    "type": "project",
+    "keywords": ["geocaching", "georoadbook", "geocache", "roadbook", "unpublished"],
+    "homepage": "http://upublished.vaguelibre.net/",
+    "version": "1.0",
+    "time": "2013-09-13",
+    "description": "Create a GPX file from your unpublished geocaches.",
+    "authors": [{
+        "name": "Surfoo",
+        "email": "surfooo@gmail.com",
+        "role": "Developer"
+    }],
+    "autoload": {
+        "psr-0": {
+            "Unpublished": "src/Geocaching/Unpublished"
+        }
+    },
     "require": {
+        "php": ">=5.3",
         "twig/twig": "1.*"
     }
 }

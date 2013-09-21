@@ -25,7 +25,7 @@ foreach ($_POST['guid'] as $guid) {
 }
 
 $loader = new Twig_Loader_Filesystem(array(ROOT . '/waypoints/', TEMPLATE_DIR));
-$twig   = new Twig_Environment($loader, array('debug' => true, 'cache' => TEMPLATE_COMPILED_DIR));
+$twig   = new Twig_Environment($loader, array('debug' => false, 'cache' => TEMPLATE_COMPILED_DIR));
 
 $twig_vars['time'] = $twig_vars2['time'] = date('c');
 

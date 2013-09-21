@@ -13,7 +13,7 @@ foreach(glob(ROOT . '/cookies/cookie_*') as $file) {
         echo "unlink ".$file."\n";
     }
 }
-foreach(glob(ROOT . '/www/gpx/*.gpx') as $file) {
+foreach(glob(ROOT . '/web/gpx/*.gpx') as $file) {
     if($now > filemtime($file) + MAX_RETENTION && unlink($file)) {
         echo "unlink ".$file."\n";
     }

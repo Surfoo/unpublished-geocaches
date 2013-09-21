@@ -18,14 +18,13 @@ define('SALT_GM',        'ooNa2aitejeipaiw8iet');
 
 define('WAYPOINT_FILENAME', ROOT . '/waypoints/%s.gpx');
 define('ADDITIONAL_WAYPOINT_FILENAME', ROOT . '/waypoints/%s-wpts.gpx');
-define('GPX_FILENAME',      ROOT . '/www/gpx/%s.gpx');
-define('ADDITIONAL_GPX_FILENAME',      ROOT . '/www/gpx/%s-wpts.gpx');
+define('GPX_FILENAME',      ROOT . '/web/gpx/%s.gpx');
+define('ADDITIONAL_GPX_FILENAME',      ROOT . '/web/gpx/%s-wpts.gpx');
 define('COOKIE_FILENAME',   ROOT . '/cookies/cookie_%s');
 define('MAX_RETENTION',     3600 * 24);
 
 require ROOT . '/vendor/autoload.php';
 require ROOT . '/helper.php';
-require ROOT . '/lib/Geocaching/Unpublished/Unpublished.php';
 
 session_start();
 

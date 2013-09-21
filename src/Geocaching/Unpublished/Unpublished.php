@@ -9,8 +9,6 @@
  * @package Geocaching\Unpublished
  */
 
-namespace Geocaching\Unpublished;
-
 class Unpublished
 {
     protected $raw_html       = null;
