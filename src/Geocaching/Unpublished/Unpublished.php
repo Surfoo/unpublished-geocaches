@@ -30,7 +30,9 @@ class Unpublished
     public $country           = null;
     public $placed_by         = null;
     public $short_description = null;
+    public $short_desc_html   = null;
     public $long_description  = null;
+    public $long_desc_html    = null;
     public $encoded_hints     = null;
     public $attributes        = null;
     public $waypoints         = null;
@@ -302,10 +304,11 @@ class Unpublished
                 $this->waypoints[$counter]['name'] = trim($wptname[1]);
                 $this->waypoints[$counter]['wid']  = trim($wptwid[1]);
 
-                $coordinates = trim(html_entity_decode($cells[6]));
+                $coordinates = substr($cells[6], 0, -6);
 
                 $this->long_description .= $this->waypoints[$counter]['type'] . ' - ' . $this->waypoints[$counter]['name'] . '<br />';
                 $this->long_description .= $coordinates . '<br />';
+                $this->long_desc_html    = 'True';
             }
             elseif(is_array($this->waypoints) && array_key_exists($counter, $this->waypoints)) {
                 $this->waypoints[$counter]['note'] = trim($cells[2]);
