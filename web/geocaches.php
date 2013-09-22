@@ -28,7 +28,7 @@ $unpublished->setSomeBasicInformations();
 $unpublished->setCoordinates();
 $unpublished->setCacheId();
 $unpublished->setLocationUsername();
-$unpublished->setOwnerId();
+//$unpublished->setOwnerId();
 $unpublished->setShortDescription();
 $unpublished->setLongDescription();
 $unpublished->setEncodedHints();

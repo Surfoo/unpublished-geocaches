@@ -200,7 +200,7 @@ class Unpublished
         }
     }
 
-    public function setOwnerId()
+    /*public function setOwnerId()
     {
         if (!$this->raw_html) {
             return false;
@@ -210,7 +210,7 @@ class Unpublished
         } else {
             $this->errors[] = 'Unable to retrieve Owner ID.';
         }
-    }
+    }*/
 
     public function setShortDescription()
     {
