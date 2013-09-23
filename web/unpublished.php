@@ -23,7 +23,7 @@ if (!$content) {
 curl_close($ch);
 
 if(!preg_match_all('#<li>\s*<img src="https?://www.geocaching.com/images/wpttypes/sm/\d*.gif" width="16" height="16" alt="" />' .
-                  '\s*<a href="https?://www.geocaching.com/seek/cache_details.aspx\?guid=(.*)">(.*)</a></li>#msU', $content, $elements)) {
+                  '\s*<a href="https?://www.geocaching.com/seek/cache_details.aspx\?guid=(.*)">(.*)</a>[\s+]?</li>#msU', $content, $elements)) {
     renderAjax(array('success' => false, 'message' => 'No unpublished caches found.'));
 }
 $unpublishedCaches = array_map('trim', array_combine($elements[1], $elements[2]));
