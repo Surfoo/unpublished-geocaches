@@ -191,7 +191,7 @@ class Unpublished
         if (!$this->raw_html) {
             return false;
         }
-        if (preg_match('/<title>\s*.*\((.*)\) in (.*), (.*) created by (.*)\s*<\/title>/msU', $this->raw_html, $matches)) {
+        if (preg_match('/<title>\s*.*\((.*)\) in ([.+])?[,\s]?(.*) created by (.*)\s*<\/title>/msU', $this->raw_html, $matches)) {
             $this->state = $matches[2];
             $this->country = $matches[3];
             $this->placed_by = $matches[4];
