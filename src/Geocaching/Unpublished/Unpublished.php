@@ -15,6 +15,7 @@ class Unpublished
 
     public $guid              = null;
     public $cache_id          = null;
+    public $date              = null;
     public $difficulty        = null;
     public $terrain           = null;
     public $container         = null;
