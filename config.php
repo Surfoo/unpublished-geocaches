@@ -23,6 +23,8 @@ define('ADDITIONAL_GPX_FILENAME',      ROOT . '/web/gpx/%s-wpts.gpx');
 define('COOKIE_FILENAME',   ROOT . '/cookies/cookie_%s');
 define('MAX_RETENTION',     3600 * 24);
 
+define('SUFFIX_CSS_JS', 20131004);
+
 require ROOT . '/vendor/autoload.php';
 require ROOT . '/helper.php';
 

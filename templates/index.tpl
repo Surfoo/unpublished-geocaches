@@ -3,7 +3,7 @@
     <head>
     <meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
         <title>Unpublished Geocaches</title>
-        <meta name="description" content="Fetch your unpublished Geocaches and create a GPX with.">
+        <meta name="description" content="Fetch your unpublished Geocaches and create a GPX with them.">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
         <link rel="stylesheet" href="css/design.css">
@@ -57,6 +57,7 @@
                             </table>
                             <button type="submit" class="btn btn-primary" data-loading-text="Refreshing..." id="refresh-cache">Refresh the list</button>
                             <button type="submit" class="btn btn-primary" data-loading-text="Creating..." id="create-gpx">Create a GPX</button>
+                            <span id="download-links"></span>
                         </div>
                     </div>
 
@@ -78,6 +79,7 @@
                             </table>
                             <button type="submit" class="btn btn-primary" data-loading-text="Refreshing..." id="refresh-cache-gm">Refresh the list</button>
                             <button type="submit" class="btn btn-primary" data-loading-text="Creating..." id="create-gpx-gm">Create a GPX</button>
+                            <span id="download-links-gm"></span>
                         </div>
                     </div>
 
@@ -103,7 +105,7 @@
                         </div>
 
                         <h5><strong>2nd method:</strong></h5>
-                        <div class="method">The "Unpublished Geocaches" app is free and open source, you can <a href="https://github.com/Surfoo/unpublished-geocaches">download the code from GitHub</a> and use it on your own server.</p>
+                        <div class="method">The "Unpublished Geocaches" app is free and open source, you can <a href="https://github.com/Surfoo/unpublished-geocaches">download the code from GitHub</a> and use it on your own server.
                         </div>
 
                         <h5><strong>3rd method:</strong></h5>
@@ -121,6 +123,6 @@
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
         <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-        <script src="js/unpublished.min.js?20130909"></script>
+        <script src="js/unpublished.min.js?{{ constant('SUFFIX_CSS_JS') }}"></script>
     </body>
 </html>
