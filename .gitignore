@@ -1,4 +1,3 @@
-packer
 vendor
 *.sublime-project
 *.sublime-workspace
