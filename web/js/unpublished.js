@@ -178,11 +178,13 @@
                     }
                 }
             });
-        },
+        };
 
-            //from http://blog.xebia.fr/2012/11/28/les-objets-differes-et-les-promesses-en-jquery/
-            //On transforme la liste d'identifiants en liste de promesses de noms correspondant à ces id
-            listOfPromises = list.map(getGeocache);
+        //from http://blog.xebia.fr/2012/11/28/les-objets-differes-et-les-promesses-en-jquery/
+        //On transforme la liste d'identifiants en liste de promesses de noms correspondant à ces id
+
+        var listOfPromises = list.map(getGeocache);
+
         // La fonction when ne prend pas de tableau en entrée, mais un varargs.
         // Il est donc nécessaire de passer par la fonction apply pour invoquer when,
         // afin de transformer le tableau de promesses en varargs
@@ -192,7 +194,7 @@
                 for (var i = 0, length = listOfPromises.length; i < length; ++i) {
                     //Arguments est une variable magique contenant les paramètres de la fonction
                     //Les paramètres sont passés dans le même ordre que les promesses.
-                    if (!arguments[i][0].success) {
+                    if (arguments[i][0].success) {
                         gpx.push(arguments[i][0].guid);
                     }
                 }
