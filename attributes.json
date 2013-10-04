@@ -246,5 +246,9 @@
     "food": {
         "id": "59",
         "text": "Food Nearby"
+    },
+    "firstaid": {
+        "id": "42",
+        "text": "Needs maintenance"
     }
 }

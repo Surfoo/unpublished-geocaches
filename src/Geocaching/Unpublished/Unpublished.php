@@ -259,7 +259,7 @@ class Unpublished
         if (preg_match_all('/attributes\/([a-z-_]+)-(yes|no).gif/i', $this->raw_html, $attributes)) {
             foreach ($attributes[1] as $key => $attribute) {
                 if (!array_key_exists($attribute, $this->list_attributes)) {
-                    $this->errors[] = 'Problems with  '. $attribute . ' attribute';
+                    $this->errors[] = 'Problem with "' . $attribute . '" attribute';
                     continue;
                 }
                 $this->attributes[] = ['id'  => $this->list_attributes->$attribute->id,
@@ -278,7 +278,7 @@ class Unpublished
 
         $wpBegin = strrpos($waypoint_html[1], '<tbody>');
         $wpEnd = strrpos($waypoint_html[1], '</tbody>');
-        $waypoint_html = substr($waypoint_html[1], $wpBegin+7, $wpEnd - $wpBegin + 7);
+        $waypoint_html = substr($waypoint_html[1], $wpBegin + 7, $wpEnd - $wpBegin + 7);
 
         preg_match_all('/<tr.*>(.*)<\/tr>/msU', $waypoint_html, $lines);
         $counter = 0;

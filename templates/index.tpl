@@ -113,7 +113,7 @@
                             <p>This method is slower than the first, but doesn't require your password.<br />
                                 You must use <a href="https://addons.mozilla.org/fr/firefox/addon/greasemonkey/" onclick="window.open(this.href);return false;">the greasemonkey addon</a> (For Firefox) and install the <a href="http://userscripts.org/scripts/show/175875" onclick="window.open(this.href);return false;">Unpublished Geocaches script</a>.
                             </p>
-                            <p>After installation, a "Send to Unpublished Geocache" button appears on your caches listing, just click it, and the content of the webpage will be sent to this web app.<br />
+                            <p>After installation, a "Send to Unpublished Geocaches" button appears on your caches listing, just click it, and the content of the webpage will be sent to this web app.<br />
                             Refresh the page, and titles of your sent caches appear.</p>
                         </div>
                     </div>
