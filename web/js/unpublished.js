@@ -69,6 +69,9 @@
                 return false;
             }
 
+            $('#username').prop('disabled', true);
+            $('#password').prop('disabled', true);
+
             btn.button('loading');
 
             $.ajax({
@@ -84,6 +87,8 @@
                     }
                     if (data && !data.success) {
                         btn.button('reset');
+                        $('#username').prop('disabled', false);
+                        $('#password').prop('disabled', false);
                         alert(data.message);
                         return false;
                     }
@@ -129,7 +134,7 @@
     });
 
     $('#refresh-cache').click(function() {
-        $('#table-caches tbody').slideUp('400', fetchUnpublishedCaches());
+        $('#table-caches tbody').slideUp(400, fetchUnpublishedCaches);
     });
 
     $('#refresh-cache-gm').click(function() {
