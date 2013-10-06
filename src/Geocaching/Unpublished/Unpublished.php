@@ -245,7 +245,25 @@ class Unpublished
             return false;
         }
         if (preg_match('/<div.*?id="div_hint" class="span-8 WrapFix">\s*(.*)\s*<\/div>/msU', $this->raw_html, $hint)) {
-            $this->encoded_hints = str_ireplace("\x0D", "", trim($hint[1]));
+            $this->encoded_hints = str_ireplace("\x0D", '', trim($hint[1]));
+            $this->encoded_hints = str_replace(array('<br />', '<br>'), "\n", $this->encoded_hints);
+
+            $chars = str_split($this->encoded_hints);
+            $encode = true;
+            foreach($chars as &$char) {
+                if(in_array($char, array('[', '<'))) {
+                    $encode = false;
+                    continue;
+                }
+                if(in_array($char, array(']', '>'))) {
+                    $encode = true;
+                    continue;
+                }
+                if($encode) {
+                    $char = str_rot13($char);
+                }
+            }
+            $this->encoded_hints = implode('', $chars);
         } else {
             $this->errors[] = 'Unable to retrieve Encoded Hints.';
         }
