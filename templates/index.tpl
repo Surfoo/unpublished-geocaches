@@ -5,7 +5,7 @@
         <title>Unpublished Geocaches</title>
         <meta name="description" content="Fetch your unpublished Geocaches and create a GPX with them.">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
         <link rel="stylesheet" href="css/design.css">
         <script type="text/javascript">
         var logged = {% if logged == 'false' %}'false'{% else %}'true'{% endif %};
@@ -122,7 +122,7 @@
         </div>
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-        <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
         <script src="js/unpublished.min.js?{{ constant('SUFFIX_CSS_JS') }}"></script>
     </body>
 </html>
