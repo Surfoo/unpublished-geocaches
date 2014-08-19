@@ -40,7 +40,7 @@ if (!empty($unpublished->errors)) {
 }
 
 $loader = new Twig_Loader_Filesystem(TEMPLATE_DIR);
-$twig   = new Twig_Environment($loader, array('debug' => true, 'cache' => TEMPLATE_COMPILED_DIR));
+$twig   = new Twig_Environment($loader);
 
 $gpx_file = $twig->render('waypoint.xml', $unpublished->getGeocacheDatas());
 
