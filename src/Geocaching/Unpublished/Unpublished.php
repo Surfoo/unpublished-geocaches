@@ -308,22 +308,24 @@ class Unpublished
             $cells = array_map('trim', $cells[1]);
             if($key % 2 == 0) {
                 $counter++;
-                if(strpos($cells[6], '???') === 0) {
-                    continue;
-                }
 
                 preg_match('/lat=([\d.]*)&amp;lng=([\d.]*)/', $cells[7], $wptcoord);
                 preg_match('/\((.*)\)/', $cells[5], $wpttype);
                 preg_match('/>(.*)<\/a>/', $cells[5], $wptname);
                 preg_match('/wpt.aspx\?WID=([a-z0-9-]*)/i', $cells[5], $wptwid);
 
-                $this->waypoints[$counter]['lat']  = trim($wptcoord[1]);
-                $this->waypoints[$counter]['lng']  = trim($wptcoord[2]);
+                $this->waypoints[$counter]['lat']  = '';
+                $this->waypoints[$counter]['lng']  = '';
                 $this->waypoints[$counter]['type'] = trim($wpttype[1]);
                 $this->waypoints[$counter]['name'] = trim($wptname[1]);
                 $this->waypoints[$counter]['wid']  = trim($wptwid[1]);
 
-                $coordinates = substr($cells[6], 0, -6);
+                $coordinates = '';
+                if(strpos($cells[6], '???') !== 0) {
+                    $this->waypoints[$counter]['lat']  = trim($wptcoord[1]);
+                    $this->waypoints[$counter]['lng']  = trim($wptcoord[2]);
+                    $coordinates = substr($cells[6], 0, -6);
+                }
 
                 $this->long_description .= $this->waypoints[$counter]['type'] . ' - ' . $this->waypoints[$counter]['name'] . '<br />';
                 $this->long_description .= $coordinates . '<br />';

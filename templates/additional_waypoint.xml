@@ -1,4 +1,5 @@
 {% for waypoint in additional_waypoints %}
+{% if waypoint.lat != '' and waypoint.lng != '' %}
   <wpt lat="{{ waypoint.lat }}" lon="{{ waypoint.lng }}">
     <time>{{ time }}</time>
     <name>{{ waypoint.name }}</name>
@@ -9,4 +10,5 @@
     <sym>{{ waypoint.type }}</sym>
     <type>Waypoint|{{ waypoint.type }}</type>
   </wpt>
+{% endif %}
 {% endfor %}
