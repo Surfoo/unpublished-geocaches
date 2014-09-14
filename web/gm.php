@@ -7,19 +7,19 @@ if (!array_key_exists('content', $_POST)) {
 }
 
 $unpublished = new Unpublished();
-$unpublished->setRawHtml($_POST['content']);
-$unpublished->setGuid();
-$unpublished->setGcCode();
-$unpublished->setSomeBasicInformations();
-$unpublished->setCoordinates();
-$unpublished->setCacheId();
-$unpublished->setLocationUsername();
-//$unpublished->setOwnerId();
-$unpublished->setShortDescription();
-$unpublished->setLongDescription();
-$unpublished->setEncodedHints();
-$unpublished->setAttributes();
-$unpublished->setWaypoints();
+$unpublished->setRawHtml($_POST['content'])
+            ->setGuid()
+            ->setGcCode()
+            ->setSomeBasicInformations()
+            ->setCoordinates()
+            ->setCacheId()
+            ->setLocationUsername()
+            //->setOwnerId()
+            ->setShortDescription()
+            ->setLongDescription()
+            ->setEncodedHints()
+            ->setAttributes()
+            ->setWaypoints();
 
 if (!empty($unpublished->errors)) {
     $message = count($unpublished->errors) > 1 ? 'Errors:' : 'Error:';
