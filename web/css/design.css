@@ -19,6 +19,9 @@
     }
 }
 
+body {
+    margin-bottom: 1em;
+}
 label {
     font-weight: normal;
     margin-bottom: 0;

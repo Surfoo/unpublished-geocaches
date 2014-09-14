@@ -6,7 +6,7 @@
         <meta name="description" content="Fetch your unpublished Geocaches and create a GPX with them.">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-        <link rel="stylesheet" href="css/design.css">
+        <link rel="stylesheet" href="css/design.css?20140914">
         <script type="text/javascript">
         var logged = {% if logged == 'false' %}'false'{% else %}'true'{% endif %};
         </script>
