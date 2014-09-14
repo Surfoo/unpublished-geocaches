@@ -23,17 +23,17 @@ if (!$unpublished->setGcCode()) {
     renderAjax(array('success' => false, 'guid' => $cache['guid'], 'message' => 'Unable to retrieve the GC code.'));
 }
 
-$unpublished->setSomeBasicInformations()
-            ->setCoordinates()
-            ->setCacheId()
-            ->setLocation()
-            ->setUsername()
-            //->setOwnerId()
-            ->setShortDescription()
-            ->setLongDescription()
-            ->setEncodedHints()
-            ->setAttributes()
-            ->setWaypoints();
+$unpublished->setSomeBasicInformations();
+
+$unpublished->setCoordinates();
+$unpublished->setCacheId();
+$unpublished->setLocationUsername();
+//$unpublished->setOwnerId();
+$unpublished->setShortDescription();
+$unpublished->setLongDescription();
+$unpublished->setEncodedHints();
+$unpublished->setAttributes();
+$unpublished->setWaypoints();
 
 if (!empty($unpublished->errors)) {
     renderAjax(array('success' => false, 'guid' => $unpublished->guid, 'message' => implode('<br />', $unpublished->errors)));

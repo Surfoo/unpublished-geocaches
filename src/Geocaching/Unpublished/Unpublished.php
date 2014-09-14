@@ -48,8 +48,6 @@ class Unpublished
     public function setRawHtml($content)
     {
         $this->raw_html = $content;
-
-        return $this;
     }
 
     public function getCacheDetails()
@@ -136,8 +134,6 @@ class Unpublished
         $this->url        = sprintf(URL_GEOCACHE, $this->guid);
         $d = explode('/', $infos->data[0]->hidden);
         $this->date = date('c', mktime(0, 0, 0, $d[0], $d[1], $d[2]));
-
-        return $this;
     }
 
     public function setGuid()
@@ -150,8 +146,6 @@ class Unpublished
         } else {
             $this->errors[] = 'Unable to retrieve GUID.';
         }
-
-        return false;
     }
 
     public function setGcCode()
@@ -179,8 +173,6 @@ class Unpublished
         } else {
             $this->errors[] = 'Unable to retrieve Latitude and Longitude.';
         }
-
-        return $this;
     }
 
     public function setCacheId()
@@ -193,42 +185,20 @@ class Unpublished
         } else {
             $this->errors[] = 'Unable to retrieve Cache ID.';
         }
-
-        return $this;
     }
 
-    public function setLocation()
+    public function setLocationUsername()
     {
         if (!$this->raw_html) {
             return false;
         }
-        if (preg_match('#<span id="ctl00_ContentBody_Location">In ([^,]+)[,\s]*(.*)</span>#', $this->raw_html, $matches)) {
-            if ($matches[2] == '') {
-                $this->state = '';
-                $this->country = $matches[1];
-            } else {
-                $this->state = $matches[1];
-                $this->country = $matches[2];
-            }
+        if (preg_match('/<title>\s*.*\((.*)\) in ([.+])?[,\s]?(.*) created by (.*)\s*<\/title>/msU', $this->raw_html, $matches)) {
+            $this->state = $matches[2];
+            $this->country = $matches[3];
+            $this->placed_by = $matches[4];
         } else {
-            $this->errors[] = 'Unable to retrieve State, Country.';
+            $this->errors[] = 'Unable to retrieve State, Country and Placed By.';
         }
-
-        return $this;
-    }
-
-    public function setUsername()
-    {
-        if (!$this->raw_html) {
-            return false;
-        }
-        if (preg_match('#<div id="ctl00_ContentBody_mcd1">[^<]+<a href="[^"]+">([^<]+)</a>#msU', $this->raw_html, $matches)) {
-            $this->placed_by = $matches[1];
-        } else {
-            $this->errors[] = 'Unable to retrieve Placed By.';
-        }
-
-        return $this;
     }
 
     /*public function setOwnerId()
@@ -241,8 +211,6 @@ class Unpublished
         } else {
             $this->errors[] = 'Unable to retrieve Owner ID.';
         }
-
-        return $this;
     }*/
 
     public function setShortDescription()
@@ -250,14 +218,12 @@ class Unpublished
         if (!$this->raw_html) {
             return false;
         }
-        if (preg_match('#<span id="ctl00_ContentBody_ShortDescription">(.*)</span>\s*</div>#msU', $this->raw_html, $short_description)) {
+        if (preg_match('/<span id="ctl00_ContentBody_ShortDescription">(.*)<\/span>/msU', $this->raw_html, $short_description)) {
             $this->short_description = str_ireplace("\x0D", "", trim($short_description[1]));
             $this->short_desc_html   = ($this->short_description != strip_tags($this->short_description)) ? 'True' : 'False';
         } else {
-            $this->errors[] = 'Unable to retrieve Short Description.';
+            $this->errors[] = 'Unable to retrieve the Short Description.';
         }
-
-        return $this;
     }
 
     public function setLongDescription()
@@ -265,14 +231,12 @@ class Unpublished
         if (!$this->raw_html) {
             return false;
         }
-        if (preg_match('#<span id="ctl00_ContentBody_LongDescription">(.*?)</span>\s*</div>\s*<p>\s*</p>\s*<p id="ctl00_ContentBody_hints">#msU', $this->raw_html, $long_description)) {
+        if (preg_match('/<div class="UserSuppliedContent">\s*<span id="ctl00_ContentBody_LongDescription">(.*)<\/span>\s*<\/div>/msU', $this->raw_html, $long_description)) {
             $this->long_description = str_ireplace("\x0D", "", trim($long_description[1]));
             $this->long_desc_html   = ($this->long_description != strip_tags($this->long_description)) ? 'True' : 'False';
         } else {
-            $this->errors[] = 'Unable to retrieve Long Description.';
+            $this->errors[] = 'Unable to retrieve the Long Description.';
         }
-
-        return $this;
     }
 
     public function setEncodedHints()
@@ -280,22 +244,22 @@ class Unpublished
         if (!$this->raw_html) {
             return false;
         }
-        if (preg_match('#<div id="div_hint"[^>]*>(.*)</div>#msU', $this->raw_html, $hint)) {
+        if (preg_match('/<div.*?id="div_hint" class="span-8 WrapFix">\s*(.*)\s*<\/div>/msU', $this->raw_html, $hint)) {
             $this->encoded_hints = str_ireplace("\x0D", '', trim($hint[1]));
             $this->encoded_hints = str_replace(array('<br />', '<br>'), "\n", $this->encoded_hints);
 
             $chars = str_split($this->encoded_hints);
             $encode = true;
-            foreach ($chars as &$char) {
-                if (in_array($char, array('[', '<'))) {
+            foreach($chars as &$char) {
+                if(in_array($char, array('[', '<'))) {
                     $encode = false;
                     continue;
                 }
-                if (in_array($char, array(']', '>'))) {
+                if(in_array($char, array(']', '>'))) {
                     $encode = true;
                     continue;
                 }
-                if ($encode) {
+                if($encode) {
                     $char = str_rot13($char);
                 }
             }
@@ -303,8 +267,6 @@ class Unpublished
         } else {
             $this->errors[] = 'Unable to retrieve Encoded Hints.';
         }
-
-        return $this;
     }
 
     public function setAttributes()
@@ -323,8 +285,6 @@ class Unpublished
                                        'text'=> $this->list_attributes->$attribute->text];
             }
         }
-
-        return $this;
     }
 
     public function setWaypoints()
@@ -346,7 +306,7 @@ class Unpublished
         foreach ($lines[1] as $key => $line) {
             preg_match_all('/<td.*>(.*)<\/td>/msU', $line, $cells);
             $cells = array_map('trim', $cells[1]);
-            if ($key % 2 == 0) {
+            if($key % 2 == 0) {
                 $counter++;
 
                 preg_match('/lat=([\d.]*)&amp;lng=([\d.]*)/', $cells[7], $wptcoord);
@@ -361,7 +321,7 @@ class Unpublished
                 $this->waypoints[$counter]['wid']  = trim($wptwid[1]);
 
                 $coordinates = '';
-                if (strpos($cells[6], '???') !== 0) {
+                if(strpos($cells[6], '???') !== 0) {
                     $this->waypoints[$counter]['lat']  = trim($wptcoord[1]);
                     $this->waypoints[$counter]['lng']  = trim($wptcoord[2]);
                     $coordinates = substr($cells[6], 0, -6);
@@ -370,12 +330,11 @@ class Unpublished
                 $this->long_description .= $this->waypoints[$counter]['type'] . ' - ' . $this->waypoints[$counter]['name'] . '<br />';
                 $this->long_description .= $coordinates . '<br />';
                 $this->long_desc_html    = 'True';
-            } elseif (is_array($this->waypoints) && array_key_exists($counter, $this->waypoints)) {
+            }
+            elseif(is_array($this->waypoints) && array_key_exists($counter, $this->waypoints)) {
                 $this->waypoints[$counter]['note'] = trim($cells[2]);
                 $this->long_description .= $this->waypoints[$counter]['note'] . '<br />';
             }
         }
-
-        return $this;
     }
 }
