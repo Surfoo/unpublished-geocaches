@@ -97,6 +97,8 @@ class Unpublished
                      'long_desc_html' => $this->long_desc_html,
                      'encoded_hints' => $this->encoded_hints,
                      'attributes' => $this->attributes,
+                     'additional_waypoints' => $this->waypoints,
+                     'time' => date('c')
             );
     }
 

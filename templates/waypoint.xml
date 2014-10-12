@@ -28,3 +28,4 @@
       <groundspeak:encoded_hints>{{ encoded_hints }}</groundspeak:encoded_hints>
     </groundspeak:cache>
   </wpt>
+{% include 'additional_waypoint.xml' %}
