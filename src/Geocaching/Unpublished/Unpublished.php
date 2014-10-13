@@ -40,18 +40,15 @@ class Unpublished
 
     public $errors = array();
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->list_attributes = json_decode(file_get_contents(ROOT . '/attributes.json'));
     }
 
-    public function setRawHtml($content)
-    {
+    public function setRawHtml($content) {
         $this->raw_html = $content;
     }
 
-    public function getCacheDetails()
-    {
+    public function getCacheDetails() {
         global $header;
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, sprintf(URL_GEOCACHE, $this->guid));
@@ -72,8 +69,7 @@ class Unpublished
         return $this->raw_html;
     }
 
-    public function getGeocacheDatas()
-    {
+    public function getGeocacheDatas() {
         return array('guid' => $this->guid,
                      'cache_id' => $this->cache_id,
                      'date' => $this->date,
@@ -102,8 +98,7 @@ class Unpublished
             );
     }
 
-    public function setSomeBasicInformations()
-    {
+    public function setSomeBasicInformations() {
         if (!$this->name) {
             return false;
         }
@@ -138,8 +133,7 @@ class Unpublished
         $this->date = date('c', mktime(0, 0, 0, $d[0], $d[1], $d[2]));
     }
 
-    public function setGuid()
-    {
+    public function setGuid() {
         if (!$this->raw_html) {
             return false;
         }
@@ -150,8 +144,7 @@ class Unpublished
         }
     }
 
-    public function setGcCode()
-    {
+    public function setGcCode() {
         if (!$this->raw_html || !is_null($this->name)) {
             return false;
         }
@@ -164,8 +157,7 @@ class Unpublished
         return false;
     }
 
-    public function setCoordinates()
-    {
+    public function setCoordinates() {
         if (!$this->raw_html) {
             return false;
         }
@@ -177,8 +169,7 @@ class Unpublished
         }
     }
 
-    public function setCacheId()
-    {
+    public function setCacheId() {
         if (!$this->raw_html) {
             return false;
         }
@@ -189,22 +180,35 @@ class Unpublished
         }
     }
 
-    public function setLocationUsername()
-    {
+    public function setLocation() {
         if (!$this->raw_html) {
             return false;
         }
-        if (preg_match('/<title>\s*.*\((.*)\) in ([.+])?[,\s]?(.*) created by (.*)\s*<\/title>/msU', $this->raw_html, $matches)) {
-            $this->state = $matches[2];
-            $this->country = $matches[3];
-            $this->placed_by = $matches[4];
+        if (preg_match('#<span id="ctl00_ContentBody_Location">In ([^,]+)[,\s]*(.*)</span>#', $this->raw_html, $matches)) {
+            if ($matches[2] == '') {
+                $this->state   = '';
+                $this->country = $matches[1];
+            } else {
+                $this->state   = $matches[1];
+                $this->country = $matches[2];
+            }
         } else {
-            $this->errors[] = 'Unable to retrieve State, Country and Placed By.';
+            $this->errors[] = 'Unable to retrieve State, Country.';
         }
     }
 
-    /*public function setOwnerId()
-    {
+    public function setUsername() {
+        if (!$this->raw_html) {
+            return false;
+        }
+        if (preg_match('#<div id="ctl00_ContentBody_mcd1">[^<]+<a href="[^"]+">([^<]+)</a>#msU', $this->raw_html, $matches)) {
+            $this->placed_by = $matches[1];
+        } else {
+            $this->errors[] = 'Unable to retrieve Placed By.';
+        }
+    }
+
+    /*public function setOwnerId() {
         if (!$this->raw_html) {
             return false;
         }
@@ -215,53 +219,50 @@ class Unpublished
         }
     }*/
 
-    public function setShortDescription()
-    {
+    public function setShortDescription() {
         if (!$this->raw_html) {
             return false;
         }
-        if (preg_match('/<span id="ctl00_ContentBody_ShortDescription">(.*)<\/span>/msU', $this->raw_html, $short_description)) {
+        if (preg_match('#<span id="ctl00_ContentBody_ShortDescription">(.*)</span>\s*</div>#msU', $this->raw_html, $short_description)) {
             $this->short_description = str_ireplace("\x0D", "", trim($short_description[1]));
             $this->short_desc_html   = ($this->short_description != strip_tags($this->short_description)) ? 'True' : 'False';
         } else {
-            $this->errors[] = 'Unable to retrieve the Short Description.';
+            $this->errors[] = 'Unable to retrieve Short Description.';
         }
     }
 
-    public function setLongDescription()
-    {
+    public function setLongDescription() {
         if (!$this->raw_html) {
             return false;
         }
-        if (preg_match('/<div class="UserSuppliedContent">\s*<span id="ctl00_ContentBody_LongDescription">(.*)<\/span>\s*<\/div>/msU', $this->raw_html, $long_description)) {
+        if (preg_match('#<span id="ctl00_ContentBody_LongDescription">(.*?)</span>\s*</div>\s*<p>\s*</p>\s*<p id="ctl00_ContentBody_hints">#msU', $this->raw_html, $long_description)) {
             $this->long_description = str_ireplace("\x0D", "", trim($long_description[1]));
             $this->long_desc_html   = ($this->long_description != strip_tags($this->long_description)) ? 'True' : 'False';
         } else {
-            $this->errors[] = 'Unable to retrieve the Long Description.';
+            $this->errors[] = 'Unable to retrieve Long Description.';
         }
     }
 
-    public function setEncodedHints()
-    {
+    public function setEncodedHints() {
         if (!$this->raw_html) {
             return false;
         }
-        if (preg_match('/<div.*?id="div_hint" class="span-8 WrapFix">\s*(.*)\s*<\/div>/msU', $this->raw_html, $hint)) {
+        if (preg_match('#<div id="div_hint"[^>]*>(.*)</div>#msU', $this->raw_html, $hint)) {
             $this->encoded_hints = str_ireplace("\x0D", '', trim($hint[1]));
             $this->encoded_hints = str_replace(array('<br />', '<br>'), "\n", $this->encoded_hints);
 
             $chars = str_split($this->encoded_hints);
             $encode = true;
-            foreach($chars as &$char) {
-                if(in_array($char, array('[', '<'))) {
+            foreach ($chars as &$char) {
+                if (in_array($char, array('[', '<'))) {
                     $encode = false;
                     continue;
                 }
-                if(in_array($char, array(']', '>'))) {
+                if (in_array($char, array(']', '>'))) {
                     $encode = true;
                     continue;
                 }
-                if($encode) {
+                if ($encode) {
                     $char = str_rot13($char);
                 }
             }
@@ -271,8 +272,7 @@ class Unpublished
         }
     }
 
-    public function setAttributes()
-    {
+    public function setAttributes() {
         if (!$this->raw_html) {
             return false;
         }
@@ -289,8 +289,7 @@ class Unpublished
         }
     }
 
-    public function setWaypoints()
-    {
+    public function setWaypoints() {
         if (!$this->raw_html || !preg_match('/<table class="Table" id="ctl00_ContentBody_Waypoints">\s*(.*)\s*<\/table>/msU',
                                             $this->raw_html, $waypoint_html)) {
             return false;
@@ -307,11 +306,11 @@ class Unpublished
 
         foreach ($lines[1] as $key => $line) {
             preg_match_all('/<td.*>(.*)<\/td>/msU', $line, $cells);
+
             $cells = array_map('trim', $cells[1]);
-            if($key % 2 == 0) {
+            if ($key % 2 == 0) {
                 $counter++;
 
-                preg_match('/lat=([\d.]*)&amp;lng=([\d.]*)/', $cells[7], $wptcoord);
                 preg_match('/\((.*)\)/', $cells[5], $wpttype);
                 preg_match('/>(.*)<\/a>/', $cells[5], $wptname);
                 preg_match('/wpt.aspx\?WID=([a-z0-9-]*)/i', $cells[5], $wptwid);
@@ -323,20 +322,40 @@ class Unpublished
                 $this->waypoints[$counter]['wid']  = trim($wptwid[1]);
 
                 $coordinates = '';
-                if(strpos($cells[6], '???') !== 0) {
-                    $this->waypoints[$counter]['lat']  = trim($wptcoord[1]);
-                    $this->waypoints[$counter]['lng']  = trim($wptcoord[2]);
+                if (strpos($cells[6], '???') !== 0) {
+                    preg_match_all('/([NSWE\d]+)/', $cells[6], $numbers);
+                    $decimalCoordinates = $this->degreeDecimalToDecimal($numbers[0]);
+                    $this->waypoints[$counter]['lat']  = $decimalCoordinates['latitude'];
+                    $this->waypoints[$counter]['lng']  = $decimalCoordinates['longitude'];
                     $coordinates = substr($cells[6], 0, -6);
                 }
 
                 $this->long_description .= $this->waypoints[$counter]['type'] . ' - ' . $this->waypoints[$counter]['name'] . '<br />';
                 $this->long_description .= $coordinates . '<br />';
                 $this->long_desc_html    = 'True';
-            }
-            elseif(is_array($this->waypoints) && array_key_exists($counter, $this->waypoints)) {
-                $this->waypoints[$counter]['note'] = trim($cells[2]);
+            } elseif (is_array($this->waypoints) && array_key_exists($counter, $this->waypoints)) {
+                $this->waypoints[$counter]['note'] = $this->br2nl(trim($cells[2]));
                 $this->long_description .= $this->waypoints[$counter]['note'] . '<br />';
             }
         }
     }
+
+    protected function degreeDecimalToDecimal(array $coordinates) {
+        $longitude = $coordinates[5] + round((($coordinates[6] . '.' . $coordinates[7]) / 60), 5);
+        if (strtoupper($coordinates[4]) == 'W') {
+            $longitude *=-1;
+        }
+        $latitude = $coordinates[1] + round((($coordinates[2] . '.' . $coordinates[3]) / 60), 5);
+        if (strtoupper($coordinates[0]) == 'S') {
+            $latitude *=-1;
+        }
+
+        return array('longitude' => $longitude,
+                     'latitude'  => $latitude);
+    }
+
+    protected function br2nl($string) {
+        return preg_replace('#<br\s*?/?>#i', "\n", $string);
+    }
+
 }

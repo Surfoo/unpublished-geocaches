@@ -47,14 +47,21 @@ label {
 tr th {
     background-color: #D0E3F0;
 }
-
+.link a {
+    display: block;
+}
 .head-pick,
+.head-link,
+.link,
 #table-caches tbody td:first-child,
 #table-caches tbody td:last-child,
 #table-caches-gm tbody td:first-child {
     text-align: center;
 }
-
+#table-caches label, #table-caches-gm label {
+    display: block;
+    cursor: pointer;
+}
 #table-unpublished-caches, #table-unpublished-caches-gm,
 #fetching-unpublished-caches {
     display: none;

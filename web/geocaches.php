@@ -27,7 +27,8 @@ $unpublished->setSomeBasicInformations();
 
 $unpublished->setCoordinates();
 $unpublished->setCacheId();
-$unpublished->setLocationUsername();
+$unpublished->setLocation();
+$unpublished->setUsername();
 //$unpublished->setOwnerId();
 $unpublished->setShortDescription();
 $unpublished->setLongDescription();
@@ -42,18 +43,10 @@ if (!empty($unpublished->errors)) {
 $loader = new Twig_Loader_Filesystem(TEMPLATE_DIR);
 $twig   = new Twig_Environment($loader);
 
-$gpx_file = $twig->render('waypoint.xml', $unpublished->getGeocacheDatas());
+$gpx_file = trim($twig->render('waypoint.xml', $unpublished->getGeocacheDatas()));
 
 $hd = fopen(sprintf(WAYPOINT_FILENAME, $unpublished->guid), 'w');
 fwrite($hd, $gpx_file);
 fclose($hd);
 
-$additional_waypoints = false;
-if(is_array($unpublished->waypoints)) {
-    $waypoint_file = $twig->render('additional_waypoint.xml', array('additional_waypoints' => $unpublished->waypoints, 'time' => date('c')));
-    $hd = fopen(sprintf(ADDITIONAL_WAYPOINT_FILENAME, $unpublished->guid), 'w');
-    fwrite($hd, $waypoint_file);
-    fclose($hd);
-    $additional_waypoints = true;
-}
-renderAjax(array('success' => true, 'guid' => $unpublished->guid, 'additional_waypoints' => $additional_waypoints));
+renderAjax(array('success' => true, 'guid' => $unpublished->guid));

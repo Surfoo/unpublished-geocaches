@@ -3,6 +3,7 @@
 
     var fetchUnpublishedCaches = function() {
         $('#refresh-cache').button('loading');
+        $('#create-gpx').button('reset');
         $.ajax({
             url: 'unpublished.php',
             success: function(data) {
@@ -23,6 +24,7 @@
                             .append('<tr class="' + guid + '">\n' +
                                 '   <td><input type="checkbox" name="cache" class="unpublished-geocache" value="' + guid + '" id="' + guid + '" /></td>\n' +
                                 '   <td><label for="' + guid + '">' + title + '</label></td>\n' +
+                                '   <td class="link"><a href="http://www.geocaching.com/seek/cache_details.aspx?guid=' + guid + '" title="View on geocaching.com"><span class="glyphicon glyphicon-new-window"></span></a></td>\n' +
                                 '   <td class="status"> </td>\n' +
                                 '</tr>\n');
                     });
@@ -53,6 +55,7 @@
                                 .append('<tr>\n' +
                                     '   <td><input type="checkbox" name="cache-gm" class="unpublished-geocache-gm" value="' + guid + '" id="' + guid + '-gm" /></td>\n' +
                                     '   <td><label for="' + guid + '-gm">' + title + '</label></td>\n' +
+                                    '   <td class="link"><a href="http://www.geocaching.com/seek/cache_details.aspx?guid=' + guid + '" title="View on geocaching.com"><span class="glyphicon glyphicon-new-window"></span></a></td>\n' +
                                     '</tr>\n');
                         });
                     }
@@ -222,9 +225,6 @@
                     success: function(data) {
                         if (data && data.success) {
                             $('#download-links').append(data.link);
-                            if (data.link_wpts) {
-                                $('#download-links').append('&nbsp;' + data.link_wpts);
-                            }
                         }
                     }
                 });
@@ -259,9 +259,6 @@
                 success: function(data) {
                     if (data && data.success) {
                         $('#download-links-gm').append(data.link);
-                        if (data.link_wpts) {
-                            $('#download-links-gm').append('&nbsp;' + data.link_wpts);
-                        }
                     }
                 }
             });
