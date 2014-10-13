@@ -55,7 +55,7 @@ $hd = fopen($gpx_filename, 'w');
 fwrite($hd, $gpx_file);
 fclose($hd);
 
-$link = '<a href="gpx/' . basename($gpx_filename) . '" class="btn btn-success" id="' . $id_link .'">Download GPX</a>';
+$link = '<a href="gpx/' . basename($gpx_filename) . '" class="btn btn-success" id="' . $id_link .'"><span class="glyphicon glyphicon-download"></span> Download GPX</a>';
 
 renderAjax(array('success' => true,
                  'link' => $link));

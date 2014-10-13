@@ -63,10 +63,10 @@
                             {% if logged == 'false' %}
                                 <input type="text" id="username" class="form-control input-sm" placeholder="Geocaching Username" required>
                                 <input type="password" id="password" class="form-control input-sm" placeholder="Geocaching Password" autocomplete="on" required>
-                                <button type="button" data-loading-text="Loading..." data-signout-text="Sign out" class="btn btn-primary btn-sm" id="login">Sign in</button>
+                                <button type="button" data-loading-text="Loading..." data-signout-text="Sign out" class="btn btn-default btn-sm" id="login">Sign in</button>
                             {% else %}
                                 <span id="signin" >Hello {{ username }}!</span>
-                                <button type="button" data-loading-text="Loading..." class="btn btn-primary btn-sm" id="login">Sign out</button>
+                                <button type="button" data-loading-text="Loading..." class="btn btn-default btn-sm" id="login">Sign out</button>
                             {% endif %}
                         </form>
                     </header>
@@ -91,8 +91,8 @@
                                 </thead>
                                 <tbody></tbody>
                             </table>
-                            <button type="submit" class="btn btn-primary" data-loading-text="Refreshing..." id="refresh-cache">Refresh the list</button>
-                            <button type="submit" class="btn btn-primary" data-loading-text="Creating..." id="create-gpx">Create a GPX</button>
+                            <button type="submit" class="btn btn-primary" data-loading-text="Refreshing..." id="refresh-cache"><span class="glyphicon glyphicon-refresh"></span> Refresh the list</button>
+                            <button type="submit" class="btn btn-primary" data-loading-text="Creating..." id="create-gpx"><span class="glyphicon glyphicon-ok-circle"></span> Create GPX</button>
                             <span id="download-links"></span>
                         </div>
                     </div>
@@ -114,8 +114,8 @@
                                 </thead>
                                 <tbody></tbody>
                             </table>
-                            <button type="submit" class="btn btn-primary" data-loading-text="Refreshing..." id="refresh-cache-gm">Refresh the list</button>
-                            <button type="submit" class="btn btn-primary" data-loading-text="Creating..." id="create-gpx-gm">Create a GPX</button>
+                            <button type="submit" class="btn btn-primary" data-loading-text="Refreshing..." id="refresh-cache-gm"><span class="glyphicon glyphicon-refresh"></span> Refresh the list</button>
+                            <button type="submit" class="btn btn-primary" data-loading-text="Creating..." id="create-gpx-gm"><span class="glyphicon glyphicon-ok-circle"></span> Create GPX</button>
                             <span id="download-links-gm"></span>
                         </div>
                     </div>

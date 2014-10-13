@@ -2,37 +2,37 @@
     'use strict';
 
     var fetchUnpublishedCaches = function() {
-        $('#refresh-cache').button('loading');
-        $('#create-gpx').button('reset');
-        $.ajax({
-            url: 'unpublished.php',
-            success: function(data) {
-                $('#select-all').prop('checked', false);
-                $('#fetching-unpublished-caches').hide();
-                $('#refresh-cache').button('reset');
-                if (!data || data === '' || typeof data !== 'object') {
-                    return false;
-                }
-                if (data && !data.success) {
-                    alert(data.message);
-                } else {
-                    $('#table-unpublished-caches').show();
-                    $('#table-caches tbody').html('');
+            $('#refresh-cache').button('loading');
+            $('#create-gpx').button('reset');
+            $.ajax({
+                url: 'unpublished.php',
+                success: function(data) {
+                    $('#select-all').prop('checked', false);
+                    $('#fetching-unpublished-caches').hide();
+                    $('#refresh-cache').button('reset');
+                    if (!data || data === '' || typeof data !== 'object') {
+                        return false;
+                    }
+                    if (data && !data.success) {
+                        alert(data.message);
+                    } else {
+                        $('#table-unpublished-caches').show();
+                        $('#table-caches tbody').html('');
 
-                    $.each(data.unpublishedCaches, function(guid, title) {
-                        $('#table-caches tbody')
-                            .append('<tr class="' + guid + '">\n' +
-                                '   <td><input type="checkbox" name="cache" class="unpublished-geocache" value="' + guid + '" id="' + guid + '" /></td>\n' +
-                                '   <td><label for="' + guid + '">' + title + '</label></td>\n' +
-                                '   <td class="link"><a href="http://www.geocaching.com/seek/cache_details.aspx?guid=' + guid + '" title="View on geocaching.com"><span class="glyphicon glyphicon-new-window"></span></a></td>\n' +
-                                '   <td class="status"> </td>\n' +
-                                '</tr>\n');
-                    });
-                    $('#table-caches tbody').show();
+                        $.each(data.unpublishedCaches, function(guid, title) {
+                            $('#table-caches tbody')
+                                .append('<tr class="' + guid + '">\n' +
+                                    '   <td><input type="checkbox" name="cache" class="unpublished-geocache" value="' + guid + '" id="' + guid + '" /></td>\n' +
+                                    '   <td><label for="' + guid + '">' + title + '</label></td>\n' +
+                                    '   <td class="link"><a href="http://www.geocaching.com/seek/cache_details.aspx?guid=' + guid + '" title="View on geocaching.com"><span class="glyphicon glyphicon-new-window"></span></a></td>\n' +
+                                    '   <td class="status"> </td>\n' +
+                                    '</tr>\n');
+                        });
+                        $('#table-caches tbody').show();
+                    }
                 }
-            }
-        });
-    },
+            });
+        },
 
         fetchUnpublishedCachesFromGM = function() {
             //$('#unpublishedCachesBlock-gm').show();
