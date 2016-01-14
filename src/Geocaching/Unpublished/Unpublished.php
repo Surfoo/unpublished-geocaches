@@ -184,8 +184,8 @@ class Unpublished
         if (!$this->raw_html) {
             return false;
         }
-        if (preg_match('#<span id="ctl00_ContentBody_Location">[^\s]+ ([^,]+)[,\s]*(.*)</span>#', $this->raw_html, $matches)) {
-            if ($matches[2] == '') {
+        if (preg_match('#<span id="ctl00_ContentBody_Location">In ([^<,]+),?\s?([^<]*)?<#', $this->raw_html, $matches)) {
+            if (!isset($matches[2]) || $matches[2] == '') {
                 $this->state   = '';
                 $this->country = $matches[1];
             } else {
