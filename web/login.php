@@ -26,10 +26,10 @@ $hd = fopen($_SESSION['cookie'], 'w');
 fclose($hd);
 $postdata = array('__EVENTTARGET'      => '',
                   '__EVENTARGUMENT'    => '',
-                  'ctl00$tbUsername'   => $_POST['username'],
-                  'ctl00$tbPassword'   => $_POST['password'],
-                  'ctl00$cbRememberMe' => 'On',
-                  'ctl00$btnSignIn'    => 'Login');
+                  'ctl00$ContentBody$tbUsername'   => $_POST['username'],
+                  'ctl00$ContentBody$tbPassword'   => $_POST['password'],
+                  'ctl00$ContentBody$cbRememberMe' => 'On',
+                  'ctl00$ContentBody$btnSignIn'    => 'Login');
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, URL_LOGIN);
 curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
