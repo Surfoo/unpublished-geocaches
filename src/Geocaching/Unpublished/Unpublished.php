@@ -184,13 +184,17 @@ class Unpublished
         if (!$this->raw_html) {
             return false;
         }
-        if (preg_match('#<span id="ctl00_ContentBody_Location">[^\s]+ ([^<,]+),?\s?([^<]*)?<#', $this->raw_html, $matches)) {
-            if (!isset($matches[2]) || $matches[2] == '') {
+
+        if (preg_match('#<span id="ctl00_ContentBody_Location">[^\s]+ (?:<a href=[^>]*>)?(.*?)<#', $this->raw_html, $matche)) {
+            if(isset($matche[1])) {
+                $matches = explode(', ', $matche[1]);
+            }
+            if (!isset($matches[1]) || $matches[1] == '') {
                 $this->state   = '';
-                $this->country = $matches[1];
+                $this->country = $matches[0];
             } else {
-                $this->state   = $matches[1];
-                $this->country = $matches[2];
+                $this->state   = $matches[0];
+                $this->country = $matches[1];
             }
         } else {
             $this->errors[] = 'Unable to retrieve State, Country.';
