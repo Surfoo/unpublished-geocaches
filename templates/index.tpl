@@ -42,6 +42,10 @@
                         <h5><strong>3rd method:</strong></h5>
                         <div class="method">The "Unpublished Geocaches" app is free and open source, you can <a href="https://github.com/Surfoo/unpublished-geocaches">download the code from GitHub</a> and use it on your own server.
                         </div>
+
+                        <h5><strong>Any questions?</strong></h5>
+                        <div class="method">You can also contact me: surfooo at gmail dot com
+                        </div>
                     </div>
                 </div>
             </div>
