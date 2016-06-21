@@ -1,6 +1,7 @@
 // ==UserScript==
 // @name            Unpublished-Geocaches
 // @namespace       https://www.geocaching.com
+// @author          Surfoo
 // @description     Fetch unpublished geocaches
 // @include         https://www.geocaching.com/geocache/*
 // @updateURL       https://unpublished.vaguelibre.net/unpublished.user.js
