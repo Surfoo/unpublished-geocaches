@@ -4,7 +4,7 @@
 // @description     Fetch unpublished geocaches
 // @include         https://www.geocaching.com/geocache/*
 // @updateURL       https://unpublished.vaguelibre.net/unpublished.user.js
-// @version         1.1
+// @version         1.1.1
 // @grant           GM_xmlhttpRequest
 // ==/UserScript==
 
