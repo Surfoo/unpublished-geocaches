@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name            Unpublished-Geocaches
-// @namespace       http://www.geocaching.com
+// @namespace       https://www.geocaching.com
 // @description     Fetch unpublished geocaches
-// @include         http://www.geocaching.com/geocache/*
-// @updateURL       http://unpublished.vaguelibre.net/unpublished.user.js
+// @include         https://www.geocaching.com/geocache/*
+// @updateURL       https://unpublished.vaguelibre.net/unpublished.user.js
 // @version         1.1
 // @grant           GM_xmlhttpRequest
 // ==/UserScript==
@@ -21,7 +21,7 @@ var button = document.getElementById("SendToUnpublishedGeocaches");
 button.addEventListener('click', function() {
     GM_xmlhttpRequest({
     method: "POST",
-    url: "http://unpublished.vaguelibre.net/gm.php",
+    url: "https://unpublished.vaguelibre.net/gm.php",
     data: "content=" + encodeURIComponent(document.documentElement.innerHTML),
     headers: {
         "Content-Type": "application/x-www-form-urlencoded"

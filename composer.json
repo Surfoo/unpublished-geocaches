@@ -19,8 +19,8 @@
     },
     "require": {
         "php": ">=5.3",
-        "twig/twig": "1.*",
-        "twbs/bootstrap": "^3.3"
+        "twig/twig": "~1.24",
+        "twbs/bootstrap": "~3.3"
     },
     "scripts": {
       "post-update-cmd": "cp -r vendor/twbs/bootstrap/dist/* web/bootstrap/"
