@@ -32,10 +32,12 @@
 
                         <h5><strong>2nd method:</strong></h5>
                         <div class="method">
-                            <p>This method is slower than the first, but doesn't require your password.<br />
-                                You must use <a href="https://addons.mozilla.org/fr/firefox/addon/greasemonkey/" onclick="window.open(this.href);return false;">the greasemonkey addon</a> (for Firefox) and install the <a href="unpublished.user.js" onclick="window.open(this.href);return false;">Unpublished Geocaches script</a>.
-                            </p>
-                            <p>After installation, a "Send to Unpublished Geocaches" button appears on your caches listing, just click it, and the content of the webpage will be sent to this web app.<br />
+                            <p>This method is slower than the first, but doesn't require your password.<p>
+                            <ul>
+                                <li><strong>For Firefox users:</strong> First, you must install <a href="https://addons.mozilla.org/fr/firefox/addon/greasemonkey/" onclick="window.open(this.href);return false;">the greasemonkey addon</a>.</li>
+                                <li><strong>For Chrome users:</strong> First, you must install <a href="https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=fr" onclick="window.open(this.href);return false;">the tampermonkey addon</a>.</li>
+                            </ul>
+                            <p>Then install the <a href="/unpublished.user.js" onclick="window.open(this.href);return false;">Unpublished Geocaches script</a>. After installation, a "Send to Unpublished Geocaches" button appears on your caches listing, just click it, and the content of the webpage will be sent to this web app.<br />
                             Refresh the page, and titles of your sent caches appear.</p>
                         </div>
 
