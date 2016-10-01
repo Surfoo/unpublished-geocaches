@@ -1,6 +1,8 @@
 (function() {
     'use strict';
 
+    var cacheBlockTitle = 'From your account';
+
     var fetchUnpublishedCaches = function() {
             $('#refresh-cache').button('loading');
             $('#create-gpx').button('reset');
@@ -19,15 +21,19 @@
                         $('#table-unpublished-caches').show();
                         $('#table-caches tbody').html('');
 
+                        var counter = 0;
                         $.each(data.unpublishedCaches, function(guid, title) {
                             $('#table-caches tbody')
                                 .append('<tr class="' + guid + '">\n' +
+                                    '   <td>#' + (++counter) + '</td>\n' +
                                     '   <td><input type="checkbox" name="cache" class="unpublished-geocache" value="' + guid + '" id="' + guid + '" /></td>\n' +
                                     '   <td><label for="' + guid + '">' + title + '</label></td>\n' +
                                     '   <td class="link"><a href="http://www.geocaching.com/seek/cache_details.aspx?guid=' + guid + '" title="View on geocaching.com"><span class="glyphicon glyphicon-new-window"></span></a></td>\n' +
                                     '   <td class="status"> </td>\n' +
                                     '</tr>\n');
                         });
+                        $('#unpublishedCachesBlock h4').html(cacheBlockTitle + ' (' + data.count + ')');
+
                         $('#table-caches tbody').show();
                     }
                 }
@@ -147,6 +153,18 @@
         $(this).button('reset');
     });
 
+    $('#chk_split').change(function(e) {
+        if (!$(this).prop('checked')) {
+            $('#block_split input[type=range]').prop('disabled', true);
+        } else {
+            $('#block_split input[type=range]').prop('disabled', false);
+        }
+    });
+
+    $('#block_split input[type=range]').change(function(e) {
+        $('label[for=chk_split]').html('Split GPX files by ' + $(this).val() + ' geocaches');
+    });
+
     $('#create-gpx').click(function() {
         var list = [],
             create = $(this);
@@ -166,13 +184,20 @@
         $('#table-caches .status').html('');
         create.button('loading');
 
+        var count = 0;
         var getGeocache = function(guid) {
+            var jsonData = {
+                'guid': guid
+            };
+
+            if ($('#chk_split').prop('checked')) {
+                jsonData.split = $('#block_split input[type=range]').val();
+            }
+
             return $.ajax({
                 url: 'geocaches.php',
                 type: 'POST',
-                data: {
-                    'guid': guid
-                },
+                data: jsonData,
                 beforeSend: function() {
                     $('.' + guid + ' .status').html('<img src="loader.gif" alt="">');
                 },
@@ -184,6 +209,8 @@
                         $('.' + data.guid).addClass('danger');
                         $('.' + data.guid + ' .status').html('<span class="glyphicon glyphicon-remove" data-content="' + data.message + '"></span>');
                     }
+
+                    $('#create-gpx').html('Creating... ' + (++count / list.length * 100).toFixed(0) + '%');
                 }
             });
         };
@@ -216,12 +243,16 @@
             });
 
             if (gpx.length > 0) {
+                var jsonData = {
+                    'guid': gpx
+                };
+                if ($('#chk_split').prop('checked')) {
+                    jsonData.split = $('#block_split input[type=range]').val();
+                }
                 $.ajax({
                     url: 'download.php',
                     type: 'POST',
-                    data: {
-                        'guid': gpx
-                    },
+                    data: jsonData,
                     success: function(data) {
                         if (data && data.success) {
                             $('#download-links').append(data.link);

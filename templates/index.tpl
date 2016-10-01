@@ -71,7 +71,7 @@
                                 <input type="password" id="password" class="form-control input-sm" placeholder="Geocaching Password" autocomplete="on" required>
                                 <button type="button" data-loading-text="Loading..." data-signout-text="Sign out" class="btn btn-default btn-sm" id="login">Sign in</button>
                             {% else %}
-                                <span id="signin" >Hello {{ username }}!</span>
+                                <span id="signin">Hello {{ username }}!</span>
                                 <button type="button" data-loading-text="Loading..." class="btn btn-default btn-sm" id="login">Sign out</button>
                             {% endif %}
                         </form>
@@ -89,6 +89,7 @@
                             <table id="table-caches" class="table table-hover table-condensed">
                                 <thead>
                                     <tr>
+                                        <th></th>
                                         <th class="head-pick"><input type="checkbox" id="select-all" title="Select All" /></th>
                                         <th class="head-title">Title</th>
                                         <th class="head-link">Link</th>
@@ -96,10 +97,28 @@
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
+                                <thead>
+                                    <tr>
+                                        <td colspan="5">
+                                            <button type="submit" class="btn btn-primary" data-loading-text="Refreshing..." id="refresh-cache"><span class="glyphicon glyphicon-refresh"></span> Refresh the list</button>
+                                        </td>
+                                    </tr>
+                                </thead>
                             </table>
-                            <button type="submit" class="btn btn-primary" data-loading-text="Refreshing..." id="refresh-cache"><span class="glyphicon glyphicon-refresh"></span> Refresh the list</button>
-                            <button type="submit" class="btn btn-primary" data-loading-text="Creating..." id="create-gpx"><span class="glyphicon glyphicon-ok-circle"></span> Create GPX</button>
-                            <span id="download-links"></span>
+                            
+                            <fieldset>
+                                <legend>Create your GPX File</legend>
+
+                                <div id="block_split">
+                                    <span>
+                                        <input type="checkbox" id="chk_split"> <label for="chk_split">Split GPX files by 100 geocaches</label>
+                                    </span>
+                                    <input type="range" value="100" min="5" max="500" step="5" name="">
+                                </div>
+
+                                <button type="submit" class="btn btn-primary" data-loading-text="Creating... 0%" id="create-gpx"><span class="glyphicon glyphicon-ok-circle"></span> Create GPX</button>
+                                <ul id="download-links"></ul>
+                            </fieldset>
                         </div>
                     </div>
 

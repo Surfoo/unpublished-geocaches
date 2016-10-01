@@ -63,6 +63,12 @@ tr th {
     display: block;
     cursor: pointer;
 }
+#table-caches tbody tr td:nth-child(1) {
+    text-align: right;
+}
+#table-caches tbody tr td:nth-child(2) {
+    text-align: center;
+}
 #table-unpublished-caches, #table-unpublished-caches-gm,
 #fetching-unpublished-caches {
     display: none;
@@ -77,4 +83,29 @@ tr th {
 }
 .method {
     padding-left: 1em;
+}
+#block_split {
+    margin-bottom: 10px;
+}
+#block_split span {
+    display: inline-block;
+}
+#block_split input[type="range"] {
+    display: inline;
+    margin-left: 20px;
+    position: relative;
+    top: 5px;
+    width: 280px;
+}
+
+#download-links {
+    margin-top: 1em;
+    padding-left: 0;
+}
+#download-links li {
+    list-style-type: none;
+    margin-bottom: 0.4em;
+}
+label[for=chk_split] {
+    width: 210px;
 }

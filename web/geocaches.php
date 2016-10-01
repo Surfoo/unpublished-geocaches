@@ -11,13 +11,22 @@ if (!array_key_exists('HTTP_X_REQUESTED_WITH', $_SERVER) || $_SERVER['HTTP_X_REQ
 $errors = array();
 
 $unpublished = new Unpublished();
+
 $cache['guid'] = $_POST['guid'];
 $unpublished->guid = $_POST['guid'];
 
-$content = $unpublished->getCacheDetails();
-if (!$content) {
-    renderAjax(array('success' => false, 'message' => 'Request error: ' . curl_error($ch)));
+if(!isset($_SESSION['counter'])) {
+    $_SESSION['counter'] = 0;
 }
+
+if(++$_SESSION['counter'] >= 500) {
+    sleep(60);
+    $_SESSION['counter'] = 0;
+}
+
+sleep(1);
+
+$unpublished->getCacheDetails();
 
 if (!$unpublished->setGcCode()) {
     renderAjax(array('success' => false, 'guid' => $cache['guid'], 'message' => 'Unable to retrieve the GC code.'));

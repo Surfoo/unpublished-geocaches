@@ -32,4 +32,4 @@ if (empty($unpublishedCaches)) {
     renderAjax(array('success' => false, 'message' => 'Problem during recovery unpublished caches'));
 }
 
-renderAjax(array('success' => true, 'unpublishedCaches' => $unpublishedCaches));
+renderAjax(array('success' => true, 'count' => count($unpublishedCaches), 'unpublishedCaches' => $unpublishedCaches));
