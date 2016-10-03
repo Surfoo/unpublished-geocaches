@@ -32,4 +32,6 @@ if (empty($unpublishedCaches)) {
     renderAjax(array('success' => false, 'message' => 'Problem during recovery unpublished caches'));
 }
 
+asort($unpublishedCaches, SORT_NATURAL);
+
 renderAjax(array('success' => true, 'count' => count($unpublishedCaches), 'unpublishedCaches' => $unpublishedCaches));
