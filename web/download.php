@@ -70,8 +70,14 @@ foreach($waypointsList as $index => $waypoints) {
     $hd = fopen($gpx_filename, 'w');
     fwrite($hd, $gpx_file);
     fclose($hd);
+
+    $linkName = 'Download GPX';
+    if($split > 0 && count($waypointsList) > 1) {
+        $linkName.= ' (part ' . ($index + 1) . ')';
+    }
+
     $links[] = '<li><a href="gpx/' . basename($gpx_filename) . '" class="btn btn-success" id="' . $id_link .'">
-                        <span class="glyphicon glyphicon-download"></span> Download GPX (part ' . ($index + 1) . ')</a></li>';
+                        <span class="glyphicon glyphicon-download"></span> ' . $linkName . '</a></li>';
 }
 
 renderAjax(array('success' => true,
