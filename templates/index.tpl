@@ -7,7 +7,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
         <link rel="stylesheet" href="bootstrap/css/bootstrap-theme.min.css">
-        <link rel="stylesheet" href="css/design.css?20140914">
+        <link rel="stylesheet" href="css/design.css?{{ constant('SUFFIX_CSS_JS') }}">
         <script type="text/javascript">
         var logged = {% if logged == 'false' %}'false'{% else %}'true'{% endif %};
         </script>
