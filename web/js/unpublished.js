@@ -153,7 +153,14 @@
     $('#select-all-gm').click(function() {
         $('.unpublished-geocache-gm').prop('checked', $(this).is(':checked'));
     });
-
+    
+    $('#table-caches tbody').on('click', 'input[type=checkbox]', function(e) {
+        if($('#chk_select').prop('checked') && $(this).prop('checked')) {
+           var countFrom = parseInt($('tr.' + $(this).attr('id') + ' td').html().substr(1), 10),
+               countTo = parseInt($('#block_select input[type=range]').val(), 10) - 1;
+           $('#table-caches tbody tr:nth-child(n+' + (countFrom + 1) + '):nth-child(-n+' + (countFrom + countTo) + ') input[type=checkbox]').prop('checked', true);
+        }
+    });
     $('#refresh-cache').click(function() {
         $('#table-caches tbody').slideUp(400, fetchUnpublishedCaches);
     });
@@ -175,6 +182,18 @@
 
     $('#block_split input[type=range]').change(function(e) {
         $('label[for=chk_split]').html('Split GPX files by ' + $(this).val() + ' geocaches');
+    });
+
+    $('#chk_select').change(function(e) {
+        if (!$(this).prop('checked')) {
+            $('#block_select input[type=range]').prop('disabled', true);
+        } else {
+            $('#block_select input[type=range]').prop('disabled', false);
+        }
+    });
+
+    $('#block_select input[type=range]').change(function(e) {
+        $('label[for=chk_select]').html('Pick ' + $(this).val() + ' geocaches with the 1st geocache picked');
     });
 
     $('#create-gpx').click(function() {
@@ -225,9 +244,6 @@
                 },
                 complete: function(jqXHR, textStatus) {
                     $('#create-gpx').html('Creating... ' + (++count / list.length * 100).toFixed(1) + '%');
-                    if(textStatus !== 'success') {
-                        console.error(jqXHR, textStatus);
-                    }
                 }
             });
         };

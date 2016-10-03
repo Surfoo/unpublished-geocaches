@@ -84,6 +84,13 @@
                 <div class="col-md-6">
                     <div id="unpublishedCachesBlock">
                         <h4>From your account</h4>
+                        <div id="block_select">
+                            <span>
+                                <input type="checkbox" id="chk_select"> <label for="chk_select">Pick 100 geocaches with the 1st geocache picked</label>
+                            </span>
+                            <input type="range" value="100" min="5" max="500" step="5" name="">
+                        </div>
+
                         <div id="fetching-unpublished-caches" class="well well-sm"><img src="loader.gif" alt="" /> Fetching your unpublished caches...</div>
                         <div id="table-unpublished-caches">
                             <table id="table-caches" class="table table-hover table-condensed">

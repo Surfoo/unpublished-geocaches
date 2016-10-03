@@ -84,17 +84,24 @@ tr th {
 .method {
     padding-left: 1em;
 }
-#block_split {
+#block_select, #block_split {
     margin-bottom: 10px;
 }
-#block_split span {
+#block_select span, #block_split span {
     display: inline-block;
 }
+#block_select input[type="range"],
 #block_split input[type="range"] {
     display: inline;
     margin-left: 20px;
     position: relative;
     top: 5px;
+}
+
+#block_select input[type="range"] {
+    width: 180px;
+}
+#block_split input[type="range"] {
     width: 280px;
 }
 
@@ -108,4 +115,7 @@ tr th {
 }
 label[for=chk_split] {
     width: 210px;
+}
+label[for=chk_select] {
+    width: 315px;
 }
