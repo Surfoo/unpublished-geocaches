@@ -21,7 +21,7 @@ define('GPX_FILENAME',      ROOT . '/web/gpx/%s.part%02d.gpx');
 define('COOKIE_FILENAME',   ROOT . '/cookies/cookie_%s');
 define('MAX_RETENTION',     3600 * 24);
 
-define('SUFFIX_CSS_JS', 20161001);
+define('SUFFIX_CSS_JS', '20161003');
 
 require ROOT . '/vendor/autoload.php';
 require ROOT . '/helper.php';

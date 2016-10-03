@@ -36,6 +36,9 @@
 
                         $('#table-caches tbody').show();
                     }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error(jqXHR, textStatus, errorThrown);
                 }
             });
         },
@@ -65,6 +68,9 @@
                                     '</tr>\n');
                         });
                     }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error(jqXHR, textStatus, errorThrown);
                 }
             });
         };
@@ -109,6 +115,9 @@
                     $('#unpublishedCachesBlock').show();
                     $('#fetching-unpublished-caches').show();
                     fetchUnpublishedCaches();
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error(jqXHR, textStatus, errorThrown);
                 }
             });
         } else if ($(this).text() === 'Sign out') {
@@ -129,6 +138,9 @@
                     if (data && data.success) {
                         location.reload();
                     }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error(jqXHR, textStatus, errorThrown);
                 }
             });
         }
@@ -190,12 +202,10 @@
                 'guid': guid
             };
 
-            if ($('#chk_split').prop('checked')) {
-                jsonData.split = $('#block_split input[type=range]').val();
-            }
+            var cacheNumber = $('tr.' + guid + ' td').html().substr(1);
 
             return $.ajax({
-                url: 'geocaches.php',
+                url: 'geocaches.php?n=' + encodeURIComponent(cacheNumber),
                 type: 'POST',
                 data: jsonData,
                 beforeSend: function() {
@@ -209,8 +219,15 @@
                         $('.' + data.guid).addClass('danger');
                         $('.' + data.guid + ' .status').html('<span class="glyphicon glyphicon-remove" data-content="' + data.message + '"></span>');
                     }
-
-                    $('#create-gpx').html('Creating... ' + (++count / list.length * 100).toFixed(0) + '%');
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error(jqXHR, textStatus, errorThrown);
+                },
+                complete: function(jqXHR, textStatus) {
+                    $('#create-gpx').html('Creating... ' + (++count / list.length * 100).toFixed(1) + '%');
+                    if(textStatus !== 'success') {
+                        console.error(jqXHR, textStatus);
+                    }
                 }
             });
         };
@@ -257,6 +274,9 @@
                         if (data && data.success) {
                             $('#download-links').append(data.link);
                         }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.error(jqXHR, textStatus, errorThrown);
                     }
                 });
             }
@@ -291,6 +311,9 @@
                     if (data && data.success) {
                         $('#download-links-gm').append(data.link);
                     }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error(jqXHR, textStatus, errorThrown);
                 }
             });
         }
