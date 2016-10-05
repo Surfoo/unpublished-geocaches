@@ -23,9 +23,10 @@
 
                         var counter = 0;
                         $.each(data.unpublishedCaches, function(guid, title) {
+                            ++counter;
                             $('#table-caches tbody')
-                                .append('<tr class="' + guid + '">\n' +
-                                    '   <td>#' + (++counter) + '</td>\n' +
+                                .append('<tr class="' + guid + '" data-counter="' + counter + '">\n' +
+                                    '   <td>#' + counter + '</td>\n' +
                                     '   <td><input type="checkbox" name="cache" class="unpublished-geocache" value="' + guid + '" id="' + guid + '" /></td>\n' +
                                     '   <td><label for="' + guid + '">' + title + '</label></td>\n' +
                                     '   <td class="link"><a href="http://www.geocaching.com/seek/cache_details.aspx?guid=' + guid + '" title="View on geocaching.com"><span class="glyphicon glyphicon-new-window"></span></a></td>\n' +
@@ -153,12 +154,12 @@
     $('#select-all-gm').click(function() {
         $('.unpublished-geocache-gm').prop('checked', $(this).is(':checked'));
     });
-    
+
     $('#table-caches tbody').on('click', 'input[type=checkbox]', function(e) {
-        if($('#chk_select').prop('checked') && $(this).prop('checked')) {
-           var countFrom = parseInt($('tr.' + $(this).attr('id') + ' td').html().substr(1), 10),
-               countTo = parseInt($('#block_select input[type=range]').val(), 10) - 1;
-           $('#table-caches tbody tr:nth-child(n+' + (countFrom + 1) + '):nth-child(-n+' + (countFrom + countTo) + ') input[type=checkbox]').prop('checked', true);
+        if ($('#chk_select').prop('checked') && $(this).prop('checked')) {
+            var countFrom = parseInt($(this).parents('tr').data("counter"), 10),
+                countTo = parseInt($('#block_select input[type=range]').val(), 10) - 1;
+            $('#table-caches tbody tr:nth-child(n+' + (countFrom + 1) + '):nth-child(-n+' + (countFrom + countTo) + ') input[type=checkbox]').prop('checked', true);
         }
     });
     $('#refresh-cache').click(function() {
@@ -221,7 +222,7 @@
                 'guid': guid
             };
 
-            var cacheNumber = $('tr.' + guid + ' td').html().substr(1);
+            var cacheNumber = $('tr.' + guid).data('counter');
 
             return $.ajax({
                 url: 'geocaches.php?n=' + encodeURIComponent(cacheNumber),
