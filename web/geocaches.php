@@ -5,6 +5,7 @@ require dirname(__DIR__) . '/config.php';
 if (!array_key_exists('HTTP_X_REQUESTED_WITH', $_SERVER) || $_SERVER['HTTP_X_REQUESTED_WITH'] != 'XMLHttpRequest' ||
     !array_key_exists('username', $_SESSION)) {
     header("HTTP/1.0 400 Bad Request");
+    renderAjax(array('success' => false, 'message' => 'Bad request, are you logged?'));
     exit(0);
 }
 
