@@ -76,8 +76,8 @@ foreach($waypointsList as $index => $waypoints) {
         $linkName.= ' (part ' . ($index + 1) . ')';
     }
 
-    $links[] = '<li><a href="gpx/' . basename($gpx_filename) . '" class="btn btn-success" id="' . $id_link .'">
-                        <span class="glyphicon glyphicon-download"></span> ' . $linkName . '</a></li>';
+    $links[] = '<li><a href="gpx/' . basename($gpx_filename) . '" class="btn btn-success" id="' . $id_link .'">' .
+               '<span class="glyphicon glyphicon-download"></span> ' . $linkName . '</a></li>';
 }
 
 renderAjax(array('success' => true,

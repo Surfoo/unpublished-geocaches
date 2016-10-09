@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * renderAjax
+ * @param  array $data
+ * @return string
+ */
 function renderAjax($data) {
     if (!is_array($data)) {
         exit();

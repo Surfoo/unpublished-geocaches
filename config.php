@@ -18,21 +18,11 @@ define('SALT_GM',        'ooNa2aitejeipaiw8iet');
 
 define('WAYPOINT_FILENAME', ROOT . '/waypoints/%s.gpx');
 define('GPX_FILENAME',      ROOT . '/web/gpx/%s.part%02d.gpx');
-define('COOKIE_FILENAME',   ROOT . '/cookies/cookie_%s');
 define('MAX_RETENTION',     3600 * 24);
 
-define('SUFFIX_CSS_JS', '20161003');
+define('SUFFIX_CSS_JS', '20161009');
 
 require ROOT . '/vendor/autoload.php';
 require ROOT . '/helper.php';
 
 session_start();
-
-$header = array();
-$header[] = "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
-$header[] = "User-Agent: Mozilla/5.0 (X11; Linux i686; rv:6.0) Gecko/20100101 Firefox/49.0";
-$header[] = "Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7";
-$header[] = "Accept-Language: fr,fr-fr;q=0.8,en-us;q=0.5,en;q=0.3";
-$header[] = "Keep-Alive: 115";
-$header[] = "Connection: keep-alive";
-$header[] = "Content-type: application/x-www-form-urlencoded;";

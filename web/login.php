@@ -2,6 +2,10 @@
 
 require dirname(__DIR__) . '/config.php';
 
+use GuzzleHttp\Client;
+use GuzzleHttp\Cookie\SessionCookieJar;
+use GuzzleHttp\Cookie\SetCookie;
+
 if (!array_key_exists('HTTP_X_REQUESTED_WITH', $_SERVER) || $_SERVER['HTTP_X_REQUESTED_WITH'] != 'XMLHttpRequest') {
     header("HTTP/1.0 400 Bad Request");
     exit(0);
@@ -9,7 +13,6 @@ if (!array_key_exists('HTTP_X_REQUESTED_WITH', $_SERVER) || $_SERVER['HTTP_X_REQ
 
 // Sign out
 if (array_key_exists('signout', $_POST)) {
-    @unlink(sprintf(COOKIE_FILENAME, md5($_SESSION['username'])));
     $_SESSION = array();
     session_destroy();
     renderAjax(array('success' => true, 'redirect' => true));
@@ -20,37 +23,42 @@ if (!array_key_exists('username', $_POST) || !array_key_exists('username', $_POS
     exit(0);
 }
 
-$_SESSION['cookie'] = sprintf(COOKIE_FILENAME, md5(strtolower(trim($_POST['username']))));
-
-$hd = fopen($_SESSION['cookie'], 'w');
-fclose($hd);
 $postdata = array('__EVENTTARGET'      => '',
                   '__EVENTARGUMENT'    => '',
                   'ctl00$ContentBody$tbUsername'   => $_POST['username'],
                   'ctl00$ContentBody$tbPassword'   => $_POST['password'],
                   'ctl00$ContentBody$cbRememberMe' => 'On',
                   'ctl00$ContentBody$btnSignIn'    => 'Login');
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, URL_LOGIN);
-curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
-curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-curl_setopt($ch, CURLOPT_COOKIEJAR, $_SESSION['cookie']);
-curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-curl_setopt($ch, CURLOPT_POST, 1);
-curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postdata));
-$res = curl_exec($ch);
-if (!$res) {
+
+$cookieJar = new SessionCookieJar('cookie', true);
+$client = new Client([
+    'base_uri' => URL_LOGIN,
+    'timeout'  => 2.0,
+    'cookies' => $cookieJar
+]);
+
+try {
+    $response = $client->request('POST', URL_LOGIN, [
+        'form_params' => $postdata
+    ]);
+} catch(Exception $e) {
+    renderAjax(array('success' => false, 'message' => $e->getMessage()));
+}
+
+
+$htmlResponse = (string) $response->getBody();
+
+if (!$htmlResponse) {
     renderAjax(array('success' => false, 'message' => 'Request error: ' . curl_error($ch)));
 }
-curl_close($ch);
 
-if (!preg_match('/ctl00_ContentBody_lbUsername">.*<strong>(.*)<\/strong>/', $res, $username)) {
-    @unlink($_SESSION['cookie']);
+if (!preg_match('/ctl00_ContentBody_lbUsername">.*<strong>(.*)<\/strong>/', $htmlResponse, $username)) {
     renderAjax(array('success' => false, 'message' => 'Your username/password combination does not match. Make sure you entered your information correctly.'));
 }
 
-$_SESSION['username'] = trim($username[1]);
+$username = trim($username[1]);
 
-renderAjax(array('success' => true, 'username' => $_SESSION['username']));
+$cookieJar->setCookie(new SetCookie(['username' => $username]));
+$_SESSION['username'] = $username;
+
+renderAjax(array('success' => true, 'username' => $username));

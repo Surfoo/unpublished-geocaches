@@ -9,9 +9,13 @@ if (!array_key_exists('HTTP_X_REQUESTED_WITH', $_SERVER) || $_SERVER['HTTP_X_REQ
     exit(0);
 }
 
+use GuzzleHttp\Cookie\SessionCookieJar;
+
 $errors = array();
 
-$unpublished = new Unpublished();
+$cookieJar = new SessionCookieJar('cookie', true);
+
+$unpublished = new Unpublished($cookieJar);
 
 $cache['guid'] = $_POST['guid'];
 $unpublished->guid = $_POST['guid'];
@@ -24,8 +28,6 @@ if(++$_SESSION['counter'] >= 500) {
     sleep(60);
     $_SESSION['counter'] = 0;
 }
-
-sleep(1);
 
 $unpublished->getCacheDetails();
 

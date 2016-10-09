@@ -9,6 +9,9 @@
  * @package Geocaching\Unpublished
  */
 
+use GuzzleHttp\Client;
+use GuzzleHttp\Cookie\SessionCookieJar;
+
 class Unpublished
 {
     protected $raw_html       = null;
@@ -40,35 +43,50 @@ class Unpublished
 
     public $errors = array();
 
-    public function __construct() {
+    /**
+     * __construct
+     * @param SessionCookieJar $cookieJar
+     */
+    public function __construct(SessionCookieJar $cookieJar) {
+        $this->cookie = $cookieJar;
         $this->list_attributes = json_decode(file_get_contents(ROOT . '/attributes.json'));
     }
 
+    /**
+     * set raw HTML
+     * @param string $content
+     */
     public function setRawHtml($content) {
         $this->raw_html = $content;
     }
 
+    /**
+     * getCacheDetails 
+     * @return string $this->raw_html
+     */
     public function getCacheDetails() {
-        global $header;
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, sprintf(URL_GEOCACHE, $this->guid));
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-        curl_setopt($ch, CURLOPT_COOKIEFILE, $_SESSION['cookie']);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        $result = curl_exec($ch);
-        if (!$result) {
-            renderAjax(array('success' => false, 'message' => 'Request error: ' . curl_error($ch)));
+        $client = new Client([
+            'base_uri' => sprintf(URL_GEOCACHE, $this->guid),
+            'timeout'  => 30,
+            'cookies' => $this->cookie
+        ]);
+        try {
+            $response = $client->request('GET', sprintf(URL_GEOCACHE, $this->guid));
+        } catch(Exception $e) {
+            renderAjax(array('success' => false, 'message' => $e->getMessage()));
         }
-        curl_close($ch);
 
-        $this->setRawHtml($result);
+        $htmlResponse = (string) $response->getBody();
+
+        $this->setRawHtml($htmlResponse);
 
         return $this->raw_html;
     }
 
+    /**
+     * getGeocacheDatas
+     * @return void
+     */
     public function getGeocacheDatas() {
         return array('guid' => $this->guid,
                      'cache_id' => $this->cache_id,
@@ -98,25 +116,25 @@ class Unpublished
             );
     }
 
+    /**
+     * setSomeBasicInformations
+     * @return void
+     */
     public function setSomeBasicInformations() {
         if (!$this->name) {
             return false;
         }
-        global $header;
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, sprintf(URL_TILE, mt_rand(1, 4), $this->name));
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        $json_content = curl_exec($ch);
-        if (!$json_content) {
-            renderAjax(array('success' => false, 'message' => 'Request error: ' . curl_error($ch)));
-        }
-        curl_close($ch);
 
-        $infos = json_decode($json_content);
+        $client = new Client([
+            'base_uri' => sprintf(URL_TILE, mt_rand(1, 4), $this->name),
+            'timeout'  => 30,
+            'cookies' => $this->cookie
+        ]);
+
+        $response = $client->request('GET', sprintf(URL_TILE, mt_rand(1, 4), $this->name));
+        $jsonResponse = (string) $response->getBody();
+
+        $infos = json_decode($jsonResponse);
         if (!$infos || !$infos->status) {
             renderAjax(array('success' => false, 'guid' => $this->guid, 'message' => 'Unable to retrieve some informations.'));
         }
@@ -133,6 +151,10 @@ class Unpublished
         $this->date = date('c', mktime(0, 0, 0, $d[0], $d[1], $d[2]));
     }
 
+    /**
+     * setGuid
+     * @return void
+     */
     public function setGuid() {
         if (!$this->raw_html) {
             return false;
@@ -144,6 +166,10 @@ class Unpublished
         }
     }
 
+    /**
+     * setGcCode
+     * @return boolean
+     */
     public function setGcCode() {
         if (!$this->raw_html || !is_null($this->name)) {
             return false;
@@ -157,6 +183,9 @@ class Unpublished
         return false;
     }
 
+    /**
+     * setCoordinates
+     */
     public function setCoordinates() {
         if (!$this->raw_html) {
             return false;
@@ -169,6 +198,9 @@ class Unpublished
         }
     }
 
+    /**
+     * setCacheId
+     */
     public function setCacheId() {
         if (!$this->raw_html) {
             return false;
@@ -180,6 +212,9 @@ class Unpublished
         }
     }
 
+    /**
+     * setLocation
+     */
     public function setLocation() {
         if (!$this->raw_html) {
             return false;
@@ -201,6 +236,9 @@ class Unpublished
         }
     }
 
+    /**
+     * setUsername
+     */
     public function setUsername() {
         if (!$this->raw_html) {
             return false;
@@ -212,6 +250,9 @@ class Unpublished
         }
     }
 
+    /**
+     * setOwnerId
+     */
     /*public function setOwnerId() {
         if (!$this->raw_html) {
             return false;
@@ -223,6 +264,9 @@ class Unpublished
         }
     }*/
 
+    /**
+     * setShortDescription
+     */
     public function setShortDescription() {
         if (!$this->raw_html) {
             return false;
@@ -235,6 +279,9 @@ class Unpublished
         }
     }
 
+    /**
+     * setLongDescription
+     */
     public function setLongDescription() {
         if (!$this->raw_html) {
             return false;
@@ -247,6 +294,9 @@ class Unpublished
         }
     }
 
+    /**
+     * setEncodedHints
+     */
     public function setEncodedHints() {
         if (!$this->raw_html) {
             return false;
@@ -276,6 +326,9 @@ class Unpublished
         }
     }
 
+    /**
+     * setAttributes
+     */
     public function setAttributes() {
         if (!$this->raw_html) {
             return false;
@@ -293,6 +346,9 @@ class Unpublished
         }
     }
 
+    /**
+     * setWaypoints
+     */
     public function setWaypoints() {
         if (!$this->raw_html || !preg_match('/<table class="Table" id="ctl00_ContentBody_Waypoints">\s*(.*)\s*<\/table>/msU',
                                             $this->raw_html, $waypoint_html)) {
@@ -344,6 +400,11 @@ class Unpublished
         }
     }
 
+    /**
+     * degreeDecimalToDecimal
+     * @param  array  $coordinates
+     * @return array
+     */
     protected function degreeDecimalToDecimal(array $coordinates) {
         $longitude = $coordinates[5] + round((($coordinates[6] . '.' . $coordinates[7]) / 60), 5);
         if (strtoupper($coordinates[4]) == 'W') {
@@ -358,6 +419,11 @@ class Unpublished
                      'latitude'  => $latitude);
     }
 
+    /**
+     * br2nl
+     * @param  string $string
+     * @return string
+     */
     protected function br2nl($string) {
         return preg_replace('#<br\s*?/?>#i', "\n", $string);
     }
