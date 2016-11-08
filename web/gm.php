@@ -6,7 +6,11 @@ if (!array_key_exists('content', $_POST)) {
     renderAjax(array('success' => false, 'message' => 'Request empty.'));
 }
 
-$unpublished = new Unpublished();
+use GuzzleHttp\Cookie\SessionCookieJar;
+
+$cookieJar = new SessionCookieJar('cookie', true);
+
+$unpublished = new Unpublished($cookieJar);
 $unpublished->setRawHtml($_POST['content']);
 $unpublished->setGuid();
 $unpublished->setGcCode();
