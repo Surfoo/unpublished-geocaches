@@ -15,6 +15,7 @@ use GuzzleHttp\Cookie\SessionCookieJar;
 class Unpublished
 {
     protected $raw_html       = null;
+    protected $document       = null;
 
     public $guid              = null;
     public $cache_id          = null;
@@ -58,6 +59,12 @@ class Unpublished
      */
     public function setRawHtml($content) {
         $this->raw_html = $content;
+
+        $this->document = new DomDocument;
+        $this->document->strictErrorChecking = false;
+        libxml_use_internal_errors(true);
+        $this->document->loadHTML($content);
+        libxml_clear_errors();
     }
 
     /**
@@ -171,12 +178,13 @@ class Unpublished
      * @return boolean
      */
     public function setGcCode() {
-        if (!$this->raw_html || !is_null($this->name)) {
+        if (!$this->document || !is_null($this->name)) {
             return false;
         }
-        if (preg_match('/<span id="ctl00_ContentBody_CoordInfoLinkControl1_uxCoordInfoCode" class="CoordInfoCode">(.*)<\/span>/', $this->raw_html, $gccode)) {
-            $this->name = $gccode[1];
 
+        $id = $this->document->getElementById('ctl00_ContentBody_CoordInfoLinkControl1_uxCoordInfoCode');
+        if(isset($id->textContent)) {
+            $this->name = $id->textContent;
             return true;
         }
 
@@ -268,11 +276,12 @@ class Unpublished
      * setShortDescription
      */
     public function setShortDescription() {
-        if (!$this->raw_html) {
+        if (!$this->document) {
             return false;
         }
-        if (preg_match('#<span id="ctl00_ContentBody_ShortDescription">(.*)</span>\s*</div>#msU', $this->raw_html, $short_description)) {
-            $this->short_description = str_ireplace("\x0D", "", trim($short_description[1]));
+        $id = $this->document->getElementById('ctl00_ContentBody_ShortDescription');
+        if(isset($id->textContent)) {
+            $this->short_description = str_ireplace("\x0D", "", trim($id->textContent));
             $this->short_desc_html   = ($this->short_description != strip_tags($this->short_description)) ? 'True' : 'False';
         } else {
             $this->errors[] = 'Unable to retrieve Short Description.';
@@ -298,11 +307,13 @@ class Unpublished
      * setEncodedHints
      */
     public function setEncodedHints() {
-        if (!$this->raw_html) {
+        if (!$this->document) {
             return false;
         }
-        if (preg_match('#<div id="div_hint"[^>]*>(.*)</div>#msU', $this->raw_html, $hint)) {
-            $this->encoded_hints = str_ireplace("\x0D", '', trim($hint[1]));
+
+        $id = $this->document->getElementById('div_hint');
+        if(isset($id->textContent)) {
+            $this->encoded_hints = str_ireplace("\x0D", '', trim($id->textContent));
             $this->encoded_hints = str_replace(array('<br />', '<br>'), "\n", $this->encoded_hints);
 
             $chars = str_split($this->encoded_hints);

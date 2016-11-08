@@ -12,7 +12,7 @@ define('URL_GEOCACHING', 'https://www.geocaching.com/');
 define('URL_LOGIN',      URL_GEOCACHING . 'login/default.aspx');
 define('URL_QUICKVIEW',  URL_GEOCACHING . 'my/');
 define('URL_GEOCACHE',   URL_GEOCACHING . 'seek/cache_details.aspx?guid=%s');
-define('URL_TILE',       'http://tiles%02d.geocaching.com/map.details?i=%s');
+define('URL_TILE',       'https://tiles%02d.geocaching.com/map.details?i=%s');
 define('SALT',           'kequahmo4tainai1da9M');
 define('SALT_GM',        'ooNa2aitejeipaiw8iet');
 

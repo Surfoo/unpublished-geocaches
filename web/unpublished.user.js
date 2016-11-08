@@ -4,8 +4,8 @@
 // @author          Surfoo
 // @description     Fetch unpublished geocaches
 // @include         https://www.geocaching.com/geocache/*
-// @updateURL       https://unpublished.vaguelibre.net/unpublished.user.js
-// @version         1.1.1
+// @include         https://www.geocaching.com/seek/cache_details.aspx*
+// @version         1.1.2
 // @grant           GM_xmlhttpRequest
 // ==/UserScript==
 
