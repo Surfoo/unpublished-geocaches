@@ -25,7 +25,7 @@ try {
 
 $htmlResponse = (string) $response->getBody();
 
-if(!preg_match_all('#<li>\s*<img src="[https?://www.geocaching.com]?/images/wpttypes/sm/[a-z0-9]+.gif" width="16" height="16" alt="" />' .
+if(!preg_match_all('#<li>\s*<img src="[^"]+" width="16" height="16" alt="" />' .
                   '\s*<a href="https?://www.geocaching.com/seek/cache_details.aspx\?guid=(.*)">(.*)</a>[\s+]?</li>#msU', $htmlResponse, $elements)) {
     renderAjax(array('success' => false, 'message' => 'No unpublished caches found.'));
 }
