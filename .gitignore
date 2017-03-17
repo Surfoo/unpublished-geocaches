@@ -1,3 +1,4 @@
+config.php
 vendor
 *.sublime-project
 *.sublime-workspace

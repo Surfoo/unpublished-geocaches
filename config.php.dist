@@ -13,14 +13,16 @@ define('URL_LOGIN',      URL_GEOCACHING . 'login/default.aspx');
 define('URL_QUICKVIEW',  URL_GEOCACHING . 'my/');
 define('URL_GEOCACHE',   URL_GEOCACHING . 'seek/cache_details.aspx?guid=%s');
 define('URL_TILE',       'https://tiles%02d.geocaching.com/map.details?i=%s');
-define('SALT',           'kequahmo4tainai1da9M');
-define('SALT_GM',        'ooNa2aitejeipaiw8iet');
+define('SALT',           '');
+define('SALT_GM',        '');
 
 define('WAYPOINT_FILENAME', ROOT . '/waypoints/%s.gpx');
 define('GPX_FILENAME',      ROOT . '/web/gpx/%s.part%02d.gpx');
 define('MAX_RETENTION',     3600 * 24);
 
-define('SUFFIX_CSS_JS', '20161009');
+define('SUFFIX_CSS_JS', '');
+define('TWIG_DEBUG', false);
+
 
 require ROOT . '/vendor/autoload.php';
 require ROOT . '/helper.php';

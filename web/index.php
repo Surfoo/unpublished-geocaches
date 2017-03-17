@@ -5,7 +5,7 @@ require dirname(__DIR__) . '/config.php';
 use GuzzleHttp\Cookie\SessionCookieJar;
 
 $loader = new Twig_Loader_Filesystem(TEMPLATE_DIR);
-$twig   = new Twig_Environment($loader, array('debug' => true, 'cache' => TEMPLATE_COMPILED_DIR));
+$twig   = new Twig_Environment($loader, array('debug' => TWIG_DEBUG, 'cache' => TEMPLATE_COMPILED_DIR));
 
 $twig_vars['logged'] = 'false';
 
