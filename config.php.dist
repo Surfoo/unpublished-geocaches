@@ -1,9 +1,5 @@
 <?php
 
-error_reporting(-1);
-ini_set('display_errors', '1');
-
-
 define('ROOT', __DIR__);
 define('TEMPLATE_DIR', ROOT . '/templates');
 define('TEMPLATE_COMPILED_DIR', ROOT . '/cache');
@@ -22,7 +18,6 @@ define('MAX_RETENTION',     3600 * 24);
 
 define('SUFFIX_CSS_JS', '');
 define('TWIG_DEBUG', false);
-
 
 require ROOT . '/vendor/autoload.php';
 require ROOT . '/helper.php';
