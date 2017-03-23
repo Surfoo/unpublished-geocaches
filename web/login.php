@@ -6,6 +6,8 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\SessionCookieJar;
 use GuzzleHttp\Cookie\SetCookie;
 
+use Symfony\Component\DomCrawler\Crawler;
+
 if (!array_key_exists('HTTP_X_REQUESTED_WITH', $_SERVER) || $_SERVER['HTTP_X_REQUESTED_WITH'] != 'XMLHttpRequest') {
     header("HTTP/1.0 400 Bad Request");
     exit(0);
@@ -23,12 +25,11 @@ if (!array_key_exists('username', $_POST) || !array_key_exists('username', $_POS
     exit(0);
 }
 
-$postdata = array('__EVENTTARGET'      => '',
-                  '__EVENTARGUMENT'    => '',
-                  'ctl00$ContentBody$tbUsername'   => $_POST['username'],
-                  'ctl00$ContentBody$tbPassword'   => $_POST['password'],
-                  'ctl00$ContentBody$cbRememberMe' => 'On',
-                  'ctl00$ContentBody$btnSignIn'    => 'Login');
+define('REQUEST_VERIFICATION_TOKEN', '__RequestVerificationToken');
+define('PATTERN_LOGIN_NAME', '/class="li-user-info"[^>]*>.*?<span>(.*?)<\/span>/ms');
+
+$postdata = array('Username'   => $_POST['username'],
+                  'Password'   => $_POST['password']);
 
 $cookieJar = new SessionCookieJar('cookie', true);
 $client = new Client([
@@ -38,6 +39,30 @@ $client = new Client([
 ]);
 
 try {
+    $response = $client->get(URL_LOGIN);
+} catch(Exception $e) {
+    renderAjax(array('success' => false, 'message' => $e->getMessage()));
+}
+
+$htmlResponse = (string) $response->getBody();
+
+if(preg_match(PATTERN_LOGIN_NAME, $htmlResponse, $username)) {
+    $username = trim($username[1]);
+
+    $cookieJar->setCookie(new SetCookie(['username' => $username]));
+    $_SESSION['username'] = $username;
+
+    renderAjax(array('success' => true, 'username' => $username));
+}
+
+$crawler = new Crawler($htmlResponse);
+$postdata[REQUEST_VERIFICATION_TOKEN] = $crawler->filter('.login > form > input[name="' . REQUEST_VERIFICATION_TOKEN . '"]')->attr('value');
+
+if(empty($postdata[REQUEST_VERIFICATION_TOKEN])) {
+    renderAjax(array('success' => false, 'message' => $e->getMessage()));
+}
+
+try {
     $response = $client->request('POST', URL_LOGIN, [
         'form_params' => $postdata
     ]);
@@ -45,20 +70,15 @@ try {
     renderAjax(array('success' => false, 'message' => $e->getMessage()));
 }
 
-
 $htmlResponse = (string) $response->getBody();
-
 if (!$htmlResponse) {
     renderAjax(array('success' => false, 'message' => 'Request error: ' . curl_error($ch)));
 }
-
-if (!preg_match('/ctl00_ContentBody_lbUsername">.*<strong>(.*)<\/strong>/', $htmlResponse, $username)) {
-    renderAjax(array('success' => false, 'message' => 'Your username/password combination does not match. Make sure you entered your information correctly.'));
+if(!preg_match(PATTERN_LOGIN_NAME, $htmlResponse, $username)) {
+    renderAjax(array('success' => false, 'message' => 'Either your username or password is incorrect. Please try again.'));
 }
 
 $username = trim($username[1]);
-
 $cookieJar->setCookie(new SetCookie(['username' => $username]));
 $_SESSION['username'] = $username;
-
 renderAjax(array('success' => true, 'username' => $username));
