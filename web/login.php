@@ -5,7 +5,7 @@ require dirname(__DIR__) . '/config.php';
 use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\SessionCookieJar;
 use GuzzleHttp\Cookie\SetCookie;
-
+use GuzzleHttp\Exception\RequestException;
 use Symfony\Component\DomCrawler\Crawler;
 
 if (!array_key_exists('HTTP_X_REQUESTED_WITH', $_SERVER) || $_SERVER['HTTP_X_REQUESTED_WITH'] != 'XMLHttpRequest') {
@@ -34,14 +34,14 @@ $postdata = array('Username'   => $_POST['username'],
 $cookieJar = new SessionCookieJar('cookie', true);
 $client = new Client([
     'base_uri' => URL_LOGIN,
-    'timeout'  => 2.0,
+    'timeout'  => 5.0,
     'cookies' => $cookieJar
 ]);
 
 try {
     $response = $client->get(URL_LOGIN);
-} catch(Exception $e) {
-    renderAjax(array('success' => false, 'message' => $e->getMessage()));
+} catch(RequestException $e) {
+    renderAjax(array('success' => false, 'message' => 'Connection failed due to geocaching.com. Please retry later.'));
 }
 
 $htmlResponse = (string) $response->getBody();
@@ -66,8 +66,8 @@ try {
     $response = $client->request('POST', URL_LOGIN, [
         'form_params' => $postdata
     ]);
-} catch(Exception $e) {
-    renderAjax(array('success' => false, 'message' => $e->getMessage()));
+} catch(RequestException $e) {
+    renderAjax(array('success' => false, 'message' => 'Connection failed due to geocaching.com. Please retry later.'));
 }
 
 $htmlResponse = (string) $response->getBody();
