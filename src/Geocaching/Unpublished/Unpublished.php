@@ -347,7 +347,7 @@ class Unpublished
         if (preg_match_all('/attributes\/([a-z-_]+)-(yes|no).gif/i', $this->raw_html, $attributes)) {
             foreach ($attributes[1] as $key => $attribute) {
                 if (!array_key_exists($attribute, $this->list_attributes)) {
-                    $this->errors[] = 'Problem with "' . $attribute . '" attribute';
+                    $this->errors[] = htmlentities('Problem with "' . $attribute . '" attribute');
                     continue;
                 }
                 $this->attributes[] = ['id'  => $this->list_attributes->$attribute->id,

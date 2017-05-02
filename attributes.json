@@ -250,5 +250,14 @@
     "firstaid": {
         "id": "42",
         "text": "Needs maintenance"
+    },
+    "partnership": {
+        "id": "61",
+        "text": "Partnership Cache"
+    },
+    "geotour": {
+        "id": "67",
+        "text": "Is part of a Geotour"
     }
+
 }
