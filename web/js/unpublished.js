@@ -29,7 +29,7 @@
                                     '   <td>#' + counter + '</td>\n' +
                                     '   <td><input type="checkbox" name="cache" class="unpublished-geocache" value="' + guid + '" id="' + guid + '" /></td>\n' +
                                     '   <td><label for="' + guid + '">' + title + '</label></td>\n' +
-                                    '   <td class="link"><a href="http://www.geocaching.com/seek/cache_details.aspx?guid=' + guid + '" title="View on geocaching.com"><span class="glyphicon glyphicon-new-window"></span></a></td>\n' +
+                                    '   <td class="link"><a href="https://www.geocaching.com/seek/cache_details.aspx?guid=' + guid + '" title="View on geocaching.com"><span class="glyphicon glyphicon-new-window"></span></a></td>\n' +
                                     '   <td class="status"> </td>\n' +
                                     '</tr>\n');
                         });
@@ -65,7 +65,7 @@
                                 .append('<tr>\n' +
                                     '   <td><input type="checkbox" name="cache-gm" class="unpublished-geocache-gm" value="' + guid + '" id="' + guid + '-gm" /></td>\n' +
                                     '   <td><label for="' + guid + '-gm">' + title + '</label></td>\n' +
-                                    '   <td class="link"><a href="http://www.geocaching.com/seek/cache_details.aspx?guid=' + guid + '" title="View on geocaching.com"><span class="glyphicon glyphicon-new-window"></span></a></td>\n' +
+                                    '   <td class="link"><a href="https://www.geocaching.com/seek/cache_details.aspx?guid=' + guid + '" title="View on geocaching.com"><span class="glyphicon glyphicon-new-window"></span></a></td>\n' +
                                     '</tr>\n');
                         });
                     }
