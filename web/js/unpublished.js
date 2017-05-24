@@ -237,7 +237,7 @@
                         $('.' + data.gccode + ' .status').html('<span class="glyphicon glyphicon-ok"></span>');
                     } else {
                         $('.' + data.gccode).addClass('danger');
-                        $('.' + data.gccode + ' .status').html('<span class="glyphicon glyphicon-remove" data-content="' + data.message + '"></span>');
+                        $('.' + data.gccode + ' .status').html('<span class="glyphicon glyphicon-remove" data-html="true" data-content="' + data.message + '"></span>');
                     }
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
