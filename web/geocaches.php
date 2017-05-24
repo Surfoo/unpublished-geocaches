@@ -46,7 +46,7 @@ $unpublished->setAttributes();
 $unpublished->setWaypoints();
 
 if (!empty($unpublished->errors)) {
-    renderAjax(array('success' => false, 'gccode' => $unpublished->name, 'message' => implode('<br />', $unpublished->errors)));
+    renderAjax(array('success' => false, 'gccode' => $unpublished->name, 'message' => '<strong>Unable to retrieve</strong>: ' . implode(', ', $unpublished->errors) . '.'));
 }
 
 $loader = new Twig_Loader_Filesystem(TEMPLATE_DIR);

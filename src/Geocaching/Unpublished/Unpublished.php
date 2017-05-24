@@ -11,6 +11,7 @@
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\SessionCookieJar;
+use GuzzleHttp\Exception\ClientException;
 
 class Unpublished
 {
@@ -78,9 +79,13 @@ class Unpublished
             'cookies' => $this->cookie
         ]);
         try {
-            $response = $client->request('GET', sprintf(URL_GEOCACHE, $this->name));
+            $response = $client->request('GET', sprintf(URL_GEOCACHE, $this->name), ['http_errors' => true]);
+        } catch (ClientException $e) {
+            renderAjax(array('success' => false,
+                             'gccode' => $this->name,
+                             'message' => $e->getResponse()->getReasonPhrase() . ' (' . $e->getResponse()->getStatusCode() . ')'));
         } catch(Exception $e) {
-            renderAjax(array('success' => false, 'message' => $e->getMessage()));
+            renderAjax(array('success' => false, 'gccode' => $this->name, 'message' => $e->getMessage()));
         }
 
         $htmlResponse = (string) $response->getBody();
@@ -169,7 +174,7 @@ class Unpublished
         if (preg_match('/guid=\'(.*)\';/', $this->raw_html, $guid)) {
             $this->guid = $guid[1];
         } else {
-            $this->errors[] = 'Unable to retrieve GUID.';
+            $this->errors[] = 'GUID';
         }
     }
 
@@ -206,7 +211,7 @@ class Unpublished
             $this->lat = $coordinates[1];
             $this->lng = $coordinates[2];
         } else {
-            $this->errors[] = 'Unable to retrieve Latitude and Longitude.';
+            $this->errors[] = 'Latitude and Longitude';
         }
     }
 
@@ -220,7 +225,7 @@ class Unpublished
         if (preg_match('/seek\/log.aspx\?ID=(\d+)/', $this->raw_html, $cache_id)) {
             $this->cache_id = $cache_id[1];
         } else {
-            $this->errors[] = 'Unable to retrieve Cache ID.';
+            $this->errors[] = 'Cache ID';
         }
     }
 
@@ -244,7 +249,7 @@ class Unpublished
                 $this->country = $matches[1];
             }
         } else {
-            $this->errors[] = 'Unable to retrieve State, Country.';
+            $this->errors[] = 'State, Country';
         }
     }
 
@@ -258,7 +263,7 @@ class Unpublished
         if (preg_match('#<div id="ctl00_ContentBody_mcd1">[^<]+<a href="[^"]+">([^<]+)</a>#msU', $this->raw_html, $matches)) {
             $this->placed_by = $matches[1];
         } else {
-            $this->errors[] = 'Unable to retrieve Placed By.';
+            $this->errors[] = 'Placed By';
         }
     }
 
@@ -288,7 +293,7 @@ class Unpublished
             $this->short_description = str_ireplace("\x0D", "", trim($id->textContent));
             $this->short_desc_html   = ($this->short_description != strip_tags($this->short_description)) ? 'True' : 'False';
         } else {
-            $this->errors[] = 'Unable to retrieve Short Description.';
+            $this->errors[] = 'Short Description';
         }
     }
 
@@ -303,7 +308,7 @@ class Unpublished
             $this->long_description = str_ireplace("\x0D", "", trim($long_description[1]));
             $this->long_desc_html   = ($this->long_description != strip_tags($this->long_description)) ? 'True' : 'False';
         } else {
-            $this->errors[] = 'Unable to retrieve Long Description.';
+            $this->errors[] = 'Long Description';
         }
     }
 
@@ -337,7 +342,7 @@ class Unpublished
             }
             $this->encoded_hints = implode('', $chars);
         } else {
-            $this->errors[] = 'Unable to retrieve Encoded Hints.';
+            $this->errors[] = 'Encoded Hints';
         }
     }
 
