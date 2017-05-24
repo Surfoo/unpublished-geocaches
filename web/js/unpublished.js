@@ -22,14 +22,14 @@
                         $('#table-caches tbody').html('');
 
                         var counter = 0;
-                        $.each(data.unpublishedCaches, function(guid, title) {
+                        $.each(data.unpublishedCaches, function(gccode, title) {
                             ++counter;
                             $('#table-caches tbody')
-                                .append('<tr class="' + guid + '" data-counter="' + counter + '">\n' +
+                                .append('<tr class="' + gccode + '" data-counter="' + counter + '">\n' +
                                     '   <td>#' + counter + '</td>\n' +
-                                    '   <td><input type="checkbox" name="cache" class="unpublished-geocache" value="' + guid + '" id="' + guid + '" /></td>\n' +
-                                    '   <td><label for="' + guid + '">' + title + '</label></td>\n' +
-                                    '   <td class="link"><a href="https://www.geocaching.com/seek/cache_details.aspx?guid=' + guid + '" title="View on geocaching.com"><span class="glyphicon glyphicon-new-window"></span></a></td>\n' +
+                                    '   <td><input type="checkbox" name="cache" class="unpublished-geocache" value="' + gccode + '" id="' + gccode + '" /></td>\n' +
+                                    '   <td><label for="' + gccode + '">' + title + '</label></td>\n' +
+                                    '   <td class="link"><a href="https://coord.info/' + gccode + '" title="View on geocaching.com"><span class="glyphicon glyphicon-new-window"></span></a></td>\n' +
                                     '   <td class="status"> </td>\n' +
                                     '</tr>\n');
                         });
@@ -217,27 +217,27 @@
         create.button('loading');
 
         var count = 0;
-        var getGeocache = function(guid) {
+        var getGeocache = function(gccode) {
             var jsonData = {
-                'guid': guid
+                'gccode': gccode
             };
 
-            var cacheNumber = $('tr.' + guid).data('counter');
+            var cacheNumber = $('tr.' + gccode).data('counter');
 
             return $.ajax({
                 url: 'geocaches.php?n=' + encodeURIComponent(cacheNumber),
                 type: 'POST',
                 data: jsonData,
                 beforeSend: function() {
-                    $('.' + guid + ' .status').html('<img src="loader.gif" alt="">');
+                    $('.' + gccode + ' .status').html('<img src="loader.gif" alt="">');
                 },
                 success: function(data) {
                     if (data && data.success) {
-                        $('.' + data.guid).addClass('success');
-                        $('.' + data.guid + ' .status').html('<span class="glyphicon glyphicon-ok"></span>');
+                        $('.' + data.gccode).addClass('success');
+                        $('.' + data.gccode + ' .status').html('<span class="glyphicon glyphicon-ok"></span>');
                     } else {
-                        $('.' + data.guid).addClass('danger');
-                        $('.' + data.guid + ' .status').html('<span class="glyphicon glyphicon-remove" data-content="' + data.message + '"></span>');
+                        $('.' + data.gccode).addClass('danger');
+                        $('.' + data.gccode + ' .status').html('<span class="glyphicon glyphicon-remove" data-content="' + data.message + '"></span>');
                     }
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
@@ -264,11 +264,11 @@
                     //Arguments est une variable magique contenant les paramètres de la fonction
                     //Les paramètres sont passés dans le même ordre que les promesses.
                     if (arguments[i][0].success) {
-                        gpx.push(arguments[i][0].guid);
+                        gpx.push(arguments[i][0].gccode);
                     }
                 }
             } else if (arguments[0].success) {
-                gpx.push(arguments[0].guid);
+                gpx.push(arguments[0].gccode);
             }
 
             $('tbody span').popover({
@@ -278,7 +278,7 @@
 
             if (gpx.length > 0) {
                 var jsonData = {
-                    'guid': gpx
+                    'gccode': gpx
                 };
                 if ($('#chk_split').prop('checked')) {
                     jsonData.split = $('#block_split input[type=range]').val();
@@ -321,7 +321,7 @@
                 url: 'download.php',
                 type: 'POST',
                 data: {
-                    'guid': list,
+                    'gccode': list,
                     'greasemonkey': true
                 },
                 success: function(data) {

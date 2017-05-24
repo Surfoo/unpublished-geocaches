@@ -148,7 +148,7 @@
                             </table>
                             <button type="submit" class="btn btn-primary" data-loading-text="Refreshing..." id="refresh-cache-gm"><span class="glyphicon glyphicon-refresh"></span> Refresh the list</button>
                             <button type="submit" class="btn btn-primary" data-loading-text="Creating..." id="create-gpx-gm"><span class="glyphicon glyphicon-ok-circle"></span> Create GPX</button>
-                            <span id="download-links-gm"></span>
+                            <p id="download-links-gm"></p>
                         </div>
                     </div>
 

@@ -29,7 +29,7 @@ $unpublished->setWaypoints();
 if (!empty($unpublished->errors)) {
     $message = count($unpublished->errors) > 1 ? 'Errors:' : 'Error:';
     $message.= "\n" . implode("\n", $unpublished->errors);
-    renderAjax(array('success' => false, 'guid' => $unpublished->guid, 'message' => $message));
+    renderAjax(array('success' => false, 'message' => $message));
 }
 
 $loader = new Twig_Loader_Filesystem(TEMPLATE_DIR);
@@ -37,7 +37,7 @@ $twig   = new Twig_Environment($loader, array('debug' => true, 'cache' => TEMPLA
 
 $gpx_file = $twig->render('waypoint.xml', $unpublished->getGeocacheDatas());
 
-$hd = fopen(sprintf(WAYPOINT_FILENAME, $unpublished->guid), 'w');
+$hd = fopen(sprintf(WAYPOINT_FILENAME, $unpublished->name), 'w');
 fwrite($hd, $gpx_file);
 fclose($hd);
 
@@ -46,9 +46,9 @@ if (array_key_exists('unpublished', $_COOKIE)) {
     $list = json_decode($_COOKIE['unpublished'], true);
 }
 
-$list[$unpublished->guid] = $unpublished->urlname;
+$list[$unpublished->name] = $unpublished->urlname;
 
 setcookie('ownerid', $unpublished->owner_id, time() + 3600 * 48);
 setcookie('unpublished', json_encode($list), time() + 3600 * 48);
 
-renderAjax(array('success' => true, 'guid' => $unpublished->guid));
+renderAjax(array('success' => true, 'gccode' => $unpublished->name));

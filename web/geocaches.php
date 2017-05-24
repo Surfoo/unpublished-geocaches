@@ -17,8 +17,8 @@ $cookieJar = new SessionCookieJar('cookie', true);
 
 $unpublished = new Unpublished($cookieJar);
 
-$cache['guid'] = $_POST['guid'];
-$unpublished->guid = $_POST['guid'];
+$cache['gccode'] = $_POST['gccode'];
+$unpublished->name = $cache['gccode'];
 
 if(!isset($_SESSION['counter'])) {
     $_SESSION['counter'] = 0;
@@ -29,11 +29,8 @@ if(++$_SESSION['counter'] >= 500) {
     $_SESSION['counter'] = 0;
 }
 
+$unpublished->setGuid();
 $unpublished->getCacheDetails();
-
-if (!$unpublished->setGcCode()) {
-    renderAjax(array('success' => false, 'guid' => $cache['guid'], 'message' => 'Unable to retrieve the GC code.'));
-}
 
 $unpublished->setSomeBasicInformations();
 
@@ -49,7 +46,7 @@ $unpublished->setAttributes();
 $unpublished->setWaypoints();
 
 if (!empty($unpublished->errors)) {
-    renderAjax(array('success' => false, 'guid' => $unpublished->guid, 'message' => implode('<br />', $unpublished->errors)));
+    renderAjax(array('success' => false, 'gccode' => $unpublished->name, 'message' => implode('<br />', $unpublished->errors)));
 }
 
 $loader = new Twig_Loader_Filesystem(TEMPLATE_DIR);
@@ -57,8 +54,8 @@ $twig   = new Twig_Environment($loader);
 
 $gpx_file = trim($twig->render('waypoint.xml', $unpublished->getGeocacheDatas()));
 
-$hd = fopen(sprintf(WAYPOINT_FILENAME, $unpublished->guid), 'w');
+$hd = fopen(sprintf(WAYPOINT_FILENAME, $unpublished->name), 'w');
 fwrite($hd, $gpx_file);
 fclose($hd);
 
-renderAjax(array('success' => true, 'guid' => $unpublished->guid));
+renderAjax(array('success' => true, 'gccode' => $unpublished->name));

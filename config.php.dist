@@ -6,7 +6,7 @@ define('TEMPLATE_COMPILED_DIR', ROOT . '/cache');
 
 define('URL_GEOCACHING', 'https://www.geocaching.com/');
 define('URL_LOGIN',      URL_GEOCACHING . 'account/login?ReturnUrl=/play');
-define('URL_QUICKVIEW',  URL_GEOCACHING . 'my/');
+define('URL_QUICKVIEW',  URL_GEOCACHING . 'account/dashboard/unpublishedcaches');
 define('URL_GEOCACHE',   URL_GEOCACHING . 'seek/cache_details.aspx?guid=%s');
 define('URL_TILE',       'https://tiles%02d.geocaching.com/map.details?i=%s');
 define('SALT',           '');

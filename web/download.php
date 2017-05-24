@@ -7,7 +7,7 @@ if (!array_key_exists('HTTP_X_REQUESTED_WITH', $_SERVER) || $_SERVER['HTTP_X_REQ
     exit(0);
 }
 
-if (!array_key_exists('guid', $_POST) || empty($_POST['guid'])) {
+if (!array_key_exists('gccode', $_POST) || empty($_POST['gccode'])) {
     renderAjax(array('success' => false, 'message' => 'No caches found.'));
 }
 
@@ -19,8 +19,8 @@ if(isset($_POST['split'])) {
 
 $waypointsList = array();
 
-foreach ($_POST['guid'] as $guid) {
-    $waypoint_filename = sprintf(WAYPOINT_FILENAME, $guid);
+foreach ($_POST['gccode'] as $gccode) {
+    $waypoint_filename = sprintf(WAYPOINT_FILENAME, $gccode);
     if (file_exists($waypoint_filename)) {
         $waypointsList[] = basename($waypoint_filename);
     }

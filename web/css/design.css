@@ -105,11 +105,11 @@ tr th {
     width: 280px;
 }
 
-#download-links {
+#download-links, #download-links-gm {
     margin-top: 1em;
     padding-left: 0;
 }
-#download-links li {
+#download-links li, #download-links-gm li {
     list-style-type: none;
     margin-bottom: 0.4em;
 }

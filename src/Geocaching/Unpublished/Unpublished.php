@@ -73,12 +73,12 @@ class Unpublished
      */
     public function getCacheDetails() {
         $client = new Client([
-            'base_uri' => sprintf(URL_GEOCACHE, $this->guid),
+            'base_uri' => sprintf(URL_GEOCACHE, $this->name),
             'timeout'  => 30,
             'cookies' => $this->cookie
         ]);
         try {
-            $response = $client->request('GET', sprintf(URL_GEOCACHE, $this->guid));
+            $response = $client->request('GET', sprintf(URL_GEOCACHE, $this->name));
         } catch(Exception $e) {
             renderAjax(array('success' => false, 'message' => $e->getMessage()));
         }
@@ -178,12 +178,16 @@ class Unpublished
      * @return boolean
      */
     public function setGcCode() {
-        if (!$this->document || !is_null($this->name)) {
+        if (!$this->document) {
             return false;
         }
 
+        if (!is_null($this->name)) {
+            return true;
+        }
+
         $id = $this->document->getElementById('ctl00_ContentBody_CoordInfoLinkControl1_uxCoordInfoCode');
-        if(isset($id->textContent)) {
+        if (isset($id->textContent)) {
             $this->name = $id->textContent;
             return true;
         }
