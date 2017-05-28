@@ -5,7 +5,7 @@
     <name>{{ waypoint.name }}</name>
     <cmt>{{ waypoint.note }}</cmt>
     <desc>{{ waypoint.name }}</desc>
-    <url>http://www.geocaching.com/seek/wpt.aspx?WID={{ waypoint.wid }}</url>
+    <url>https://www.geocaching.com/seek/wpt.aspx?WID={{ waypoint.wid }}</url>
     <urlname>{{ waypoint.name }}</urlname>
     <sym>{{ waypoint.type }}</sym>
     <type>Waypoint|{{ waypoint.type }}</type>
