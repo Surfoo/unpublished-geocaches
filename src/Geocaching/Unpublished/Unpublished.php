@@ -218,7 +218,7 @@ class Unpublished
             $this->lat = $coordinates[1];
             $this->lng = $coordinates[2];
         } else {
-            $this->errors[] = '';
+            $this->errors[] = 'Latitude and Longitude';
             $this->logger->error('Latitude and Longitude are missing', ['name' => $this->name]);
         }
     }
