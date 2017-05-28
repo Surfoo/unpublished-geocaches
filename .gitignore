@@ -1,4 +1,5 @@
 config.php
 vendor
+logs/*.log
 *.sublime-project
 *.sublime-workspace

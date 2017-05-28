@@ -12,6 +12,8 @@
 use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\SessionCookieJar;
 use GuzzleHttp\Exception\ClientException;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 
 class Unpublished
 {
@@ -52,6 +54,10 @@ class Unpublished
     public function __construct(SessionCookieJar $cookieJar) {
         $this->cookie = $cookieJar;
         $this->list_attributes = json_decode(file_get_contents(ROOT . '/attributes.json'));
+
+        // create a log channel
+        $this->logger = new Logger('unpublished');
+        $this->logger->pushHandler(new StreamHandler(ROOT . '/logs/unpublished.log', Logger::ERROR));
     }
 
     /**
@@ -175,6 +181,7 @@ class Unpublished
             $this->guid = $guid[1];
         } else {
             $this->errors[] = 'GUID';
+            $this->logger->error('GUID is missing', ['name' => $this->name]);
         }
     }
 
@@ -211,7 +218,8 @@ class Unpublished
             $this->lat = $coordinates[1];
             $this->lng = $coordinates[2];
         } else {
-            $this->errors[] = 'Latitude and Longitude';
+            $this->errors[] = '';
+            $this->logger->error('Latitude and Longitude are missing', ['name' => $this->name]);
         }
     }
 
@@ -226,6 +234,7 @@ class Unpublished
             $this->cache_id = $cache_id[1];
         } else {
             $this->errors[] = 'Cache ID';
+            $this->logger->error('Cache ID is missing', ['name' => $this->name]);
         }
     }
 
@@ -250,6 +259,7 @@ class Unpublished
             }
         } else {
             $this->errors[] = 'State, Country';
+            $this->logger->error('State, Country are missing', ['name' => $this->name]);
         }
     }
 
@@ -264,6 +274,7 @@ class Unpublished
             $this->placed_by = $matches[1];
         } else {
             $this->errors[] = 'Placed By';
+            $this->logger->error('Placed By is missing', ['name' => $this->name]);
         }
     }
 
@@ -294,6 +305,7 @@ class Unpublished
             $this->short_desc_html   = ($this->short_description != strip_tags($this->short_description)) ? 'True' : 'False';
         } else {
             $this->errors[] = 'Short Description';
+            $this->logger->error('Short Description is missing', ['name' => $this->name]);
         }
     }
 
@@ -309,6 +321,7 @@ class Unpublished
             $this->long_desc_html   = ($this->long_description != strip_tags($this->long_description)) ? 'True' : 'False';
         } else {
             $this->errors[] = 'Long Description';
+            $this->logger->error('Long Description is missing', ['name' => $this->name]);
         }
     }
 
@@ -343,6 +356,7 @@ class Unpublished
             $this->encoded_hints = implode('', $chars);
         } else {
             $this->errors[] = 'Encoded Hints';
+            $this->logger->error('Encoded Hints is missing', ['name' => $this->name]);
         }
     }
 
@@ -356,7 +370,8 @@ class Unpublished
         if (preg_match_all('/attributes\/([a-z-_]+)-(yes|no).gif/i', $this->raw_html, $attributes)) {
             foreach ($attributes[1] as $key => $attribute) {
                 if (!array_key_exists($attribute, $this->list_attributes)) {
-                    $this->errors[] = htmlentities('Problem with "' . $attribute . '" attribute');
+                    $this->errors[] = htmlentities('"' . $attribute . '" attribute is unknown');
+                    $this->logger->error('Attribute is missing', ['name' => $this->name, 'attribute' => $attribute]);
                     continue;
                 }
                 $this->attributes[] = ['id'  => $this->list_attributes->$attribute->id,

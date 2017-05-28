@@ -23,7 +23,8 @@
         "twbs/bootstrap": "~3.3",
         "guzzlehttp/guzzle": "~6.2.0",
         "symfony/css-selector": "^3.2",
-        "symfony/dom-crawler": "^3.2"
+        "symfony/dom-crawler": "^3.2",
+        "monolog/monolog": "^1.22"
     },
     "scripts": {
       "post-update-cmd": "cp -r vendor/twbs/bootstrap/dist/* web/bootstrap/"
