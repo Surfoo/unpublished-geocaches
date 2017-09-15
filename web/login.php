@@ -26,7 +26,8 @@ if (!array_key_exists('username', $_POST) || !array_key_exists('username', $_POS
 }
 
 define('REQUEST_VERIFICATION_TOKEN', '__RequestVerificationToken');
-define('PATTERN_LOGIN_NAME', '/class="li-user-info"[^>]*>.*?<span>(.*?)<\/span>/ms');
+define('PATTERN_LOGIN_NAME', '/<span class="user-name"[^>]*>(.+)<\/span>/');
+define('PATTERN_AVATAR', '/<span class="user-avatar"[^>]*>\s+?<img src="([^"]+)"[^>]*>\s+?<\/span>/');
 
 $postdata = array('Username'   => $_POST['username'],
                   'Password'   => $_POST['password']);

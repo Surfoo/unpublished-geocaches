@@ -54,8 +54,10 @@ $twig   = new Twig_Environment($loader);
 
 $gpx_file = trim($twig->render('waypoint.xml', $unpublished->getGeocacheDatas()));
 
-$hd = fopen(sprintf(WAYPOINT_FILENAME, $unpublished->name), 'w');
-fwrite($hd, $gpx_file);
-fclose($hd);
-
-renderAjax(array('success' => true, 'gccode' => $unpublished->name));
+if (!$hd = fopen(sprintf(WAYPOINT_FILENAME, $unpublished->name), 'w')) {
+    renderAjax(array('success' => false, 'gccode' => $unpublished->name, 'message' => 'Failed to create temporary file.'));
+} else {
+    fwrite($hd, $gpx_file);
+    fclose($hd);
+    renderAjax(array('success' => true, 'gccode' => $unpublished->name));
+}

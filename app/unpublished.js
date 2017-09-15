@@ -1,3 +1,6 @@
+/* jshint esversion: 6 */
+/* global $:true */
+
 (function() {
     'use strict';
 
@@ -194,7 +197,7 @@
     });
 
     $('#block_select input[type=range]').change(function(e) {
-        $('label[for=chk_select]').html('Pick ' + $(this).val() + ' geocaches with the 1st geocache picked');
+        $('label[for=chk_select]').html('Pick ' + $(this).val() + ' geocaches');
     });
 
     $('#create-gpx').click(function() {
@@ -216,22 +219,20 @@
         $('#table-caches .status').html('');
         create.button('loading');
 
-        var count = 0;
-        var getGeocache = function(gccode) {
-            var jsonData = {
-                'gccode': gccode
-            };
+        let count = 0,
+            getGeocache = function(gccode) {
+                var cacheNumber = $('tr.' + gccode).data('counter');
 
-            var cacheNumber = $('tr.' + gccode).data('counter');
-
-            return $.ajax({
-                url: 'geocaches.php?n=' + encodeURIComponent(cacheNumber),
-                type: 'POST',
-                data: jsonData,
-                beforeSend: function() {
-                    $('.' + gccode + ' .status').html('<img src="loader.gif" alt="">');
-                },
-                success: function(data) {
+                return $.ajax({
+                    url: 'geocaches.php?n=' + encodeURIComponent(cacheNumber),
+                    type: 'POST',
+                    data: {
+                        'gccode': gccode
+                    },
+                    beforeSend: function() {
+                        $('.' + gccode + ' .status').html('<img src="loader.gif" alt="">');
+                    }
+                }).done(function(data) {
                     if (data && data.success) {
                         $('.' + data.gccode).addClass('success');
                         $('.' + data.gccode + ' .status').html('<span class="glyphicon glyphicon-ok"></span>');
@@ -239,26 +240,25 @@
                         $('.' + data.gccode).addClass('danger');
                         $('.' + data.gccode + ' .status').html('<span class="glyphicon glyphicon-remove" data-html="true" data-content="' + data.message + '"></span>');
                     }
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    console.error(jqXHR, textStatus, errorThrown);
-                },
-                complete: function(jqXHR, textStatus) {
                     $('#create-gpx').html('Creating... ' + (++count / list.length * 100).toFixed(1) + '%');
-                }
-            });
-        };
+                }).fail(function(jqXHR, textStatus, errorThrown) {
+                    $('.' + gccode).addClass('danger');
+                    $('.' + gccode + ' .status').html('<span class="glyphicon glyphicon-remove" data-html="true" data-content="<strong>Error ' + jqXHR.status + '</strong>: ' + errorThrown + '"></span>');
+                }).always(function(jqXHR, textStatus) {
+                    $('.' + gccode + ' .status span').popover({
+                        trigger: 'hover',
+                        animation: false
+                    });
+                });
+            };
 
         //from http://blog.xebia.fr/2012/11/28/les-objets-differes-et-les-promesses-en-jquery/
         //On transforme la liste d'identifiants en liste de promesses de noms correspondant à ces id
+        let listOfPromises = list.map(getGeocache);
 
-        var listOfPromises = list.map(getGeocache);
+        $.when(...listOfPromises).then(function() {
+            let gpx = [];
 
-        // La fonction when ne prend pas de tableau en entrée, mais un varargs.
-        // Il est donc nécessaire de passer par la fonction apply pour invoquer when,
-        // afin de transformer le tableau de promesses en varargs
-        $.when.apply($, listOfPromises).then(function() {
-            var gpx = [];
             if (listOfPromises.length > 1) {
                 for (var i = 0, length = listOfPromises.length; i < length; ++i) {
                     //Arguments est une variable magique contenant les paramètres de la fonction
@@ -270,11 +270,6 @@
             } else if (arguments[0].success) {
                 gpx.push(arguments[0].gccode);
             }
-
-            $('tbody span').popover({
-                trigger: 'hover',
-                animation: false
-            });
 
             if (gpx.length > 0) {
                 var jsonData = {
@@ -298,6 +293,9 @@
                 });
             }
             create.button('reset');
+        }, function(err) {
+            create.button('reset');
+            console.log("rejection callback");
         });
     });
 

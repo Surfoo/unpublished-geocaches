@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="utf-8"> 
+        <meta charset="utf-8">
         <title>Unpublished Geocaches</title>
         <meta name="description" content="Fetch your unpublished Geocaches and create a GPX with them.">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -86,7 +86,7 @@
                         <h4>From your account</h4>
                         <div id="block_select">
                             <span>
-                                <input type="checkbox" id="chk_select"> <label for="chk_select">Pick 100 geocaches with the 1st geocache picked</label>
+                                <input type="checkbox" id="chk_select"> <label for="chk_select">Pick 100 geocaches</label>
                             </span>
                             <input type="range" value="100" min="5" max="500" step="5" name="">
                         </div>
@@ -112,7 +112,7 @@
                                     </tr>
                                 </thead>
                             </table>
-                            
+
                             <fieldset>
                                 <legend>Create your GPX File</legend>
 
@@ -156,8 +156,12 @@
             </div>
         </div>
 
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+        <script src="js/jquery.min.js"></script>
         <script src="bootstrap/js/bootstrap.min.js"></script>
-        <script src="js/unpublished.min.js?{{ constant('SUFFIX_CSS_JS') }}"></script>
+        <script src="js/app.min.js?{{ constant('SUFFIX_CSS_JS') }}"></script>
+
+        <script type="text/javascript">
+            require('unpublished.js');
+        </script>
     </body>
 </html>

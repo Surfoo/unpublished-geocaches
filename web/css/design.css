@@ -30,6 +30,7 @@ label {
 #signin {
     display: inline-block;
     font-size: 1.4em;
+    vertical-align: middle;
 }
 
 #glyphicon-help {
@@ -117,5 +118,5 @@ label[for=chk_split] {
     width: 210px;
 }
 label[for=chk_select] {
-    width: 315px;
+    width: 130px;
 }
