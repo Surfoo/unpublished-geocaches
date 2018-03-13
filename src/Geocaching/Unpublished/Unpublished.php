@@ -75,7 +75,7 @@ class Unpublished
     }
 
     /**
-     * getCacheDetails 
+     * getCacheDetails
      * @return string $this->raw_html
      */
     public function getCacheDetails() {
@@ -230,7 +230,7 @@ class Unpublished
         if (!$this->raw_html) {
             return false;
         }
-        if (preg_match('/seek\/log.aspx\?ID=(\d+)/', $this->raw_html, $cache_id)) {
+        if (preg_match('/seek\/log.aspx\?id=(\d+)/', $this->raw_html, $cache_id)) {
             $this->cache_id = $cache_id[1];
         } else {
             $this->errors[] = 'Cache ID';
@@ -385,7 +385,7 @@ class Unpublished
      * setWaypoints
      */
     public function setWaypoints() {
-        if (!$this->raw_html || !preg_match('/<table class="Table" id="ctl00_ContentBody_Waypoints">\s*(.*)\s*<\/table>/msU',
+        if (!$this->raw_html || !preg_match('/<table class="Table alternating-row-stacked" id="ctl00_ContentBody_Waypoints">\s*(.*)\s*<\/table>/msU',
                                             $this->raw_html, $waypoint_html)) {
             return false;
         }
@@ -403,13 +403,13 @@ class Unpublished
             preg_match_all('/<td.*>(.*)<\/td>/msU', $line, $cells);
 
             $cells = array_map('trim', $cells[1]);
+
             if ($key % 2 == 0) {
                 $counter++;
 
-                preg_match('/\((.*)\)/', $cells[5], $wpttype);
-                preg_match('/>(.*)<\/a>/', $cells[5], $wptname);
-                preg_match('/wpt.aspx\?WID=([a-z0-9-]*)/i', $cells[5], $wptwid);
-
+                preg_match('/\((.*)\)/', $cells[4], $wpttype);
+                preg_match('/>(.*)<\/a>/', $cells[4], $wptname);
+                preg_match('/wpt.aspx\?WID=([a-z0-9-]*)/i', $cells[4], $wptwid);
                 $this->waypoints[$counter]['lat']  = '';
                 $this->waypoints[$counter]['lng']  = '';
                 $this->waypoints[$counter]['type'] = trim($wpttype[1]);
@@ -417,12 +417,14 @@ class Unpublished
                 $this->waypoints[$counter]['wid']  = trim($wptwid[1]);
 
                 $coordinates = '';
-                if (strpos($cells[6], '???') !== 0) {
-                    preg_match_all('/([NSWE\d]+)/', $cells[6], $numbers);
+                $cells[5] = trim(html_entity_decode($cells[5]), chr(0xC2) . chr(0xA0));
+                if (strpos($cells[5], '???') !== 0) {
+                    preg_match_all('/([NSWE\d]+)/', $cells[5], $numbers);
+
                     $decimalCoordinates = $this->degreeDecimalToDecimal($numbers[0]);
                     $this->waypoints[$counter]['lat']  = $decimalCoordinates['latitude'];
                     $this->waypoints[$counter]['lng']  = $decimalCoordinates['longitude'];
-                    $coordinates = substr($cells[6], 0, -6);
+                    $coordinates = substr($cells[5], 0, -6);
                 }
 
                 $this->long_description .= $this->waypoints[$counter]['type'] . ' - ' . $this->waypoints[$counter]['name'] . '<br />';
