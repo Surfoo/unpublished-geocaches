@@ -29,8 +29,9 @@ if(++$_SESSION['counter'] >= 500) {
     $_SESSION['counter'] = 0;
 }
 
-$unpublished->setGuid();
 $unpublished->getCacheDetails();
+
+$unpublished->setGuid();
 
 $unpublished->setSomeBasicInformations();
 

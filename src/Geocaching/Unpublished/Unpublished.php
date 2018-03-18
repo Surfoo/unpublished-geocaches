@@ -177,7 +177,7 @@ class Unpublished
         if (!$this->raw_html) {
             return false;
         }
-        if (preg_match('/guid=\'(.*)\';/', $this->raw_html, $guid)) {
+        if (preg_match('/guid=([a-z0-9-]{36})/', $this->raw_html, $guid)) {
             $this->guid = $guid[1];
         } else {
             $this->errors[] = 'GUID';
