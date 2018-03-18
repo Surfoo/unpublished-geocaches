@@ -313,11 +313,12 @@ class Unpublished
      * setLongDescription
      */
     public function setLongDescription() {
-        if (!$this->raw_html) {
+        if (!$this->document) {
             return false;
         }
-        if (preg_match('#<span id="ctl00_ContentBody_LongDescription">(.*?)</span>\s*</div>\s*<p>\s*</p>\s*<p id="ctl00_ContentBody_hints">#msU', $this->raw_html, $long_description)) {
-            $this->long_description = str_ireplace("\x0D", "", trim($long_description[1]));
+        $id = $this->document->getElementById('ctl00_ContentBody_LongDescription');
+        if(isset($id->textContent)) {
+            $this->long_description = str_ireplace("\x0D", "", trim($id->textContent));
             $this->long_desc_html   = ($this->long_description != strip_tags($this->long_description)) ? 'True' : 'False';
         } else {
             $this->errors[] = 'Long Description';
