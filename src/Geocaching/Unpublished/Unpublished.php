@@ -230,7 +230,7 @@ class Unpublished
         if (!$this->raw_html) {
             return false;
         }
-        if (preg_match('/seek\/log.aspx\?id=(\d+)/', $this->raw_html, $cache_id)) {
+        if (preg_match('/seek\/log\.aspx\?id=(\d+)/i', $this->raw_html, $cache_id) || preg_match('/"CacheID":(\d+),/', $this->raw_html, $cache_id)) {
             $this->cache_id = $cache_id[1];
         } else {
             $this->errors[] = 'Cache ID';
