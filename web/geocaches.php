@@ -15,7 +15,7 @@ $errors = array();
 
 $cookieJar = new SessionCookieJar('cookie', true);
 
-$unpublished = new Unpublished($cookieJar);
+$unpublished = new Unpublished($cookieJar, $_POST['username']);
 
 $cache['gccode'] = $_POST['gccode'];
 $unpublished->name = $cache['gccode'];

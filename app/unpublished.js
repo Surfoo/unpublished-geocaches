@@ -4,7 +4,9 @@
 (function() {
     'use strict';
 
-    var cacheBlockTitle = 'From your account';
+    const cacheBlockTitle = 'From your account';
+
+    let username = null;
 
     var fetchUnpublishedCaches = function() {
             $('#refresh-cache').button('loading');
@@ -111,6 +113,7 @@
                         alert(data.message);
                         return false;
                     }
+                    username = data.username;
                     $('#username').remove();
                     $('#password').remove();
                     $('#gc-form-login').prepend('<span id="signin">Hello ' + data.username + '!</span>');
@@ -227,7 +230,8 @@
                     url: 'geocaches.php?n=' + encodeURIComponent(cacheNumber),
                     type: 'POST',
                     data: {
-                        'gccode': gccode
+                        'gccode': gccode,
+                        'username': username
                     },
                     beforeSend: function() {
                         $('.' + gccode + ' .status').html('<img src="loader.gif" alt="">');

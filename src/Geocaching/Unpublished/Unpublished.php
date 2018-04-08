@@ -19,6 +19,7 @@ class Unpublished
 {
     protected $raw_html       = null;
     protected $document       = null;
+    protected $username       = null;
 
     public $guid              = null;
     public $cache_id          = null;
@@ -47,12 +48,19 @@ class Unpublished
 
     public $errors = array();
 
+
+    private function log(string $message, array $attributes = []) {
+        $attributes = ['name' => $this->name, 'username' => $this->username, 'attributes' => $attributes];
+        $this->logger->error($message, $attributes);
+    }
+
     /**
      * __construct
      * @param SessionCookieJar $cookieJar
      */
-    public function __construct(SessionCookieJar $cookieJar) {
-        $this->cookie = $cookieJar;
+    public function __construct(SessionCookieJar $cookieJar, string $username) {
+        $this->username = $username;
+        $this->cookie   = $cookieJar;
         $this->list_attributes = json_decode(file_get_contents(ROOT . '/attributes.json'));
 
         // create a log channel
@@ -181,7 +189,7 @@ class Unpublished
             $this->guid = $guid[1];
         } else {
             $this->errors[] = 'GUID';
-            $this->logger->error('GUID is missing', ['name' => $this->name]);
+            $this->log('GUID is missing');
         }
     }
 
@@ -219,7 +227,7 @@ class Unpublished
             $this->lng = $coordinates[2];
         } else {
             $this->errors[] = 'Latitude and Longitude';
-            $this->logger->error('Latitude and Longitude are missing', ['name' => $this->name]);
+            $this->log('Latitude and Longitude are missing');
         }
     }
 
@@ -234,7 +242,7 @@ class Unpublished
             $this->cache_id = $cache_id[1];
         } else {
             $this->errors[] = 'Cache ID';
-            $this->logger->error('Cache ID is missing', ['name' => $this->name]);
+            $this->log('Cache ID is missing');
         }
     }
 
@@ -259,7 +267,7 @@ class Unpublished
             }
         } else {
             $this->errors[] = 'State, Country';
-            $this->logger->error('State, Country are missing', ['name' => $this->name]);
+            $this->log('State, Country are missing');
         }
     }
 
@@ -274,7 +282,7 @@ class Unpublished
             $this->placed_by = $matches[1];
         } else {
             $this->errors[] = 'Placed By';
-            $this->logger->error('Placed By is missing', ['name' => $this->name]);
+            $this->log('Placed By is missing');
         }
     }
 
@@ -300,12 +308,13 @@ class Unpublished
             return false;
         }
         $id = $this->document->getElementById('ctl00_ContentBody_ShortDescription');
-        if(isset($id->textContent)) {
-            $this->short_description = str_ireplace("\x0D", "", trim($id->textContent));
+        $this->short_description = $id->ownerDocument->saveHtml($id);
+        if(isset($this->short_description)) {
+            $this->short_description = str_ireplace("\x0D", "", trim($this->short_description));
             $this->short_desc_html   = ($this->short_description != strip_tags($this->short_description)) ? 'True' : 'False';
         } else {
             $this->errors[] = 'Short Description';
-            $this->logger->error('Short Description is missing', ['name' => $this->name]);
+            $this->log('Short Description is missing');
         }
     }
 
@@ -317,12 +326,13 @@ class Unpublished
             return false;
         }
         $id = $this->document->getElementById('ctl00_ContentBody_LongDescription');
-        if(isset($id->textContent)) {
-            $this->long_description = str_ireplace("\x0D", "", trim($id->textContent));
+        $this->long_description = $id->ownerDocument->saveHtml($id);
+        if($this->long_description) {
+            $this->long_description = str_ireplace("\x0D", "", trim($this->long_description));
             $this->long_desc_html   = ($this->long_description != strip_tags($this->long_description)) ? 'True' : 'False';
         } else {
             $this->errors[] = 'Long Description';
-            $this->logger->error('Long Description is missing', ['name' => $this->name]);
+            $this->log('Long Description is missing');
         }
     }
 
@@ -357,7 +367,7 @@ class Unpublished
             $this->encoded_hints = implode('', $chars);
         } else {
             $this->errors[] = 'Encoded Hints';
-            $this->logger->error('Encoded Hints is missing', ['name' => $this->name]);
+            $this->log('Encoded Hints is missing');
         }
     }
 
@@ -372,7 +382,7 @@ class Unpublished
             foreach ($attributes[1] as $key => $attribute) {
                 if (!array_key_exists($attribute, $this->list_attributes)) {
                     $this->errors[] = htmlentities('"' . $attribute . '" attribute is unknown');
-                    $this->logger->error('Attribute is missing', ['name' => $this->name, 'attribute' => $attribute]);
+                    $this->log('Attribute is missing', ['attribute' => $attribute]);
                     continue;
                 }
                 $this->attributes[] = ['id'  => $this->list_attributes->$attribute->id,
