@@ -58,7 +58,16 @@
                 <div class="col-md-12">
                     <header>
                         <h1>Unpublished Geocaches</h1>
-                        <div class="alert alert-warning alert-dismissable fade in">
+                        {% if override == false %}
+                        <div class="alert alert-danger" role="alert">
+                            <p>Hello fellow geocachers!</p>
+                            <p>Groundspeak doesn't authorize the scraping of geocaching.com and ask me to stop it. The login form is disabled from now but you can still use the second or third method to create your gpx file.<br />
+                            This functionality could come back maybe soon with a new API from Grounspeak, so let's wait and see!</p>
+
+                            <p>Thank you.</p>
+                        </div>
+                        {% endif %}
+                        <div class="alert alert-warning alert-dismissable fade in" role="alert">
                             <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
                             Please, read <a href="#help" data-toggle="modal">the help section</a> before you use this web app.
                         </div>
@@ -67,9 +76,9 @@
                         </div>
                         <form id="gc-form-login" class="form-inline">
                             {% if logged == 'false' %}
-                                <input type="text" id="username" class="form-control input-sm" placeholder="Geocaching Username" required>
-                                <input type="password" id="password" class="form-control input-sm" placeholder="Geocaching Password" autocomplete="on" required>
-                                <button type="button" data-loading-text="Loading..." data-signout-text="Sign out" class="btn btn-default btn-sm" id="login">Sign in</button>
+                                <input type="text" id="username" class="form-control input-sm" placeholder="Geocaching Username" required{% if override == false %} disabled="disabled"{% endif %} />
+                                <input type="password" id="password" class="form-control input-sm" placeholder="Geocaching Password" autocomplete="on" required{% if override == false %} disabled="disabled"{% endif %} />
+                                <button type="button" data-loading-text="Loading..." data-signout-text="Sign out" class="btn btn-default btn-sm" id="login"{% if override == false %} disabled="disabled"{% endif %}>Sign in</button>
                             {% else %}
                                 <span id="signin">Hello {{ username }}!</span>
                                 <button type="button" data-loading-text="Loading..." class="btn btn-default btn-sm" id="login">Sign out</button>

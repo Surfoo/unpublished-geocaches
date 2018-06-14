@@ -8,6 +8,7 @@ $loader = new Twig_Loader_Filesystem(TEMPLATE_DIR);
 $twig   = new Twig_Environment($loader, array('debug' => TWIG_DEBUG, 'cache' => TEMPLATE_COMPILED_DIR));
 
 $twig_vars['logged'] = 'false';
+$twig_vars['override'] = isset($_GET['override']) ? true : false;
 
 $cookieJar = new SessionCookieJar('cookie', true);
 
