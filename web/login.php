@@ -57,10 +57,10 @@ if(preg_match(PATTERN_LOGIN_NAME, $htmlResponse, $username)) {
 }
 
 $crawler = new Crawler($htmlResponse);
-$postdata[REQUEST_VERIFICATION_TOKEN] = $crawler->filter('.login > form > input[name="' . REQUEST_VERIFICATION_TOKEN . '"]')->attr('value');
+$postdata[REQUEST_VERIFICATION_TOKEN] = $crawler->filter('form > input[name="' . REQUEST_VERIFICATION_TOKEN . '"]')->attr('value');
 
-if(empty($postdata[REQUEST_VERIFICATION_TOKEN])) {
-    renderAjax(array('success' => false, 'message' => $e->getMessage()));
+if (empty($postdata[REQUEST_VERIFICATION_TOKEN])) {
+    renderAjax(array('success' => false, 'message' => 'Failed to find request verification token'));
 }
 
 try {

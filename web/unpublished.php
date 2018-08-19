@@ -12,13 +12,13 @@ if (!array_key_exists('HTTP_X_REQUESTED_WITH', $_SERVER) || $_SERVER['HTTP_X_REQ
 }
 
 $client = new Client([
-    'base_uri' => URL_QUICKVIEW,
+    'base_uri' => URL_UNPUBLISHED,
     'timeout'  => 60,
-    'cookies' => new SessionCookieJar('cookie', true)
+    'cookies'  => new SessionCookieJar('cookie', true)
 ]);
 
 try {
-    $response = $client->request('GET', URL_QUICKVIEW);
+    $response = $client->request('GET', URL_UNPUBLISHED);
 } catch(Exception $e) {
     renderAjax(array('success' => false, 'message' => $e->getMessage()));
 }
