@@ -5,8 +5,8 @@
 // @description     Fetch unpublished geocaches
 // @include         https://www.geocaching.com/geocache/*
 // @include         https://www.geocaching.com/seek/cache_details.aspx*
-// @version         1.1.3
-// @grant           GM_xmlhttpRequest
+// @version         1.1.4
+// @grant           GM.xmlHttpRequest
 // ==/UserScript==
 
 
@@ -20,7 +20,7 @@ last.innerHTML = last.innerHTML + html;
 var button = document.getElementById("SendToUnpublishedGeocaches");
 
 button.addEventListener('click', function() {
-    GM_xmlhttpRequest({
+    GM.xmlHttpRequest({
         method: "POST",
         url: "https://unpublished.vaguelibre.net/gm.php",
         data: "content=" + encodeURIComponent(document.documentElement.innerHTML),

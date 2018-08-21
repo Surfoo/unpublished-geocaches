@@ -10,21 +10,34 @@ use GuzzleHttp\Cookie\SessionCookieJar;
 
 $cookieJar = new SessionCookieJar('cookie', true);
 
-$unpublished = new Unpublished($cookieJar);
-$unpublished->setRawHtml($_POST['content']);
-$unpublished->setGuid();
-$unpublished->setGcCode();
-$unpublished->setSomeBasicInformations();
-$unpublished->setCoordinates();
-$unpublished->setCacheId();
-$unpublished->setLocation();
-$unpublished->setUsername();
-//$unpublished->setOwnerId();
-$unpublished->setShortDescription();
-$unpublished->setLongDescription();
-$unpublished->setEncodedHints();
-$unpublished->setAttributes();
-$unpublished->setWaypoints();
+$username = '';
+preg_match('#<span class="user-name">(.*)</span>#im', $_POST['content'], $matche);
+if (!empty($matche)) {
+    $username = $matche[1];
+}
+
+$unpublished = new Unpublished($cookieJar, $username);
+
+try {
+    $unpublished->setRawHtml($_POST['content']);
+
+    $unpublished->setGuid();
+    $unpublished->setGcCode();
+    $unpublished->setSomeBasicInformations();
+    $unpublished->setCoordinates();
+    $unpublished->setCacheId();
+    $unpublished->setLocation();
+    $unpublished->setUsername();
+    //$unpublished->setOwnerId();
+    $unpublished->setShortDescription();
+    $unpublished->setLongDescription();
+    $unpublished->setEncodedHints();
+    $unpublished->setAttributes();
+    $unpublished->setWaypoints();
+} catch(\Exception $e) {
+    renderAjax(array('success' => false, 'message' => $e->getMessage()));
+    exit;
+}
 
 if (!empty($unpublished->errors)) {
     $message = count($unpublished->errors) > 1 ? 'Errors:' : 'Error:';

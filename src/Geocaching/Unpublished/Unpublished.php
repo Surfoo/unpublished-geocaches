@@ -73,6 +73,10 @@ class Unpublished
      * @param string $content
      */
     public function setRawHtml($content) {
+
+        if ($content == strip_tags($content)) {
+            throw new \Exception('Content is not HTML.');
+        }
         $this->raw_html = $content;
 
         $this->document = new DomDocument;
@@ -307,7 +311,13 @@ class Unpublished
         if (!$this->document) {
             return false;
         }
+
         $id = $this->document->getElementById('ctl00_ContentBody_ShortDescription');
+
+        if (is_null($id)) {
+            return false;
+        }
+
         $this->short_description = $id->ownerDocument->saveHtml($id);
         if(isset($this->short_description)) {
             $this->short_description = str_ireplace("\x0D", "", trim($this->short_description));
@@ -326,6 +336,11 @@ class Unpublished
             return false;
         }
         $id = $this->document->getElementById('ctl00_ContentBody_LongDescription');
+
+        if (is_null($id)) {
+            return false;
+        }
+
         $this->long_description = $id->ownerDocument->saveHtml($id);
         if($this->long_description) {
             $this->long_description = str_ireplace("\x0D", "", trim($this->long_description));
