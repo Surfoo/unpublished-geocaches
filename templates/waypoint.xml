@@ -1,31 +1,31 @@
-  <wpt lat="{{ lat }}" lon="{{ lng }}">
-    <time>{{ date }}</time>
-    <name>{{ name }}</name>
-    <desc>{{ urlname }} by {{ owner }}, {{ type }} ({{ difficulty }}/{{ terrain }})</desc>
+  <wpt lat="{{ postedCoordinates.latitude }}" lon="{{ postedCoordinates.longitude }}">
+    <time>{{ placedDate }}</time>
+    <name>{{ referenceCode }}</name>
+    <desc>{{ name }} by {{ ownerAlias }}, {{ geocacheType.name }} ({{ difficulty }}/{{ terrain }})</desc>
     <url>{{ url }}</url>
-    <urlname>{{ urlname }}</urlname>
+    <urlname>{{ name }}</urlname>
     <sym>Geocache</sym>
-    <type>Geocache|{{ type }}</type>
-    <groundspeak:cache id="{{ cache_id }}" available="True" archived="False" xmlns:groundspeak="http://www.groundspeak.com/cache/1/0/1">
-      <groundspeak:name>{{ urlname }}</groundspeak:name>
-      <groundspeak:placed_by>{{ placed_by }}</groundspeak:placed_by>
-      <groundspeak:owner id="{{ owner_id }}">{{ owner }}</groundspeak:owner>
-      <groundspeak:type>{{ type }}</groundspeak:type>
-      <groundspeak:container>{{ container }}</groundspeak:container>
+    <type>Geocache|{{ geocacheType.name }}</type>
+    <groundspeak:cache id="{{ referenceCode }}" available="True" archived="False" xmlns:groundspeak="http://www.groundspeak.com/cache/1/0/1">
+      <groundspeak:name>{{ name }}</groundspeak:name>
+      <groundspeak:placed_by>{{ ownerAlias }}</groundspeak:placed_by>
+      <groundspeak:owner id="{{ ownerCode }}">{{ owner.username }}</groundspeak:owner>
+      <groundspeak:type>{{ geocacheType.name }}</groundspeak:type>
+      <groundspeak:container>{{ geocacheSize.name }}</groundspeak:container>
   {% if attributes is defined %}
       <groundspeak:attributes>
   {% for attribute in attributes %}
-        <groundspeak:attribute id="{{ attribute.id }}" inc="{{ attribute.inc }}">{{ attribute.text }}</groundspeak:attribute>
+        <groundspeak:attribute id="{{ attribute.id }}" inc="{% if attribute.isOn %}1{% else %}0{% endif %}">{{ attribute.name }}</groundspeak:attribute>
   {% endfor %}
       </groundspeak:attributes>
   {% endif %}
       <groundspeak:difficulty>{{ difficulty }}</groundspeak:difficulty>
       <groundspeak:terrain>{{ terrain }}</groundspeak:terrain>
-      <groundspeak:country>{{ country }}</groundspeak:country>
-      <groundspeak:state>{{ state }}</groundspeak:state>
-      <groundspeak:short_description html="{{ short_desc_html }}">{{ short_description }}</groundspeak:short_description>
-      <groundspeak:long_description html="{{ long_desc_html }}">{{ long_description }}</groundspeak:long_description>
-      <groundspeak:encoded_hints>{{ encoded_hints }}</groundspeak:encoded_hints>
+      <groundspeak:country>{{ location.country }}</groundspeak:country>
+      <groundspeak:state>{{ location.state }}</groundspeak:state>
+      <groundspeak:short_description html="{% if containsHtml %}True{% else %}False{% endif %}">{{ shortDescription|trim }}</groundspeak:short_description>
+      <groundspeak:long_description html="{% if containsHtml %}True{% else %}False{% endif %}">{{ longDescription|trim }}</groundspeak:long_description>
+      <groundspeak:encoded_hints>{{ hints|trim }}</groundspeak:encoded_hints>
     </groundspeak:cache>
   </wpt>
 {% include 'additional_waypoint.xml' %}

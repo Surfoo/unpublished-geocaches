@@ -4,8 +4,7 @@
     "type": "project",
     "keywords": ["geocaching", "georoadbook", "geocache", "roadbook", "unpublished"],
     "homepage": "http://upublished.vaguelibre.net/",
-    "version": "1.0",
-    "time": "2013-09-13",
+    "version": "2.0",
     "description": "Create a GPX file from your unpublished geocaches.",
     "authors": [{
         "name": "Surfoo",
@@ -13,21 +12,36 @@
         "role": "Developer"
     }],
     "autoload": {
-        "psr-0": {
-            "Unpublished": "src/Geocaching/Unpublished"
+        "psr-4": {
+            "": "src/Unpublished"
         }
     },
     "require": {
-        "php": "~7.1",
+        "php": "~7.2",
         "twig/twig": "~2.0",
         "twbs/bootstrap": "~3.3",
         "guzzlehttp/guzzle": "~6.3",
         "symfony/css-selector": "^3.2",
         "symfony/dom-crawler": "^3.2",
         "monolog/monolog": "^1.22",
-        "components/jquery": "~3.0"
+        "components/jquery": "~3.0",
+        "surfoo/geocaching-php-sdk": "~3.1"
     },
     "scripts": {
-      "post-update-cmd": "cp -r vendor/twbs/bootstrap/dist/* web/bootstrap/;cp vendor/components/jquery/jquery.min.js web/js/;chown www-data:www-data -R web/gpx cache waypoints"
+        "assets": [
+            "cp -r vendor/twbs/bootstrap/dist/* web/assets/bootstrap/",
+            "cp -r vendor/components/jquery/ web/assets/"
+        ],
+        "post-install-cmd": [
+            "cp -n config.dist.php config.php",
+            "@assets"
+        ],
+        "post-update-cmd": [
+            "@assets"
+        ],
+        "phpstan": "vendor/bin/phpstan analyze src -l 5"
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^0.10.5"
     }
 }
