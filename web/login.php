@@ -29,13 +29,13 @@ define('REQUEST_VERIFICATION_TOKEN', '__RequestVerificationToken');
 define('PATTERN_LOGIN_NAME', '/<span class="user-name"[^>]*>(.+)<\/span>/');
 define('PATTERN_AVATAR', '/<span class="user-avatar"[^>]*>\s+?<img src="([^"]+)"[^>]*>\s+?<\/span>/');
 
-$postdata = array('Username'   => $_POST['username'],
-                  'Password'   => $_POST['password']);
+$postdata = array('UsernameOrEmail' => $_POST['username'],
+                  'Password'        => $_POST['password']);
 
 $cookieJar = new SessionCookieJar('cookie', true);
 $client = new Client([
     'base_uri' => URL_LOGIN,
-    'timeout'  => 5.0,
+    'timeout'  => 5,
     'cookies' => $cookieJar
 ]);
 
