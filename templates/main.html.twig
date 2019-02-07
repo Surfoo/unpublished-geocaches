@@ -18,13 +18,13 @@
             <div id="navbar">
               {% if user is empty %}
                 <form action="/" method="post">
-                    <input type="submit" name="oauth" value="Login with Geocaching.com" class="btn btn-primary navbar-btn navbar-right" />
+                    <input type="submit" name="oauth" value="Sign in with Geocaching.com" class="btn btn-primary navbar-btn navbar-right" />
                 </form>
               {% else %}
                 <div class="hello-user navbar-right navbar-text">
                     <span><img src="{{ user.avatarUrl }}" width="30" alt="" /></span>
-                    <span>Hello {{ user.username }}!</span>
-                    <span class="btn btn-default" role="button"><a href="?logout">Sign Out</a></span>
+                    <span><strong>Hello {{ user.username }}!</strong></span>&nbsp;&nbsp;
+                    <span class="btn btn-default" role="button"><a href="?logout">Sign out</a></span>
                 </div>
               {% endif %}
             </div>
@@ -64,7 +64,7 @@
                     <div class="modal-body">
                         <p>The "Unpublished Geocaches" app allows you to create GPX files from your unpublished geocaches, to prepare an event for example.</p>
 
-                        <h5><strong>Any questions or issues?</strong></h5>
+                        <h5><strong>Any questions, issues or suggestions?</strong></h5>
                         <div class="padding-left">You can contact me (French or english): surfooo at gmail dot com</div>
 
                         <hr />

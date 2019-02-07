@@ -3,7 +3,14 @@
 {% block main %}
     {% if user is empty %}
         <div class="jumbotron">
-            <p>Unpublished Geocaches allow you to retrieve your unpublished geocaches in order to prepare an event, or a powertrail. You can download one or several GPX.</p>
+            <p>Unpublished Geocaches allow you to retrieve your unpublished geocaches in order to prepare an event, powertrail before their publication.<br />
+	       You can choose your geocaches, download one or several GPX files.</p>
+
+            <p>In order to use it, you have to login with your geocaching account.</p>
+
+            <form action="/" method="post" class="text-center">
+                <input type="submit" name="oauth" value="Sign in with Geocaching.com" class="btn btn-primary btn-lg" />
+            </form>
         </div>
     {% else %}
             <div class="col-md-12">

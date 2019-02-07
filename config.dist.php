@@ -14,7 +14,6 @@ define('ROOT', __DIR__);
 define('TEMPLATE_DIR', ROOT . '/templates');
 define('TEMPLATE_COMPILED_DIR', ROOT . '/cache');
 
-define('URL_GEOCACHING', 'https://www.geocaching.com/');
 define('SALT',           '');
 
 define('WAYPOINT_FILENAME', ROOT . '/waypoints/%s.gpx');

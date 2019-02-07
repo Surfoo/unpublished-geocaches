@@ -25,7 +25,7 @@
         "symfony/dom-crawler": "^3.2",
         "monolog/monolog": "^1.22",
         "components/jquery": "~3.0",
-        "surfoo/geocaching-php-sdk": "~3.1"
+        "surfoo/geocaching-php-sdk": "~3.0"
     },
     "scripts": {
         "assets": [

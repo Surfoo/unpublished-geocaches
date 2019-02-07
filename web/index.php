@@ -60,8 +60,13 @@ if (isset($_SESSION['oauth2state'])) {
             'message' => $_GET['state'] . ' != ' . $_SESSION['oauth2state']
         ];
     } else {
-        // state is OK, retrive the access token
+        //in case of error
+
+        // state is OK, retrieve the access token
         try {
+            if (isset($_GET['error'])) {
+                throw new GeocachingSdkException(sprintf('error:%s, error_description:%s', $_GET['error'], $_GET['error_description']));
+            }
             // Try to get an access token using the authorization code grant.
             $accessToken = $provider->getAccessToken('authorization_code', [
                 'code' => $_GET['code']
@@ -82,6 +87,9 @@ if (isset($_SESSION['oauth2state'])) {
                 'code'    => $e->getCode(),
                 'trace'   => print_r($e->getTrace(), true),
             ];
+        } catch(GeocachingSdkException $e) {
+            echo $e->getMessage();
+            die;
         }
     }
 
