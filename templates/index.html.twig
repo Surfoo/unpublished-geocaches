@@ -1,0 +1,78 @@
+{% extends "main.html.twig" %}
+
+{% block main %}
+    {% if user is empty %}
+        <div class="jumbotron">
+            <p>Unpublished Geocaches allow you to retrieve your unpublished geocaches in order to prepare an event, powertrail before their publication.<br />
+	       You can choose your geocaches, download one or several GPX files.</p>
+
+            <p>In order to use it, you have to login with your geocaching account.</p>
+
+            <form action="/" method="post" class="text-center">
+                <input type="submit" name="oauth" value="Sign in with Geocaching.com" class="btn btn-primary btn-lg" />
+            </form>
+        </div>
+    {% else %}
+            <div class="col-md-12">
+                <div id="unpublishedCachesBlock">
+                    <h4>Your unpublished geocaches <span id="totalGeocaches"></span></h4>
+
+                    {# {% if geocaches|length == 0 %}
+                        <div class="alert alert-info">
+                            <h4>Oops!</h4>
+                            <p>You don't have any unpublished geocaches :-(</p>
+                            <p><a href="https://www.geocaching.com/play/hide" class="btn btn-primary">Hide a new geocache</a></p>
+                        </div>
+                    {% else %} #}
+                        <div id="block_select">
+                            <span>
+                                <input type="checkbox" id="chk_select"> <label for="chk_select">Pick 100 geocaches</label>
+                            </span>
+                            <input type="range" value="100" min="5" max="500" step="5" name="">
+                        </div>
+
+                        <div id="fetching-unpublished-caches" class="well well-sm"><img src="assets/loader.gif" alt="" /> Fetching your unpublished caches...</div>
+
+                        <div id="table-unpublished-caches">
+                            <table id="table-caches" class="table table-hover table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th class="head-pick"><input type="checkbox" id="select-all" title="Select All" /></th>
+                                        <th class="head-pick"></th>
+                                        <th class="head-pick">Geocode</th>
+                                        <th class="head-title">Title</th>
+                                        <th class="head-link">Link</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                {# </tbody>
+                                <thead>
+                                    <tr>
+                                        <td colspan="5">
+                                            <button type="submit" class="btn btn-primary" data-loading-text="Refreshing..." id="refresh-cache"><span class="glyphicon glyphicon-refresh"></span> Refresh the list</button>
+                                        </td>
+                                    </tr>
+                                </thead> #}
+                            </table>
+
+                            <fieldset>
+                                <legend>Create your GPX File</legend>
+
+                                <div id="block_split">
+                                    <span>
+                                        <input type="checkbox" id="chk_split"> <label for="chk_split">Split GPX files by 100 geocaches</label>
+                                    </span>
+                                    <input type="range" value="100" min="5" max="500" step="5" name="">
+                                </div>
+
+                                <button type="submit" class="btn btn-primary" data-loading-text="<span class='glyphicon glyphicon-ok-circle'></span> Creating..." id="create-gpx"><span class="glyphicon glyphicon-ok-circle"></span> Create GPX</button>
+                                <ul id="download-links"></ul>
+                            </fieldset>
+                        </div>
+                    {# {% endif %} #}
+                </div>
+            </div>
+        {# endif #}
+    {% endif %}
+{% endblock %}
