@@ -1,6 +1,4 @@
 config.php
 vendor
 node_modules
-logs/*.log
-*.sublime-project
-*.sublime-workspace
+logs

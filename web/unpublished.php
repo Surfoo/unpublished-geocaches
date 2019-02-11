@@ -1,39 +1,30 @@
 <?php
 
-require dirname(__DIR__) . '/config.php';
+require dirname(__DIR__) . '/app/app.php';
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Cookie\SessionCookieJar;
+use Geocaching\GeocachingFactory;
+use Geocaching\Exception\GeocachingSdkException;
 
 if (!array_key_exists('HTTP_X_REQUESTED_WITH', $_SERVER) || $_SERVER['HTTP_X_REQUESTED_WITH'] != 'XMLHttpRequest' ||
-    !array_key_exists('username', $_SESSION)) {
+    !array_key_exists('accessToken', $_SESSION)) {
     header("HTTP/1.0 400 Bad Request");
     exit(0);
 }
 
-$client = new Client([
-    'base_uri' => URL_UNPUBLISHED,
-    'timeout'  => 60,
-    'cookies'  => new SessionCookieJar('cookie', true)
-]);
-
 try {
-    $response = $client->request('GET', URL_UNPUBLISHED);
-} catch(Exception $e) {
+    $sdk = GeocachingFactory::createSdk($_SESSION['accessToken'],
+                                        $app['environment'], ['connect_timeout' => $app['connect_timeout'], 
+                                                              'timeout'         => $app['timeout'],
+                                                              'handler'         => $handlerStack,
+                                                              ]);
+
+    $unpublished = new Unpublished($sdk);
+    $geocaches = $unpublished->getUnpublishedGeocaches();
+    // $geocaches = $unpublished->searchGeocaches('hby:Surfoo', 100);
+
+} catch(GeocachingSdkException $e) {
+    $logger->error($e->getMessage(), $e->getContext());
     renderAjax(array('success' => false, 'message' => $e->getMessage()));
 }
 
-$htmlResponse = (string) $response->getBody();
-
-if(!preg_match_all('#<div class="activity-data">\s+<p>\s+<a href="https://coord\.info/([A-Z0-9]+)"><strong>([^<]+)</strong></a>#msU', $htmlResponse, $elements)) {
-    renderAjax(array('success' => false, 'message' => 'No unpublished caches found.'));
-}
-$unpublishedCaches = array_map('trim', array_combine($elements[1], $elements[2]));
-
-if (empty($unpublishedCaches)) {
-    renderAjax(array('success' => false, 'message' => 'Problem during recovery unpublished caches'));
-}
-
-asort($unpublishedCaches, SORT_NATURAL);
-
-renderAjax(array('success' => true, 'count' => count($unpublishedCaches), 'unpublishedCaches' => $unpublishedCaches));
+renderAjax(array('success' => true, 'count' => count($geocaches), 'geocaches' => $geocaches));

@@ -8,10 +8,7 @@
     .alert {
         padding: 8px;
     }
-    #gc-form-login input {
-        margin: 5px 0;
-    }
-    #download-gpx, #download-gpx-gm {
+    #download-gpx {
         margin-top: 5px;
     }
     hr {
@@ -19,12 +16,34 @@
     }
 }
 
-body {
-    margin-bottom: 1em;
+html {
+    position: relative;
+    min-height: 100%;
 }
+
+body {
+    margin-bottom: 100px; /* Margin bottom by footer height */
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 100px; /* Set the fixed height of the footer here */
+    line-height: 100px; /* Vertically center the text there */
+    background-color: #f5f5f5;
+}
+
 label {
     font-weight: normal;
     margin-bottom: 0;
+}
+
+footer li {
+    list-style-type: none;
+    display: inline;
+    margin-right: 2em;
+    font-size: 1.2em;
 }
 
 #signin {
@@ -33,16 +52,7 @@ label {
     vertical-align: middle;
 }
 
-#glyphicon-help {
-    font-size: 2em;
-    color: #000;
-}
-
-#glyphicon-help:hover {
-    text-decoration: none;
-}
-
-.head-pick, .head-status {
+.head-pick {
     width: 50px;
 }
 
@@ -56,11 +66,10 @@ tr th {
 .head-link,
 .link,
 #table-caches tbody td:first-child,
-#table-caches tbody td:last-child,
-#table-caches-gm tbody td:first-child {
+#table-caches tbody td:last-child {
     text-align: center;
 }
-#table-caches label, #table-caches-gm label {
+#table-caches label {
     display: block;
     cursor: pointer;
 }
@@ -70,19 +79,12 @@ tr th {
 #table-caches tbody tr td:nth-child(2) {
     text-align: center;
 }
-#table-unpublished-caches, #table-unpublished-caches-gm,
+
 #fetching-unpublished-caches {
     display: none;
 }
 
-#gc-form-login {
-    width: 500px;
-}
-
-#gc-form-login input[type="text"], #gc-form-login input[type="password"] {
-    width: 180px;
-}
-.method {
+.padding-left {
     padding-left: 1em;
 }
 #block_select, #block_split {
@@ -106,11 +108,11 @@ tr th {
     width: 280px;
 }
 
-#download-links, #download-links-gm {
+#download-links {
     margin-top: 1em;
     padding-left: 0;
 }
-#download-links li, #download-links-gm li {
+#download-links li {
     list-style-type: none;
     margin-bottom: 0.4em;
 }
