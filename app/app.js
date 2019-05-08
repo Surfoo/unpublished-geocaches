@@ -1,46 +1,90 @@
 (function ($) {
   "use strict";
 
-  let fetchUnpublishedCaches = function () {
-    // $('#refresh-cache').button('loading');
+  let geocachesRetrieved = [];
+
+  let fetchUnpublishedGeocaches = function () {
     $("#create-gpx").button("reset");
 
-    $.ajax("unpublished.php")
-      .done(function(data) {
-        $("#select-all").prop("checked", false);
-        $("#fetching-unpublished-caches").hide();
-        // $('#refresh-cache').button('reset');
-        if (!data || data === "" || typeof data !== "object") {
-            // console.error(data);
-            return false;
-        }
-        if (data && !data.success) {
-            alert(data.message);
-            // console.error(data.message);
-        } else {
-            $("#table-unpublished-caches").show();
-            $("#table-caches tbody").html("");
-
-            $.each(data.geocaches, function(index, g) {
-                $("#table-caches tbody")
-                    .append(`
-                    <tr class="${g.referenceCode}" data-counter=" ${index+1}" title="Add this geocache to the GPX">
-                            <td style="text-align: center;"><input type="checkbox" name="cache" class="unpublished-geocache" value="${g.referenceCode }" id="${g.referenceCode}" /></td>
-                            <td>#${index+1}</td>
-                            <td>${g.referenceCode}</td>
-                            <td><label for="${g.referenceCode}"><img src="${g.geocacheType.imageUrl}" alt="${g.geocacheType.name}" width="24" /> ${g.name}</label></td>
-                            <td class="link"><a href="${g.url}" title="View on geocaching.com"><span class="glyphicon glyphicon-new-window"></span></a></td>
-                        </tr>`);
-            });
-            $("#totalGeocaches").html("(" + data.count + ")");
-
-            $("#table-caches tbody").show();
-        }
-      })
-      .fail(function(jqXHR, textStatus, errorThrown) {
-        alert(textStatus);
-        console.error(jqXHR, textStatus, errorThrown);
+    fetch("unpublished.php", {
+      mode: "same-origin",
+      credentials: "same-origin"
+    })
+      .then(json)
+      .then(filterData)
+      .then(displayGeocaches)
+      .catch(err => {
+        err.text().then(errorMessage => {
+          console.error(errorMessage);
+        });
       });
+  };
+
+  $("#search-geocodes").click(function () {
+    if (document.getElementById("geocodes").value === "") {
+      return false;
+    }
+
+    fetch("unpublished.php", {
+      method: "POST",
+      mode: "same-origin",
+      credentials: "same-origin",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        "geocodes": document.getElementById("geocodes").value
+      })
+    })
+      .then(json)
+      .then(filterData)
+      .then(displayGeocaches)
+      .catch(err => {
+        err.text().then(errorMessage => {
+          console.error(errorMessage);
+        });
+      });
+
+  });
+
+  let json = function (response) {
+    if (!response.ok) {
+      if (response.status === 403) {
+        window.location.replace(window.location.href + "?logout");
+      }
+      throw response;
+    }
+    return response.json();
+  };
+
+  let filterData = function (data) {
+    $.each(data.geocaches, function (index, g) {
+      if (Object.keys(geocachesRetrieved).find(key => geocachesRetrieved[key].referenceCode === g.referenceCode) === undefined) {
+        geocachesRetrieved.push(g);
+      }
+    });
+  };
+
+  let displayGeocaches = function () {
+    $("#select-all").prop("checked", false);
+    $("#fetching-unpublished-caches").hide();
+    $("#table-unpublished-caches").show();
+    $("#table-caches tbody").html("");
+
+    geocachesRetrieved.forEach(function (g, index) {
+      $("#table-caches tbody")
+        .append(`
+            <tr class="${g.referenceCode}" data-counter=" ${index + 1}" title="Add this geocache to the GPX">
+                    <td style="text-align: center;"><input type="checkbox" name="cache" class="unpublished-geocache" value="${g.referenceCode}" id="${g.referenceCode}" /></td>
+                    <td>#${index + 1}</td>
+                    <td>${g.referenceCode}</td>
+                    <td><label for="${g.referenceCode}"><img src="${g.geocacheType.imageUrl}" alt="${g.geocacheType.name}" width="24" /> ${g.name}</label></td>
+                    <td class="link"><a href="${g.url}" title="View on geocaching.com"><span class="glyphicon glyphicon-new-window"></span></a></td>
+                </tr>`);
+    });
+
+    $("#totalGeocaches").html("(" + geocachesRetrieved.length + ")");
+    $("#table-caches tbody").show();
   };
 
   $("#select-all").click(function () {
@@ -55,9 +99,6 @@
       $("#table-caches tbody tr:nth-child(n+" + (countFrom + 1) + "):nth-child(-n+" + (countFrom + countTo) + ") input[type=checkbox]").prop("checked", true);
     }
   });
-  // $('#refresh-cache').click(function() {
-  //     $('#table-caches tbody').slideUp(400, fetchUnpublishedCaches);
-  // });
 
   $("#chk_split").change(function () {
     $("#block_split input[type=range]").prop("disabled", !$(this).prop("checked"));
@@ -121,9 +162,9 @@
     });
   });
 
-  $().ready(function() {
+  $().ready(function () {
     if (user) {
-      $("#fetching-unpublished-caches").show(0, fetchUnpublishedCaches);
+      $("#fetching-unpublished-caches").show(0, fetchUnpublishedGeocaches);
     }
   });
 

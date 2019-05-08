@@ -5,10 +5,10 @@ require dirname(__DIR__) . '/app/app.php';
 use Geocaching\GeocachingFactory;
 use Geocaching\Exception\GeocachingSdkException;
 
-if (!array_key_exists('HTTP_X_REQUESTED_WITH', $_SERVER) || $_SERVER['HTTP_X_REQUESTED_WITH'] != 'XMLHttpRequest' ||
-    !array_key_exists('accessToken', $_SESSION)) {
-    header("HTTP/1.0 400 Bad Request");
-    exit(0);
+if (!array_key_exists('accessToken', $_SESSION)) {
+    header('HTTP/1.0 403 Forbidden');
+    $logger->error($e->getMessage(), $e->getContext());
+    renderAjax(array('success' => false, 'message' => "accessToken missing"));
 }
 
 try {
@@ -19,10 +19,31 @@ try {
                                                               ]);
 
     $unpublished = new Unpublished($sdk);
-    $geocaches = $unpublished->getUnpublishedGeocaches();
-    // $geocaches = $unpublished->searchGeocaches('hby:Surfoo', 100);
 
+    $contentType = isset($_SERVER["CONTENT_TYPE"]) ? trim($_SERVER["CONTENT_TYPE"]) : '';
+
+    if ($contentType === "application/json") {
+        $data = json_decode(trim(file_get_contents("php://input")), true);
+
+        if(!isset($data['geocodes'])) {
+            renderAjax(array('success' => false, 'message' => 'invalid data'));
+        }
+
+        preg_match_all('/(GC[a-z-0-9]+)/mi', $data['geocodes'], $matches);
+
+        if (!isset($matches[1]) || empty($matches[1])) {
+            renderAjax(array('success' => false, 'message' => 'no valid geocodes found'));
+        }
+
+        $geocodes = array_unique($matches[1]);
+
+        $geocaches = $unpublished->getGeocaches($geocodes, true);
+    } else {
+        $geocaches = $unpublished->getUnpublishedGeocaches();
+        // $geocaches = $unpublished->searchGeocaches('hby:Surfoo', 100);
+    }
 } catch(GeocachingSdkException $e) {
+    header('HTTP/1.0 403 Forbidden');
     $logger->error($e->getMessage(), $e->getContext());
     renderAjax(array('success' => false, 'message' => $e->getMessage()));
 }

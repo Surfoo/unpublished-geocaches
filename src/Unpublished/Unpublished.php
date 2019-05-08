@@ -70,12 +70,13 @@ class Unpublished
      * getGeocaches
      *
      * @param array $geocodes
+     * @param bool $lite
      *
      * @return array
      */
-    public function getGeocaches(array $geocodes): array
+    public function getGeocaches(array $geocodes, bool $lite = false): array
     {
-        return $this->handleGetGeocaches($geocodes);
+        return $this->handleGetGeocaches($geocodes, $lite);
     }
 
     /**
@@ -110,10 +111,11 @@ class Unpublished
      * handleGetGeocaches
      * 
      * @param array $geocodes
+     * @param bool $lite
      * 
      * @return array
      */
-    protected function handleGetGeocaches(array $geocodes): array
+    protected function handleGetGeocaches(array $geocodes, bool $lite = false): array
     {
         $take = 50;
         $geocodesChunked = array_chunk($geocodes, $take);
@@ -122,7 +124,7 @@ class Unpublished
         $data = [];
 
         foreach($geocodesChunked as $geocodes) {
-            $result = $this->handleRequestGetGeocaches(implode(',', $geocodes), $take);
+            $result = $this->handleRequestGetGeocaches(implode(',', $geocodes), $take, $lite);
             $data   = array_merge($data, $result->getBody(true));
             if ($countRequests > self::MAX_REQUESTS_PER_MINUTE) {
                 sleep(2);
@@ -158,15 +160,22 @@ class Unpublished
      *
      * @param string $geocodes
      * @param int $take
+     * @param bool $lite
      *
      * @return GuzzleHttpClient
      */
-    public function handleRequestGetGeocaches(string $geocodes, int $take): GuzzleHttpClient
+    public function handleRequestGetGeocaches(string $geocodes, int $take, bool $lite): GuzzleHttpClient
     {
+        if ($lite) {
+            $fields = 'referenceCode,name,url,geocacheType';
+        } else {
+            $fields = 'referenceCode,publishedDate,ownerAlias,OwnerCode,owner[username],name,difficulty,terrain,favoritePoints,placedDate,geocacheType,geocacheSize,status,location,postedCoordinates,shortDescription,longDescription,hints,attributes,relatedWebPage,url,containsHtml,additionalWaypoints';
+        }
         return $this->sdk->getGeocaches(
             ['referenceCodes' => $geocodes,
              'take'           => $take,
-             'fields'         => 'referenceCode,publishedDate,ownerAlias,OwnerCode,owner[username],name,difficulty,terrain,favoritePoints,placedDate,geocacheType,geocacheSize,status,location,postedCoordinates,shortDescription,longDescription,hints,attributes,relatedWebPage,url,containsHtml,additionalWaypoints',]);
+             'fields'         => $fields
+            ]);
     }
 
     /**

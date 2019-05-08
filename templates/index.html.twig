@@ -4,7 +4,7 @@
     {% if user is empty %}
         <div class="jumbotron">
             <p>Unpublished Geocaches allow you to retrieve your unpublished geocaches in order to prepare an event, powertrail before their publication.<br />
-	       You can choose your geocaches, download one or several GPX files.</p>
+	        You can choose your geocaches, download one or several GPX files.</p>
 
             <p>In order to use it, you have to login with your geocaching account.</p>
 
@@ -14,8 +14,17 @@
         </div>
     {% else %}
             <div class="col-md-12">
+
+                <div>
+                    <h4>Add geocaches by geocode <small>(published, locked, archived geocaches...)</small></h4>
+                    <textarea id="geocodes" class="form-control" placeholder="GC2X3Y6, GC7NX8F..."></textarea><br />
+                    <button type="submit" class="btn btn-primary" id="search-geocodes">Add to the list</button>
+                </div>
+
+                <hr />
+
                 <div id="unpublishedCachesBlock">
-                    <h4>Your unpublished geocaches <span id="totalGeocaches"></span></h4>
+                    <h4>Your geocaches <span id="totalGeocaches"></span></h4>
 
                     {# {% if geocaches|length == 0 %}
                         <div class="alert alert-info">
