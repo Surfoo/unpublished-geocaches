@@ -40,16 +40,18 @@
       .then(filterData)
       .then(displayGeocaches)
       .catch(err => {
-        err.text().then(errorMessage => {
-          console.error(errorMessage);
-        });
+        err.text()
+          .then(errorMessage => {
+            console.error(errorMessage);
+            alert(err.statusText);
+          });
       });
 
   });
 
   let json = function (response) {
     if (!response.ok) {
-      if (response.status === 403) {
+      if (response.status === 401) {
         window.location.replace(window.location.href + "?logout");
       }
       throw response;

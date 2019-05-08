@@ -23,7 +23,7 @@
               {% else %}
                 <div class="hello-user navbar-right navbar-text">
                     <span><img src="{{ user.avatarUrl }}" width="30" alt="" /></span>
-                    <span><strong>Hello {{ user.username }}!</strong></span>&nbsp;&nbsp;
+                    <span><strong>{{ user.username }}</strong></span>&nbsp;&nbsp;
                     <span class="btn btn-default" role="button"><a href="?logout">Sign out</a></span>
                 </div>
               {% endif %}

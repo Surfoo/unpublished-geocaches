@@ -43,9 +43,9 @@ try {
         // $geocaches = $unpublished->searchGeocaches('hby:Surfoo', 100);
     }
 } catch(GeocachingSdkException $e) {
-    header('HTTP/1.0 403 Forbidden');
+    header('HTTP/1.0 ' . $e->getCode() . ' ' . $e->getMessage());
     $logger->error($e->getMessage(), $e->getContext());
-    renderAjax(array('success' => false, 'message' => $e->getMessage()));
+    renderAjax(array('success' => false, 'code' => $e->getCode(), 'message' => $e->getMessage()));
 }
 
 renderAjax(array('success' => true, 'count' => count($geocaches), 'geocaches' => $geocaches));
