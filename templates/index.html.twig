@@ -17,6 +17,10 @@
 
                 <div>
                     <h4>Add geocaches by geocode <small>(published, locked, archived geocaches...)</small></h4>
+                    {% if user.membershipLevelId == 1 %}
+                    <p class="alert alert-info" role="alert">As a basic Geocaching member, you are permitted to download full details 
+                    of 3 geocaches per 24 hour period.</p>
+                    {% endif %}
                     <textarea id="geocodes" class="form-control" placeholder="GC2X3Y6, GC7NX8F..."></textarea><br />
                     <button type="submit" class="btn btn-primary" id="search-geocodes">Add to the list</button>
                 </div>
