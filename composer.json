@@ -2,8 +2,8 @@
     "name": "surfoo/unpublished-geocaches",
     "license": "Apache-2.0",
     "type": "project",
-    "keywords": ["geocaching", "georoadbook", "geocache", "roadbook", "unpublished"],
-    "homepage": "http://upublished.vaguelibre.net/",
+    "keywords": ["groundspeak", "geocaching", "georoadbook", "geocache", "roadbook", "unpublished", "gpx"],
+    "homepage": "https://unpublished.vaguelibre.net/",
     "version": "2.0",
     "description": "Create a GPX file from your unpublished geocaches.",
     "authors": [{
