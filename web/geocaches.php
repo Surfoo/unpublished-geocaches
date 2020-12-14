@@ -3,6 +3,7 @@
 require dirname(__DIR__) . '/app/app.php';
 
 use Geocaching\GeocachingFactory;
+use Geocaching\Lib\Utils\Utils;
 use Geocaching\Exception\GeocachingSdkException;
 use League\OAuth2\Client\Provider\Geocaching as GeocachingProvider;
 
@@ -41,6 +42,8 @@ try {
 
 $loader = new Twig\Loader\FilesystemLoader([ROOT . '/waypoints/', TEMPLATE_DIR]);
 $twig   = new Twig\Environment($loader);
+$filter = new \Twig\TwigFilter('referenceCodeToId', ['Geocaching\Lib\Utils\Utils', 'referenceCodeToId']);
+$twig->addFilter($filter);
 
 $failed = [];
 $waypointsList = [];

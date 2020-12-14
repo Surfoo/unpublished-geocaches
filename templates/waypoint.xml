@@ -6,10 +6,10 @@
     <urlname>{{ name }}</urlname>
     <sym>Geocache</sym>
     <type>Geocache|{{ geocacheType.name }}</type>
-    <groundspeak:cache id="{{ referenceCode }}" available="True" archived="False" xmlns:groundspeak="http://www.groundspeak.com/cache/1/0/1">
+    <groundspeak:cache id="{{ referenceCode|referenceCodeToId }}" available="True" archived="False" xmlns:groundspeak="http://www.groundspeak.com/cache/1/0/1">
       <groundspeak:name>{{ name }}</groundspeak:name>
       <groundspeak:placed_by>{{ ownerAlias }}</groundspeak:placed_by>
-      <groundspeak:owner id="{{ ownerCode }}">{{ owner.username }}</groundspeak:owner>
+      <groundspeak:owner id="{{ ownerCode|referenceCodeToId }}">{{ owner.username }}</groundspeak:owner>
       <groundspeak:type>{{ geocacheType.name }}</groundspeak:type>
       <groundspeak:container>{{ geocacheSize.name }}</groundspeak:container>
   {% if attributes is defined %}
