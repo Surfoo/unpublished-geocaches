@@ -6,26 +6,21 @@
     "homepage": "https://unpublished.vaguelibre.net/",
     "version": "2.0",
     "description": "Create a GPX file from your unpublished geocaches.",
-    "authors": [{
-        "name": "Surfoo",
-        "email": "surfooo@gmail.com",
-        "role": "Developer"
-    }],
     "autoload": {
         "psr-4": {
             "": "src/Unpublished"
         }
     },
     "require": {
-        "php": "~7.2",
-        "twig/twig": "~2.0",
-        "twbs/bootstrap": "~3.3",
-        "guzzlehttp/guzzle": "~6.3",
-        "symfony/css-selector": "^3.2",
-        "symfony/dom-crawler": "^3.2",
-        "monolog/monolog": "^1.22",
+        "php": "~7.4",
         "components/jquery": "~3.0",
-        "surfoo/geocaching-php-sdk": "~3.0"
+        "guzzlehttp/guzzle": "~7.0",
+        "monolog/monolog": "^2.0",
+        "surfoo/geocaching-php-sdk": "~3.0",
+        "symfony/css-selector": "^5.2",
+        "symfony/dom-crawler": "^5.2",
+        "twbs/bootstrap": "~3.3",
+        "twig/twig": "~3.0"
     },
     "scripts": {
         "assets": [
@@ -42,6 +37,6 @@
         "phpstan": "vendor/bin/phpstan analyze src -l 5"
     },
     "require-dev": {
-        "phpstan/phpstan": "^0.10.5"
+        "phpstan/phpstan": "^0.12"
     }
 }

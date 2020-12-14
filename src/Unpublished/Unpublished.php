@@ -17,7 +17,6 @@ use Geocaching\Lib\Adapters\GuzzleHttpClient;
 
 class Unpublished
 {
-
     const MAX_REQUESTS_PER_MINUTE = 30;
 
     /**
@@ -58,7 +57,7 @@ class Unpublished
     /**
      * @param string $query
      * @param int $chunk
-     * 
+     *
      * @return array
      */
     public function searchGeocaches(string $query, int $chunk): array
@@ -81,10 +80,10 @@ class Unpublished
 
     /**
      * handleSearchGeocaches
-     * 
+     *
      * @param string $query
      * @param int    $chunk
-     * 
+     *
      * @return array
      */
     protected function handleSearchGeocaches(string $query, int $chunk): array
@@ -109,10 +108,10 @@ class Unpublished
 
     /**
      * handleGetGeocaches
-     * 
+     *
      * @param array $geocodes
      * @param bool $lite
-     * 
+     *
      * @return array
      */
     protected function handleGetGeocaches(array $geocodes, bool $lite = false): array
@@ -123,7 +122,7 @@ class Unpublished
 
         $data = [];
 
-        foreach($geocodesChunked as $geocodes) {
+        foreach ($geocodesChunked as $geocodes) {
             $result = $this->handleRequestGetGeocaches(implode(',', $geocodes), $take, $lite);
             $data   = array_merge($data, $result->getBody(true));
             if ($countRequests > self::MAX_REQUESTS_PER_MINUTE) {
@@ -152,7 +151,8 @@ class Unpublished
             'take'   => $take,
             'skip'   => $skip,
             'fields' => 'referenceCode,name,url,geocacheType'
-            ]);
+            ]
+        );
     }
 
     /**
@@ -175,15 +175,17 @@ class Unpublished
             ['referenceCodes' => $geocodes,
              'take'           => $take,
              'fields'         => $fields
-            ]);
+            ]
+        );
     }
 
     /**
      * @param array $coordinates
-     * 
+     *
      * @return array
      */
-    protected function degreeDecimalToDecimal(array $coordinates): array {
+    protected function degreeDecimalToDecimal(array $coordinates): array
+    {
         $longitude = $coordinates[5] + round((($coordinates[6] . '.' . $coordinates[7]) / 60), 5);
         if (strtoupper($coordinates[4]) == 'W') {
             $longitude *=-1;

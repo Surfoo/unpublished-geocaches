@@ -7,10 +7,9 @@ use Geocaching\Exception\GeocachingSdkException;
 use League\OAuth2\Client\Provider\Geocaching as GeocachingProvider;
 use League\OAuth2\Client\Provider\Exception\GeocachingIdentityProviderException;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
-use League\OAuth2\Client\Token\AccessToken;
 
-$loader = new Twig_Loader_Filesystem(TEMPLATE_DIR);
-$twig   = new Twig_Environment($loader, array('debug' => TWIG_DEBUG, 'cache' => TEMPLATE_COMPILED_DIR));
+$loader = new Twig\Loader\FilesystemLoader(TEMPLATE_DIR);
+$twig   = new Twig\Environment($loader, ['debug' => TWIG_DEBUG, 'cache' => TEMPLATE_COMPILED_DIR]);
 
 $twig_vars = ['user' => []];
 
@@ -87,7 +86,7 @@ if (isset($_SESSION['oauth2state'])) {
                 'code'    => $e->getCode(),
                 'trace'   => print_r($e->getTrace(), true),
             ];
-        } catch(GeocachingSdkException $e) {
+        } catch (GeocachingSdkException $e) {
             echo $e->getMessage();
             die;
         }
@@ -114,7 +113,6 @@ if (!empty($_SESSION['accessToken'])) {
                 $_SESSION['hasExpired']              = $accessToken->hasExpired();
                 $_SESSION['object']                  = serialize($accessToken);
             } catch (GeocachingIdentityProviderException $e) {
-
                 $logger->error($e->getMessage());
 
                 $class = explode('\\', get_class($e));
@@ -128,22 +126,23 @@ if (!empty($_SESSION['accessToken'])) {
             }
         }
 
-        $sdk = GeocachingFactory::createSdk($_SESSION['accessToken'], 
-                                            $app['environment'], 
-                                            [
+        $sdk = GeocachingFactory::createSdk(
+            $_SESSION['accessToken'],
+            $app['environment'],
+            [
                                                 'connect_timeout' => $app['connect_timeout'],
                                                 'timeout'         => $app['timeout'],
                                                 'handler'         => $handlerStack,
-                                            ]);
+                                            ]
+        );
 
         $unpublished = new Unpublished($sdk);
 
-        if(empty($_SESSION['user'])) {
+        if (empty($_SESSION['user'])) {
             $_SESSION['user'] = $unpublished->getMyProfile();
         }
 
         $twig_vars['user'] = $_SESSION['user'];
-
     } catch (\Throwable $e) {
         $logger->error($e->getMessage());
 

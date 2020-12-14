@@ -27,10 +27,10 @@ $unpublished = new Unpublished($sdk);
 
 try {
     $geocaches = $unpublished->getGeocaches($_POST['geocodes']);
-} catch(GeocachingSdkException $e) {
+} catch (GeocachingSdkException $e) {
     $logger->error($e->getMessage());
     renderAjax(array('success' => false, 'message' => "API error:\n" . $e->getMessage()));
-} catch(\Exception $e) {
+} catch (\Exception $e) {
     $errorMsg = json_decode($e->getMessage());
     if ($errorMsg) {
         $logger->error($errorMsg->message);
@@ -39,14 +39,14 @@ try {
     renderAjax(array('success' => false, 'message' => $errorMsg));
 }
 
-$loader = new Twig_Loader_Filesystem([ROOT . '/waypoints/', TEMPLATE_DIR]);
-$twig   = new Twig_Environment($loader);
+$loader = new Twig\Loader\FilesystemLoader([ROOT . '/waypoints/', TEMPLATE_DIR]);
+$twig   = new Twig\Environment($loader);
 
 $failed = [];
 $waypointsList = [];
 
 //create each geocache file
-foreach($geocaches as $geocache) {
+foreach ($geocaches as $geocache) {
     $filename = sprintf(WAYPOINT_FILENAME, $geocache['referenceCode']);
 
     if (!$hd = fopen($filename, 'w')) {
@@ -66,7 +66,7 @@ $twig_vars['time'] = date('c');
 
 $split = (int) $_POST['gpxSplit'];
 
-if($split > 0) {
+if ($split > 0) {
     $waypointsList = array_chunk($waypointsList, $split);
 } else {
     $waypointsListTmp[] = $waypointsList;
