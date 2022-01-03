@@ -1,0 +1,8 @@
+twig:
+    default_path: '%kernel.project_dir%/templates'
+    paths:
+        'waypoints': ~
+
+when@test:
+    twig:
+        strict_variables: true
