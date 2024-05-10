@@ -44,6 +44,7 @@ if (isset($_POST['oauth'])) {
 
     // Get the state generated for you and store it to the session.
     $_SESSION['oauth2state'] = $provider->getState();
+    $_SESSION['oauth2pkceCode'] = $provider->getPkceCode();
 
     // Redirect the user to the authorization URL.
     header('Location: ' . $authorizationUrl);
@@ -66,6 +67,8 @@ if (isset($_SESSION['oauth2state'])) {
             if (isset($_GET['error'])) {
                 throw new GeocachingSdkException(sprintf('error:%s, error_description:%s', $_GET['error'], $_GET['error_description']));
             }
+            $provider->setPkceCode($_SESSION['oauth2pkceCode']);
+            
             // Try to get an access token using the authorization code grant.
             $accessToken = $provider->getAccessToken('authorization_code', [
                 'code' => $_GET['code']
