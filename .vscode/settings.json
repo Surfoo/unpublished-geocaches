@@ -1,0 +1,21 @@
+{
+    "editor.formatOnSave": true,
+    "[javascript]": {
+        "editor.formatOnSave": false
+    },
+    "[twig]": {
+        "editor.formatOnSave": false
+    },
+    "[php]": {
+        "editor.defaultFormatter": "junstyle.php-cs-fixer"
+    },
+    "editor.codeActionsOnSave": {
+        "source.fixAll": "explicit"
+    },
+    "files.trimTrailingWhitespace": true,
+    "files.eol": "\n",
+    "editor.insertSpaces": true,
+    "search.exclude": {
+        ".git/": true
+    }
+}

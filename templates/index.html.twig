@@ -1,93 +1,64 @@
 {% extends "main.html.twig" %}
 
 {% block main %}
-    {% if user is empty %}
-        <div class="jumbotron">
-            <p>Unpublished Geocaches allow you to retrieve your unpublished geocaches in order to prepare an event, powertrail before their publication.<br />
-	        You can choose your geocaches, download one or several GPX files.</p>
+    <div class="col-md-12">
 
-            <p>In order to use it, you have to login with your geocaching account.</p>
-
-            <form action="/" method="post" class="text-center">
-                <input type="submit" name="oauth" value="Sign in with Geocaching.com" class="btn btn-primary btn-lg" />
-            </form>
+        <div>
+            <h4>Add geocaches by geocode <small>(published, locked, archived geocaches...)</small></h4>
+            {% if app.user.membershipLevelId == 1 %}
+            <p class="alert alert-info" role="alert">As a basic Geocaching member, you are permitted to download full details 
+            of 3 geocaches per 24 hour period.<br />
+            Upgrade to a Geocaching Premium Membership today for full geocache information, access to all geocaching cache types, 
+            and many other Premium services including lists, offline functionality and geocache filtering.</p>
+            {% endif %}
+            <textarea id="geocodes" class="form-control" placeholder="GC2X3Y6, GC7NX8F..."></textarea><br />
+            <button type="submit" class="btn btn-primary" id="search-geocodes">Add to the list</button>
         </div>
-    {% else %}
-            <div class="col-md-12">
 
-                <div>
-                    <h4>Add geocaches by geocode <small>(published, locked, archived geocaches...)</small></h4>
-                    {% if user.membershipLevelId == 1 %}
-                    <p class="alert alert-info" role="alert">As a basic Geocaching member, you are permitted to download full details 
-                    of 3 geocaches per 24 hour period.<br />
-                    Upgrade to a Geocaching Premium Membership today for full geocache information, access to all geocaching cache types, 
-                    and many other Premium services including lists, offline functionality and geocache filtering.</p>
-                    {% endif %}
-                    <textarea id="geocodes" class="form-control" placeholder="GC2X3Y6, GC7NX8F..."></textarea><br />
-                    <button type="submit" class="btn btn-primary" id="search-geocodes">Add to the list</button>
+        <hr />
+
+        <div id="unpublishedCachesBlock">
+            <h4>Your geocaches <span id="totalGeocaches"></span></h4>
+            <div id="block_select" class="row g-3 align-items-center">
+                <div class="col-auto">
+                    <input type="checkbox" id="chk_select"> <label for="chk_select">Pick 100 geocaches</label>
                 </div>
-
-                <hr />
-
-                <div id="unpublishedCachesBlock">
-                    <h4>Your geocaches <span id="totalGeocaches"></span></h4>
-
-                    {# {% if geocaches|length == 0 %}
-                        <div class="alert alert-info">
-                            <h4>Oops!</h4>
-                            <p>You don't have any unpublished geocaches :-(</p>
-                            <p><a href="https://www.geocaching.com/play/hide" class="btn btn-primary">Hide a new geocache</a></p>
-                        </div>
-                    {% else %} #}
-                        <div id="block_select">
-                            <span>
-                                <input type="checkbox" id="chk_select"> <label for="chk_select">Pick 100 geocaches</label>
-                            </span>
-                            <input type="range" value="100" min="5" max="500" step="5" name="">
-                        </div>
-
-                        <div id="fetching-unpublished-caches" class="well well-sm"><img src="assets/loader.gif" alt="" /> Fetching your unpublished caches...</div>
-
-                        <div id="table-unpublished-caches">
-                            <table id="table-caches" class="table table-hover table-condensed">
-                                <thead>
-                                    <tr>
-                                        <th class="head-pick"><input type="checkbox" id="select-all" title="Select All" /></th>
-                                        <th class="head-pick"></th>
-                                        <th class="head-pick">Geocode</th>
-                                        <th class="head-title">Title</th>
-                                        <th class="head-link">Link</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    
-                                {# </tbody>
-                                <thead>
-                                    <tr>
-                                        <td colspan="5">
-                                            <button type="submit" class="btn btn-primary" data-loading-text="Refreshing..." id="refresh-cache"><span class="glyphicon glyphicon-refresh"></span> Refresh the list</button>
-                                        </td>
-                                    </tr>
-                                </thead> #}
-                            </table>
-
-                            <fieldset>
-                                <legend>Create your GPX File</legend>
-
-                                <div id="block_split">
-                                    <span>
-                                        <input type="checkbox" id="chk_split"> <label for="chk_split">Split GPX files by 100 geocaches</label>
-                                    </span>
-                                    <input type="range" value="100" min="5" max="500" step="5" name="">
-                                </div>
-
-                                <button type="submit" class="btn btn-primary" data-loading-text="<span class='glyphicon glyphicon-ok-circle'></span> Creating..." id="create-gpx"><span class="glyphicon glyphicon-ok-circle"></span> Create GPX</button>
-                                <ul id="download-links"></ul>
-                            </fieldset>
-                        </div>
-                    {# {% endif %} #}
+                <div class="col-auto">
+                    <input type="range" value="100" min="5" max="500" step="5" name="">
                 </div>
             </div>
-        {# endif #}
-    {% endif %}
+
+            <div id="fetching-unpublished-caches" class="well well-sm"><img src="{{ asset('loader.gif') }}" alt="" /> Fetching your unpublished caches...</div>
+
+            <div id="table-unpublished-caches">
+                <table id="table-caches" class="table table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="head-pick"><input type="checkbox" id="select-all" title="Select All" /></th>
+                            <th scope="col" style="width: 30px;"></th>
+                            <th scope="col" style="width: 120px;">Geocode</th>
+                            <th scope="col">Title</th>
+                            <th scope="col" class="head-link" style="width: 30px;">Link</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+
+                <fieldset>
+                    <legend>Create your GPX File</legend>
+
+                    <div id="block_split">
+                        <span>
+                            <input type="checkbox" id="chk_split"> <label for="chk_split">Split GPX files by 100 geocaches</label>
+                        </span>
+                        <input type="range" value="100" min="5" max="500" step="5" name="">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" data-loading-text="<i class='bi bi-check'></i> Creating..." id="create-gpx"><i class="bi bi-check"></i> Create GPX</button>
+                    <ul id="download-links"></ul>
+                </fieldset>
+            </div>
+        </div>
+    </div>
 {% endblock %}

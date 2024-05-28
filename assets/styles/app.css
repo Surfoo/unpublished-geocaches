@@ -1,0 +1,95 @@
+@media screen and (max-width: 768px) {
+    h1 {
+        font-size: 1.4em;
+    }
+    h3 {
+        margin: 0px;
+    }
+    .alert {
+        padding: 8px;
+    }
+    #download-gpx {
+        margin-top: 5px;
+    }
+    hr {
+        margin: 10px 0;
+    }
+}
+
+label {
+    font-weight: normal;
+    margin-bottom: 0;
+}
+
+footer li {
+    list-style-type: none;
+    display: inline;
+    margin-right: 2em;
+    font-size: 1.2em;
+}
+
+.head-pick {
+    width: 40px;
+}
+
+tr th {
+    background-color: #D0E3F0;
+}
+.link a {
+    display: block;
+}
+.head-pick,
+.head-link,
+.link,
+#table-caches tbody td:first-child,
+#table-caches tbody td:last-child {
+    text-align: center;
+}
+#table-caches label {
+    display: block;
+    cursor: pointer;
+}
+#table-caches tbody tr td:nth-child(1) {
+    text-align: right;
+}
+#table-caches tbody tr td:nth-child(2) {
+    text-align: center;
+}
+
+#fetching-unpublished-caches {
+    display: none;
+}
+
+.padding-left {
+    padding-left: 1em;
+}
+#block_select, #block_split {
+    margin-bottom: 10px;
+}
+#block_select span, #block_split span {
+    display: inline-block;
+}
+#block_select input[type="range"],
+#block_split input[type="range"] {
+    display: inline;
+    margin-left: 20px;
+    position: relative;
+    top: 5px;
+}
+
+#block_select input[type="range"] {
+    width: 180px;
+}
+#block_split input[type="range"] {
+    width: 280px;
+}
+
+#download-links {
+    margin-top: 1em;
+    padding-left: 0;
+}
+#download-links li {
+    list-style-type: none;
+    margin-bottom: 0.4em;
+}
+

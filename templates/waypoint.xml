@@ -28,4 +28,17 @@
       <groundspeak:encoded_hints>{{ hints|trim }}</groundspeak:encoded_hints>
     </groundspeak:cache>
   </wpt>
-{% include 'additional_waypoint.xml' %}
+{% for waypoint in additionalWaypoints %}
+  {% if waypoint.coordinates.latitude != '' and waypoint.coordinates.longitude != '' %}
+  <wpt lat="{{ waypoint.coordinates.latitude }}" lon="{{ waypoint.coordinates.longitude }}">
+    <time>{{ time }}</time>
+    <name>{{ waypoint.name }}</name>
+    <cmt>{{ waypoint.description }}</cmt>
+    <desc>{{ waypoint.typeName }}</desc>
+    <url>{{ waypoint.url }}</url>
+    <urlname>{{ waypoint.typeName }}</urlname>
+    <sym>{{ waypoint.typeName }}</sym>
+    <type>Waypoint|{{ waypoint.typeName }}</type>
+  </wpt>
+  {% endif %}
+{% endfor %}
