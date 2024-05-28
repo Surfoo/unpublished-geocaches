@@ -1,13 +1,8 @@
 twig:
-<<<<<<< ours
-    default_path: '%kernel.project_dir%/templates'
+    default_path: "%kernel.project_dir%/templates"
     paths:
-        'waypoints': ~
-||||||| base
-    default_path: '%kernel.project_dir%/templates'
-=======
-    file_name_pattern: '*.twig'
->>>>>>> theirs
+        "waypoints": ~
+    file_name_pattern: "*.twig"
 
 when@test:
     twig:
