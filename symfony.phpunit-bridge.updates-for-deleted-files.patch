@@ -1,0 +1,42 @@
+diff --git a/phpunit.xml.dist b/phpunit.xml.dist
+index af3f147..c76a655 100644
+--- a/phpunit.xml.dist
++++ b/phpunit.xml.dist
+@@ -14,7 +14,7 @@
+         <server name="APP_ENV" value="test" force="true" />
+         <server name="SHELL_VERBOSITY" value="-1" />
+         <server name="SYMFONY_PHPUNIT_REMOVE" value="" />
+-        <server name="SYMFONY_PHPUNIT_VERSION" value="9.5" />
++        <server name="SYMFONY_PHPUNIT_VERSION" value="9.6" />
+     </php>
+ 
+     <testsuites>
+@@ -33,10 +33,6 @@
+         <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener" />
+     </listeners>
+ 
+-    <!-- Run `composer require symfony/panther` before enabling this extension -->
+-    <!--
+     <extensions>
+-        <extension class="Symfony\Component\Panther\ServerExtension" />
+     </extensions>
+-    -->
+ </phpunit>
+diff --git a/tests/bootstrap.php b/tests/bootstrap.php
+index 469dcce..47a5855 100644
+--- a/tests/bootstrap.php
++++ b/tests/bootstrap.php
+@@ -4,8 +4,10 @@ use Symfony\Component\Dotenv\Dotenv;
+ 
+ require dirname(__DIR__).'/vendor/autoload.php';
+ 
+-if (file_exists(dirname(__DIR__).'/config/bootstrap.php')) {
+-    require dirname(__DIR__).'/config/bootstrap.php';
+-} elseif (method_exists(Dotenv::class, 'bootEnv')) {
++if (method_exists(Dotenv::class, 'bootEnv')) {
+     (new Dotenv())->bootEnv(dirname(__DIR__).'/.env');
+ }
++
++if ($_SERVER['APP_DEBUG']) {
++    umask(0000);
++}
