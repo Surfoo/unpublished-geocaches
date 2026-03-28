@@ -3,22 +3,20 @@
 namespace App\Controller;
 
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
-use League\OAuth2\Client\Provider\Geocaching as GeocachingProvider;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Routing\Annotation\Route;
-
+use Symfony\Component\Routing\Attribute\Route;
 
 class OAuthController extends AbstractController
 {
     #[Route('/login', name: 'app_login')]
-    public function login(ClientRegistry $clientRegistry, SessionInterface $session): Response
+    public function login(ClientRegistry $clientRegistry, Request $request): Response
     {
         $response = $clientRegistry->getClient('geocaching_main')->redirect([], []);
         $pkceCode = $clientRegistry->getClient('geocaching_main')->getOAuth2Provider()->getPkceCode();
 
-        $session->set('oauth2_pkce_code', $pkceCode);
+        $request->getSession()->set('oauth2_pkce_code', $pkceCode);
 
         return $response;
     }

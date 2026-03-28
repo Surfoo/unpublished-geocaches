@@ -7,10 +7,12 @@ use Geocaching\Utils;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use KnpU\OAuth2ClientBundle\Security\Authenticator\OAuth2Authenticator;
 use League\OAuth2\Client\Token\AccessToken;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -24,6 +26,7 @@ class GeocachingAuthenticator extends OAuth2Authenticator
         private ClientRegistry $clientRegistry,
         private RouterInterface $router,
         private RequestStack $requestStack,
+        private readonly LoggerInterface $apiLogger,
     ) {
     }
 
@@ -52,17 +55,28 @@ class GeocachingAuthenticator extends OAuth2Authenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
+        $this->apiLogger->info('onAuthenticationSuccess', [
+            'referenceCode'     => $token->getUser()->getReferenceCode(),
+            'userId'            => $token->getUser()->getUserId(),
+            'username'          => $token->getUser()->getUserIdentifier(),
+            'membershipLevelId' => $token->getUser()->getMembershipLevelId(),
+        ]);
+
         return null;
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
         $session = $this->requestStack->getSession();
-        $session->getFlashBag()->add(
-            'error',
-            'Erreur de connexion'
-        );
-        dd('Erreur de connexion');
+        /** @var FlashBagInterface $flashBag */
+        $flashBag = $session->getBag('flashes');
+        $flashBag->add('error', $exception->getMessageKey());
+
+        $this->apiLogger->error('onAuthenticationFailure', [
+            'key'     => $exception->getMessageKey(),
+            'message' => $exception->getMessageData(),
+        ]);
+
         return new RedirectResponse($this->router->generate('app_homepage'));
     }
 
