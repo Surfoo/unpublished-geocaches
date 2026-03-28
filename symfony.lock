@@ -11,9 +11,6 @@
     "egulias/email-validator": {
         "version": "3.1.2"
     },
-    "friendsofphp/proxy-manager-lts": {
-        "version": "v1.0.5"
-    },
     "guzzlehttp/guzzle": {
         "version": "7.4.1"
     },
@@ -32,9 +29,6 @@
             "ref": "1ff300d8c030f55c99219cc55050b97a695af3f6"
         }
     },
-    "laminas/laminas-code": {
-        "version": "4.5.1"
-    },
     "league/oauth2-client": {
         "version": "2.6.1"
     },
@@ -46,9 +40,6 @@
     },
     "nikic/php-parser": {
         "version": "v4.13.2"
-    },
-    "paragonie/random_compat": {
-        "version": "v9.99.100"
     },
     "phar-io/manifest": {
         "version": "2.0.3"
@@ -412,9 +403,6 @@
     },
     "symfony/property-info": {
         "version": "v6.0.0"
-    },
-    "symfony/proxy-manager-bridge": {
-        "version": "v6.0.1"
     },
     "symfony/routing": {
         "version": "7.0",
