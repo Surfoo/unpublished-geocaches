@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d365fb27c6bf3f93a1bcd7e0619f186c",
+    "content-hash": "c51d82287af594c42a65211cd0e11824",
     "packages": [
         {
             "name": "clue/stream-filter",
@@ -1881,39 +1881,39 @@
         },
         {
             "name": "surfoo/geocaching-php-sdk",
-            "version": "3.21.0",
+            "version": "dev-feat-v4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Surfoo/geocaching-php-sdk.git",
-                "reference": "34d67c4c52602e0992746a633b9951afd20f09e9"
+                "reference": "9626e8fa7f99bb7650ede3607ab82129a152c1d0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Surfoo/geocaching-php-sdk/zipball/34d67c4c52602e0992746a633b9951afd20f09e9",
-                "reference": "34d67c4c52602e0992746a633b9951afd20f09e9",
+                "url": "https://api.github.com/repos/Surfoo/geocaching-php-sdk/zipball/9626e8fa7f99bb7650ede3607ab82129a152c1d0",
+                "reference": "9626e8fa7f99bb7650ede3607ab82129a152c1d0",
                 "shasum": ""
             },
             "require": {
                 "monolog/monolog": "^3.0",
                 "nyholm/psr7": "^1.8",
-                "php": "^8.1",
+                "php": "^8.2",
                 "php-http/client-common": "^2.7",
                 "php-http/discovery": "^1.19",
                 "psr/http-client": "^1.0",
                 "psr/http-client-implementation": "*",
                 "psr/http-factory": "^1.0",
-                "surfoo/oauth2-geocaching": "^2.0"
+                "surfoo/oauth2-geocaching": "dev-feat-v3"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.0",
                 "php-http/mock-client": "^1.6",
                 "php-parallel-lint/php-parallel-lint": "~1.3",
-                "phpstan/phpstan": "^1.9",
-                "phpunit/php-code-coverage": "^10.0",
-                "phpunit/phpunit": "^10.0",
-                "rector/rector": "^0.17",
-                "squizlabs/php_codesniffer": "~3.5",
-                "symfony/var-dumper": "^6.3"
+                "phpstan/phpstan": "^2.1",
+                "phpunit/php-code-coverage": "^11.0 || ^12.0",
+                "phpunit/phpunit": "^11.0 || ^12.0",
+                "rector/rector": "^2.0",
+                "squizlabs/php_codesniffer": "^4.0",
+                "symfony/var-dumper": "^7.0 || ^8.0"
             },
             "type": "library",
             "autoload": {
@@ -1944,36 +1944,39 @@
             ],
             "support": {
                 "issues": "https://github.com/Surfoo/geocaching-php-sdk/issues",
-                "source": "https://github.com/Surfoo/geocaching-php-sdk/tree/3.21.0"
+                "source": "https://github.com/Surfoo/geocaching-php-sdk/tree/feat-v4"
             },
-            "time": "2023-11-01T23:57:46+00:00"
+            "time": "2026-03-19T22:35:43+00:00"
         },
         {
             "name": "surfoo/oauth2-geocaching",
-            "version": "2.1.0",
+            "version": "dev-feat-v3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Surfoo/oauth2-geocaching.git",
-                "reference": "10f939a7d419b3f7029c9de713d97facf9fae71e"
+                "reference": "9c8d871da7b4011e9afdf82795e25418d3299698"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Surfoo/oauth2-geocaching/zipball/10f939a7d419b3f7029c9de713d97facf9fae71e",
-                "reference": "10f939a7d419b3f7029c9de713d97facf9fae71e",
+                "url": "https://api.github.com/repos/Surfoo/oauth2-geocaching/zipball/9c8d871da7b4011e9afdf82795e25418d3299698",
+                "reference": "9c8d871da7b4011e9afdf82795e25418d3299698",
                 "shasum": ""
             },
             "require": {
-                "league/oauth2-client": "^2.7",
-                "php": "^8.1"
+                "league/oauth2-client": "^2.9",
+                "php": ">=8.2",
+                "php-http/client-common": "^2.7",
+                "php-http/promise": "^1.1",
+                "psr/log": "^3.0"
             },
             "require-dev": {
-                "mockery/mockery": "~1.4",
+                "nyholm/psr7": "^1.8",
                 "php-parallel-lint/php-parallel-lint": "~1.3",
-                "phpstan/phpstan": "^1.9",
-                "phpunit/php-code-coverage": "^10.0",
-                "phpunit/phpunit": "^10.0",
-                "rector/rector": "^0.17",
-                "squizlabs/php_codesniffer": "~3.5"
+                "phpstan/phpstan": "^2.0",
+                "phpunit/php-code-coverage": "^11.0 || ^12.0",
+                "phpunit/phpunit": "^11.0 || ^12.0",
+                "rector/rector": "^2.0",
+                "squizlabs/php_codesniffer": "~4.0"
             },
             "type": "library",
             "autoload": {
@@ -2003,9 +2006,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Surfoo/oauth2-geocaching/issues",
-                "source": "https://github.com/Surfoo/oauth2-geocaching/tree/2.1.0"
+                "source": "https://github.com/Surfoo/oauth2-geocaching/tree/feat-v3"
             },
-            "time": "2023-10-02T18:58:49+00:00"
+            "time": "2025-12-17T11:45:27+00:00"
         },
         {
             "name": "symfony/asset",
@@ -9764,8 +9767,10 @@
         }
     ],
     "aliases": [],
-    "minimum-stability": "stable",
-    "stability-flags": {},
+    "minimum-stability": "dev",
+    "stability-flags": {
+        "surfoo/geocaching-php-sdk": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
