@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-A Symfony 7.0 PHP web application that lets geocachers download GPX files for unpublished geocaches via the Geocaching.com OAuth2 API. Stateless (no database) — all state lives in sessions or files.
+A Symfony 8.0 PHP web application that lets geocachers download GPX files for unpublished geocaches via the Geocaching.com OAuth2 API. Stateless (no database) — all state lives in sessions or files.
 
 ## Common Commands
 
@@ -25,7 +25,8 @@ php bin/console cache:clear
 # Lint
 php bin/console lint:twig templates/
 php bin/console lint:yaml config/
-npx eslint .
+npm run lint        # Biome (JS lint + format check)
+npm run format      # Biome (JS auto-format)
 
 # Tests
 php bin/phpunit
