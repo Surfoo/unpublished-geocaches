@@ -14,9 +14,9 @@ class User implements UserInterface
     private ?string $avatarUrl;
     private string $membershipLevelId;
     private \DateTimeInterface $joinedDateUtc;
-    private AccessToken $credentials;
+    private ?AccessToken $credentials = null;
 
-    private $roles = [];
+    private array $roles = [];
 
     public function getUserId(): ?int
     {
@@ -114,7 +114,7 @@ class User implements UserInterface
 
     public function isPremium(): bool
     {
-        return $this->getMembershipLevelId() == MembershipType::PREMIUM->id();
+        return (int) $this->getMembershipLevelId() === MembershipType::PREMIUM->id();
     }
 
     /**
@@ -161,7 +161,6 @@ class User implements UserInterface
      */
     public function eraseCredentials(): void
     {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
+        $this->credentials = null;
     }
 }
