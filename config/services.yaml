@@ -24,3 +24,4 @@ services:
     App\Service\GeocachingService:
         arguments:
             $clientRegistry: '@KnpU\OAuth2ClientBundle\Client\ClientRegistry'
+            $geocachingEnv: '%env(GEOCACHING_ENV)%'
