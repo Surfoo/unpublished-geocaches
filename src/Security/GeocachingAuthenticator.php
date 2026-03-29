@@ -43,14 +43,14 @@ class GeocachingAuthenticator extends OAuth2Authenticator
         $this->clientRegistry->getClient('geocaching_main')->getOAuth2Provider()->setPkceCode($session->get('oauth2_pkce_code'));
 
         $credentials = $this->fetchAccessToken($this->clientRegistry->getClient('geocaching_main'), [
-            'code' => $request->get('code')
+            'code' => $request->query->get('code'),
         ]);
 
         $user = $this->getUser($credentials);
 
         $session->set('user', $user);
 
-        return new SelfValidatingPassport(new UserBadge($credentials->getToken(), fn() => $this->getUser($credentials)));
+        return new SelfValidatingPassport(new UserBadge($credentials->getToken(), fn() => $user));
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
@@ -82,11 +82,14 @@ class GeocachingAuthenticator extends OAuth2Authenticator
 
     private function getUser(AccessToken $credentials): User
     {
-        $this->clientRegistry->getClient('geocaching_main')->getOAuth2Provider()->setResourceOwnerFields(
-            [...$this->clientRegistry->getClient('geocaching_main')->getOAuth2Provider()->getResourceOwnerFields(), ...['avatarUrl']]
-        );
+        $client   = $this->clientRegistry->getClient('geocaching_main');
+        $provider = $client->getOAuth2Provider();
 
-        $geocachingResourceOwner = $this->clientRegistry->getClient('geocaching_main')->fetchUserFromToken($credentials);
+        if (!in_array('avatarUrl', $provider->getResourceOwnerFields(), true)) {
+            $provider->setResourceOwnerFields([...$provider->getResourceOwnerFields(), 'avatarUrl']);
+        }
+
+        $geocachingResourceOwner = $client->fetchUserFromToken($credentials);
 
         $user = new User();
         $user->setUserId(Utils::referenceCodeToId($geocachingResourceOwner->getId()))
@@ -98,13 +101,18 @@ class GeocachingAuthenticator extends OAuth2Authenticator
              ->setMembershipLevelId($geocachingResourceOwner->getMembershipLevelId())
             ;
 
-        switch ($user->getMembershipLevelId()) {
+        switch ((int) $user->getMembershipLevelId()) {
             case MembershipType::PREMIUM->id():
                 $user->setRoles(['ROLE_PREMIUM']);
                 break;
             case MembershipType::BASIC->id():
                 $user->setRoles(['ROLE_BASIC']);
                 break;
+            default:
+                $this->apiLogger->warning('Unknown membership level', [
+                    'membershipLevelId' => $user->getMembershipLevelId(),
+                    'username'          => $user->getUserIdentifier(),
+                ]);
         }
 
         return $user;
