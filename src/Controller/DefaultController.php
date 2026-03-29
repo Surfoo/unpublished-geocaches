@@ -2,18 +2,21 @@
 
 namespace App\Controller;
 
+use App\Security\User;
 use App\Service\GeocachingService;
+use App\Service\GpxGeneratorService;
 use App\Service\UnpublishedService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class DefaultController extends AbstractController
 {
-    public function __construct(private ParameterBagInterface $params, private GeocachingService $geocachingService)
-    {
+    public function __construct(
+        private GeocachingService $geocachingService,
+        private GpxGeneratorService $gpxGeneratorService,
+    ) {
     }
 
     #[Route('/', name: 'app_homepage')]
@@ -27,104 +30,53 @@ class DefaultController extends AbstractController
     #[Route('/unpublished', name: 'app_get_unpublished', format: 'json')]
     public function getUnpublished(Request $request): Response
     {
-        $api = $this->geocachingService->checkAndRefreshToken()->getGeocachingClientApi();
-        $unpublisedService = new UnpublishedService($api);
+        $api              = $this->geocachingService->checkAndRefreshToken()->getGeocachingClientApi();
+        $unpublishedService = new UnpublishedService($api);
 
-        if($request->getContent() == "") {
-            return $this->json($unpublisedService->getUnpublishedGeocaches());
+        if ($request->getContent() === '') {
+            return $this->json($unpublishedService->getUnpublishedGeocaches());
         }
 
         $data = $request->toArray();
-        if(!isset($data['geocodes'])) {
-            return new Response(status: Response::HTTP_BAD_REQUEST);
-        }
-
-        preg_match_all('/(GC[a-z-0-9]+)/mi', $data['geocodes'], $matches);
-        $geocodes = array_unique($matches[1]);
-
-        return $this->json($unpublisedService->getGeocaches($geocodes));
-    }
-
-    #[Route('/createGpx', name: 'app_create_gpx', /*format: 'json'*/)]
-    public function getCreateGpx(Request $request): Response
-    {
-        if ($request->getContent() == "") {
-            return new Response(status: Response::HTTP_BAD_REQUEST);
-        }
-
-        $data = $request->toArray();
-
         if (!isset($data['geocodes'])) {
             return new Response(status: Response::HTTP_BAD_REQUEST);
         }
 
-        $geocodes = $data['geocodes'];
-        $gpxSplit = (int) $data['gpxSplit'];
+        preg_match_all('/(GC[a-z0-9]+)/mi', $data['geocodes'], $matches);
+        $geocodes = array_unique($matches[1]);
 
-        if (empty($geocodes) || !is_array($geocodes)) {
+        return $this->json($unpublishedService->getGeocaches($geocodes));
+    }
+
+    #[Route('/createGpx', name: 'app_create_gpx')]
+    public function getCreateGpx(Request $request): Response
+    {
+        if ($request->getContent() === '') {
             return new Response(status: Response::HTTP_BAD_REQUEST);
         }
 
-        $api = $this->geocachingService->checkAndRefreshToken()->getGeocachingClientApi();
-        $unpublisedService = new UnpublishedService($api);
+        $data = $request->toArray();
 
-        $data = $unpublisedService->getGeocaches($geocodes);
-
-        $failed = [];
-        $waypointsList = [];
-        $time = date('c');
-
-        //create each geocache file
-        foreach ($data as $geocache) {
-            $filename = sprintf($this->params->get('kernel.project_dir') . '/waypoints/%s.gpx', $geocache->referenceCode);
-
-            if (!$hd = fopen($filename, 'w')) {
-                $failed[] = $geocache->referenceCode;
-                continue;
-            }
-
-            $waypointsList[] = basename($filename);
-            fwrite($hd, trim($this->renderView('waypoint.xml', [...(array) $geocache, 'time' => $time])));
-            fclose($hd);
+        if (!isset($data['geocodes']) || !is_array($data['geocodes']) || empty($data['geocodes'])) {
+            return new Response(status: Response::HTTP_BAD_REQUEST);
         }
 
-        // create gpx files
-        $twig_vars['username'] = $this->getUser()->getUsername();
+        $geocodes = $data['geocodes'];
+        $gpxSplit = (int) ($data['gpxSplit'] ?? 0);
 
-        if ($gpxSplit > 0) {
-            $waypointsList = array_chunk($waypointsList, $gpxSplit);
-        } else {
-            $waypointsListTmp[] = $waypointsList;
-            unset($waypointsList);
-            $waypointsList = $waypointsListTmp;
-        }
+        $api              = $this->geocachingService->checkAndRefreshToken()->getGeocachingClientApi();
+        $unpublishedService = new UnpublishedService($api);
+        $geocacheData     = $unpublishedService->getGeocaches($geocodes);
 
-        $links = [];
+        /** @var User $user */
+        $user   = $this->getUser();
+        $result = $this->gpxGeneratorService->generate(
+            $geocacheData,
+            $user->getUsername(),
+            $user->getReferenceCode(),
+            $gpxSplit,
+        );
 
-        foreach ($waypointsList as $key => $waypoints) {
-            $twig_vars['waypoints'] = $waypoints;
-            $gpxContent = $this->renderView('geocaches.xml', [...$twig_vars, 'time' => $time]);
-
-            $xml = new \DomDocument();
-            $xml->preserveWhiteSpace = false;
-            $xml->formatOutput = true;
-            $xml->loadXML($gpxContent);
-            $gpxContent = $xml->saveXML();
-            $gpxFilename = sprintf($this->params->get('kernel.project_dir') . '/public/gpx/%s.part%02d.gpx',
-                                   substr(hash('sha512', $this->getUser()->getReferenceCode()), 0, 12), $key + 1);
-            $hd = fopen($gpxFilename, 'w');
-            fwrite($hd, $gpxContent);
-            fclose($hd);
-
-            $linkName = 'Download GPX';
-            if ($gpxSplit > 0 && count($waypointsList) > 1) {
-                $linkName.= ' (part ' . ($key + 1) . ')';
-            }
-
-            $links[] = '<li><a href="gpx/' . basename($gpxFilename) . '" class="btn btn-success" id="download-gpx">' .
-                       '<i class="bi bi-file-arrow-down"></i> ' . $linkName . '</a></li>';
-        }
-
-        return $this->json(['success' => true, 'fail' => $failed, 'link' => $links]);
+        return $this->json(['success' => true, 'fail' => $result['failed'], 'links' => $result['links']]);
     }
 }

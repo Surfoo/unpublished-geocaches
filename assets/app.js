@@ -187,7 +187,12 @@ document.getElementById("create-gpx").addEventListener("click", () => {
         .then(json)
         .then((data) => {
             if (data?.success) {
-                document.getElementById("download-links").innerHTML = data.link.join("")
+                document.getElementById("download-links").innerHTML = data.links
+                    .map(
+                        (l) =>
+                            `<li><a href="${l.href}" class="btn btn-success"><i class="bi bi-file-arrow-down"></i> ${l.label}</a></li>`
+                    )
+                    .join("")
             } else {
                 alert(data.message)
             }
