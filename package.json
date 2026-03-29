@@ -3,7 +3,7 @@
         "@biomejs/biome": "^2.4.9"
     },
     "scripts": {
-        "lint": "biome check assets/",
-        "format": "biome format --write assets/"
+        "lint": "biome check assets/app.js assets/styles/app.css",
+        "format": "biome format --write assets/app.js assets/styles/app.css"
     }
 }

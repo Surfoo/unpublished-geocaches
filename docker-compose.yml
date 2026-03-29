@@ -12,9 +12,14 @@ services:
       - "8000:80"
 
   php-fpm:
-    build: docker/php-fpm
+    build:
+      context: docker/php-fpm
+      args:
+        UID: "${UID:-1000}"
+        GID: "${GID:-1000}"
     container_name: unpublished-php-fpm
     working_dir: /application
+    user: "${UID:-1000}:${GID:-1000}"
     environment:
       - TZ=Europe/Paris
     volumes:

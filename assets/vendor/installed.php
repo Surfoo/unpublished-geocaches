@@ -1,17 +1,7 @@
 <?php return array (
-  'jquery' => 
-  array (
-    'version' => '3.7.1',
-    'dependencies' => 
-    array (
-    ),
-    'extraFiles' => 
-    array (
-    ),
-  ),
   'bootstrap' => 
   array (
-    'version' => '5.3.3',
+    'version' => '5.3.8',
     'dependencies' => 
     array (
       0 => '@popperjs/core',
@@ -32,7 +22,7 @@
   ),
   'bootstrap/dist/css/bootstrap.min.css' => 
   array (
-    'version' => '5.3.3',
+    'version' => '5.3.8',
     'dependencies' => 
     array (
     ),
@@ -42,7 +32,7 @@
   ),
   'bootstrap-icons/font/bootstrap-icons.min.css' => 
   array (
-    'version' => '1.11.3',
+    'version' => '1.13.1',
     'dependencies' => 
     array (
     ),
@@ -50,16 +40,6 @@
     array (
       0 => '/font/fonts/bootstrap-icons.woff2',
       1 => '/font/fonts/bootstrap-icons.woff',
-    ),
-  ),
-  '@hotwired/stimulus' => 
-  array (
-    'version' => '3.2.2',
-    'dependencies' => 
-    array (
-    ),
-    'extraFiles' => 
-    array (
     ),
   ),
 );

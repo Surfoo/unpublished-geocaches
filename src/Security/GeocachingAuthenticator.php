@@ -38,9 +38,9 @@ class GeocachingAuthenticator extends OAuth2Authenticator
 
     public function authenticate(Request $request): Passport
     {
-        $session = $this->requestStack->getSession();
-
-        $this->clientRegistry->getClient('geocaching_main')->getOAuth2Provider()->setPkceCode($session->get('oauth2_pkce_code'));
+        $session  = $this->requestStack->getSession();
+        $provider = $this->clientRegistry->getClient('geocaching_main')->getOAuth2Provider();
+        $provider->setPkceCode($session->get('oauth2_pkce_code'));
 
         $credentials = $this->fetchAccessToken($this->clientRegistry->getClient('geocaching_main'), [
             'code' => $request->query->get('code'),
