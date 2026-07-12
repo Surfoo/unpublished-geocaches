@@ -2,13 +2,13 @@
 
 namespace App\Service;
 
+use Geocaching\Exception\RateLimitExceededException;
 use Geocaching\GeocachingSdk;
+use Http\Client\Exception\HttpException;
 use Psr\Http\Message\ResponseInterface;
 
 class UnpublishedService
 {
-    public const MAX_REQUESTS_PER_MINUTE = 30;
-
     public function __construct(private readonly GeocachingSdk $api)
     {
     }
@@ -38,20 +38,29 @@ class UnpublishedService
     {
         $geocaches = [];
 
-        $totalCount    = (int) $this->handleRequestSearchGeocaches($query, 0, 0)->getHeader('x-total-count')[0];
-        $countRequests = ceil($totalCount / $chunk);
+        $countResponse = $this->request(
+            fn () => $this->handleRequestSearchGeocaches($query, 0, 0),
+            'Failed to count geocaches for query "' . $query . '"'
+        );
+
+        $totalCountHeader = $countResponse->getHeader('x-total-count');
+        if (!isset($totalCountHeader[0])) {
+            throw new GeocachingApiException(
+                $countResponse->getStatusCode(),
+                'Missing x-total-count header for query "' . $query . '"'
+            );
+        }
+
+        $totalCount = (int) $totalCountHeader[0];
 
         $i = 0;
         while (count($geocaches) < $totalCount) {
-            $result = $this->handleRequestSearchGeocaches($query, $chunk, $chunk * $i);
-            if (!$this->isOk($result->getStatusCode())) {
-                throw new \Exception('Bad Request');
-            }
+            $result = $this->request(
+                fn () => $this->handleRequestSearchGeocaches($query, $chunk, $chunk * $i),
+                'Failed to search geocaches for query "' . $query . '"'
+            );
             $geocaches = array_merge($geocaches, json_decode($result->getBody()));
             ++$i;
-            if ($countRequests > self::MAX_REQUESTS_PER_MINUTE) {
-                sleep(2);
-            }
         }
 
         return $geocaches;
@@ -66,22 +75,45 @@ class UnpublishedService
     {
         $take            = 50;
         $geocodesChunked = array_chunk($geocodes, $take);
-        $countRequests   = count($geocodesChunked);
 
         $data = [];
 
         foreach ($geocodesChunked as $geocodes) {
-            $result = $this->handleRequestGetGeocaches(implode(',', $geocodes), $take, $lite);
-            if (!$this->isOk($result->getStatusCode())) {
-                throw new \Exception('Bad Request');
-            }
+            $result = $this->request(
+                fn () => $this->handleRequestGetGeocaches(implode(',', $geocodes), $take, $lite),
+                'Failed to fetch geocaches'
+            );
             $data = array_merge($data, json_decode($result->getBody()));
-            if ($countRequests > self::MAX_REQUESTS_PER_MINUTE) {
-                sleep(2);
-            }
         }
 
         return $data;
+    }
+
+    /**
+     * Issues an SDK request and normalizes both a non-2xx response and an
+     * HttpException raised by the SDK's reliability plugins (retries are
+     * already exhausted by the time we see this) into a GeocachingApiException.
+     */
+    private function request(\Closure $call, string $errorMessage): ResponseInterface
+    {
+        try {
+            $response = $call();
+        } catch (RateLimitExceededException $e) {
+            throw new GeocachingApiException(
+                $e->getResponse()->getStatusCode(),
+                $errorMessage . ': rate limit exceeded',
+                $e->getRetryAfterSeconds(),
+                $e
+            );
+        } catch (HttpException $e) {
+            throw new GeocachingApiException($e->getResponse()->getStatusCode(), $errorMessage, previous: $e);
+        }
+
+        if (!$this->isOk($response->getStatusCode())) {
+            throw new GeocachingApiException($response->getStatusCode(), $errorMessage);
+        }
+
+        return $response;
     }
 
     protected function handleRequestSearchGeocaches(string $query, int $take, int $skip): ResponseInterface

@@ -2,8 +2,12 @@
 
 namespace App\Tests\Service;
 
+use App\Service\GeocachingApiException;
 use App\Service\UnpublishedService;
+use Geocaching\Exception\RateLimitExceededException;
 use Geocaching\GeocachingSdk;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
@@ -82,5 +86,26 @@ class UnpublishedServiceTest extends TestCase
 
         $this->expectException(\Exception::class);
         $service->getGeocaches(['GC12345']);
+    }
+
+    public function testGetGeocachesWrapsExhaustedRateLimitIntoApiExceptionWithRetryAfter(): void
+    {
+        $request  = new Request('GET', '/geocaches');
+        $response = new Response(429, ['x-rate-limit-reset' => '42']);
+
+        $sdk = $this->createStub(GeocachingSdk::class);
+        $sdk->method('getGeocaches')->willThrowException(
+            new RateLimitExceededException('Geocaching API rate limit exceeded', $request, $response, 42)
+        );
+
+        $service = new UnpublishedService($sdk);
+
+        try {
+            $service->getGeocaches(['GC12345']);
+            $this->fail('Expected GeocachingApiException to be thrown.');
+        } catch (GeocachingApiException $e) {
+            $this->assertSame(429, $e->getApiStatusCode());
+            $this->assertSame(42, $e->getRetryAfterSeconds());
+        }
     }
 }

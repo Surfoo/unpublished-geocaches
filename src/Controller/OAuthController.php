@@ -22,14 +22,18 @@ class OAuthController extends AbstractController
         return $response;
     }
 
-    #[Route('/logout', name: 'app_logout')]
-    public function logout(): never
-    {
-        throw new \Exception('Don\'t forget to activate logout in security.yaml');
-    }
-
     #[Route('/callback', name: 'app_callback')]
     public function callback(): RedirectResponse
+    {
+        return $this->redirectToRoute('app_homepage');
+    }
+
+    /**
+     * Route only exists to give the "app_logout" name a path; the actual logout
+     * is performed by the firewall's LogoutListener before this action ever runs.
+     */
+    #[Route('/logout', name: 'app_logout')]
+    public function logout(): RedirectResponse
     {
         return $this->redirectToRoute('app_homepage');
     }

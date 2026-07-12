@@ -29,15 +29,13 @@ class GpxGeneratorService
 
         foreach ($geocaches as $geocache) {
             $filename = sprintf('%s/%s.gpx', $this->waypointsDir, $geocache->referenceCode);
-            $handle   = fopen($filename, 'w');
+            $content  = trim($this->twig->render('waypoint.xml', [...(array) $geocache, 'time' => $time]));
 
-            if ($handle === false) {
+            if (file_put_contents($filename, $content) === false) {
                 $failed[] = $geocache->referenceCode;
                 continue;
             }
 
-            fwrite($handle, trim($this->twig->render('waypoint.xml', [...(array) $geocache, 'time' => $time])));
-            fclose($handle);
             $waypointFiles[] = basename($filename);
         }
 
@@ -59,6 +57,10 @@ class GpxGeneratorService
 
             $gpxFilename = sprintf('%s/%s.part%02d.gpx', $this->gpxDir, $filenamePrefix, $key + 1);
             file_put_contents($gpxFilename, $xml->saveXML());
+
+            foreach ($chunk as $waypointFile) {
+                @unlink($this->waypointsDir . '/' . $waypointFile);
+            }
 
             $label = 'Download GPX';
             if ($gpxSplit > 0 && count($chunks) > 1) {

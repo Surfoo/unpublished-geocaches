@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Security\User;
 use App\Service\GeocachingService;
 use App\Service\GpxGeneratorService;
-use App\Service\UnpublishedService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,8 +29,7 @@ class DefaultController extends AbstractController
     #[Route('/unpublished', name: 'app_get_unpublished', format: 'json')]
     public function getUnpublished(Request $request): Response
     {
-        $api                = $this->geocachingService->getGeocachingClientApi();
-        $unpublishedService = new UnpublishedService($api);
+        $unpublishedService = $this->geocachingService->createUnpublishedService();
 
         if ($request->getContent() === '') {
             return $this->json($unpublishedService->getUnpublishedGeocaches());
@@ -42,7 +40,7 @@ class DefaultController extends AbstractController
             return new Response(status: Response::HTTP_BAD_REQUEST);
         }
 
-        preg_match_all('/(GC[a-z0-9]+)/mi', $data['geocodes'], $matches);
+        preg_match_all('/(GC[A-Z0-9]+)/i', $data['geocodes'], $matches);
         $geocodes = array_unique($matches[1]);
 
         return $this->json($unpublishedService->getGeocaches($geocodes));
@@ -64,8 +62,7 @@ class DefaultController extends AbstractController
         $geocodes = $data['geocodes'];
         $gpxSplit = (int) ($data['gpxSplit'] ?? 0);
 
-        $api                = $this->geocachingService->getGeocachingClientApi();
-        $unpublishedService = new UnpublishedService($api);
+        $unpublishedService = $this->geocachingService->createUnpublishedService();
         $geocacheData       = $unpublishedService->getGeocaches($geocodes);
 
         /** @var User $user */
