@@ -91,7 +91,12 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
-        ]
+        ],
+        "php-cs-fixer": [
+            "./vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php"
+        ],
+        "phpstan": "./vendor/bin/phpstan --memory-limit=512M analyse",
+        "rector": "./vendor/bin/rector"
     },
     "conflict": {
         "symfony/symfony": "*"

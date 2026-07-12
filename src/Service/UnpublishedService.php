@@ -45,10 +45,7 @@ class UnpublishedService
 
         $totalCountHeader = $countResponse->getHeader('x-total-count');
         if (!isset($totalCountHeader[0])) {
-            throw new GeocachingApiException(
-                $countResponse->getStatusCode(),
-                'Missing x-total-count header for query "' . $query . '"'
-            );
+            throw new GeocachingApiException($countResponse->getStatusCode(), 'Missing x-total-count header for query "' . $query . '"');
         }
 
         $totalCount = (int) $totalCountHeader[0];
@@ -99,12 +96,7 @@ class UnpublishedService
         try {
             $response = $call();
         } catch (RateLimitExceededException $e) {
-            throw new GeocachingApiException(
-                $e->getResponse()->getStatusCode(),
-                $errorMessage . ': rate limit exceeded',
-                $e->getRetryAfterSeconds(),
-                $e
-            );
+            throw new GeocachingApiException($e->getResponse()->getStatusCode(), $errorMessage . ': rate limit exceeded', $e->getRetryAfterSeconds(), $e);
         } catch (HttpException $e) {
             throw new GeocachingApiException($e->getResponse()->getStatusCode(), $errorMessage, previous: $e);
         }
