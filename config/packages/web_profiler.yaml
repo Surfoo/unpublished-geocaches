@@ -3,7 +3,7 @@ when@dev:
         toolbar: true
 
     framework:
-        profiler:
+        profiler: true
 
 when@test:
     framework:
