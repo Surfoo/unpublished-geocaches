@@ -1,9 +1,28 @@
-import "./styles/app.css"
 import "bootstrap"
 import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap-icons/font/bootstrap-icons.min.css"
+import "./styles/app.css"
 
 ;("use strict")
+
+/* ── Theme toggle ───────────────────────────────────────────── */
+function initTheme() {
+    document.querySelectorAll(".theme-toggle [data-set-theme]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+            const theme = btn.dataset.setTheme
+            document.documentElement.setAttribute("data-theme", theme)
+            localStorage.setItem("theme", theme)
+        })
+    })
+
+    window.addEventListener("storage", (e) => {
+        if (e.key === "theme" && e.newValue) {
+            document.documentElement.setAttribute("data-theme", e.newValue)
+        }
+    })
+}
+
+initTheme()
 
 const geocachesRetrieved = []
 const fetchingUnpublishedCachesElm = document.getElementById("fetching-unpublished-caches")

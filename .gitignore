@@ -1,6 +1,9 @@
-public/gpx
-waypoints
-node_modules
+/public/gpx
+/waypoints
+/node_modules
+/docs/
+/config/reference.php
+
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php
@@ -24,3 +27,4 @@ node_modules
 /public/assets/
 /assets/vendor/
 ###< symfony/asset-mapper ###
+
