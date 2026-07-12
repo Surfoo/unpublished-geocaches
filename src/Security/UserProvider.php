@@ -8,16 +8,19 @@ use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
+/**
+ * @implements UserProviderInterface<User>
+ */
 class UserProvider implements UserProviderInterface
 {
     public function __construct(
-        private RequestStack $requestStack,
+        private readonly RequestStack $requestStack,
     ) {
     }
 
     public function loadUserByIdentifier(string $identifier): UserInterface
     {
-        $user = ($this->requestStack->getSession())->get('user');
+        $user = $this->requestStack->getSession()->get('user');
 
         if (!$user instanceof User) {
             throw new UserNotFoundException('User not found');
@@ -44,25 +47,19 @@ class UserProvider implements UserProviderInterface
     public function refreshUser(UserInterface $user): UserInterface
     {
         if (!$user instanceof User) {
-            throw new UnsupportedUserException(sprintf('Invalid user class "%s".', get_class($user)));
+            throw new UnsupportedUserException(sprintf('Invalid user class "%s".', $user::class));
         }
 
         // Return a User object after making sure its data is "fresh".
         // Or throw a UsernameNotFoundException if the user no longer exists.
-        $user = $this->loadUserByIdentifier($user->getUsername());
-
-        // Si on arrive là, c'est que le token a expiré
-        // Utilisation de token de l'utilisateur pour l'API et refresh du token
-        //$this->api->setUser($user)->refreshToken();
-
-        // Renvoie de l'objet User attendu, que le refresh ai fonctionné ou pas.
-        return $user;
+        // Token refresh is handled by GeocachingService/SessionTokenStorage via the SDK's TokenRefreshPlugin.
+        return $this->loadUserByIdentifier($user->getUsername());
     }
 
     /**
      * Tells Symfony to use this provider for this User class.
      */
-    public function supportsClass($class): bool
+    public function supportsClass(string $class): bool
     {
         return User::class === $class || is_subclass_of($class, User::class);
     }

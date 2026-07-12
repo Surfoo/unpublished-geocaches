@@ -14,8 +14,8 @@ use Symfony\Component\Routing\Attribute\Route;
 class DefaultController extends AbstractController
 {
     public function __construct(
-        private GeocachingService $geocachingService,
-        private GpxGeneratorService $gpxGeneratorService,
+        private readonly GeocachingService $geocachingService,
+        private readonly GpxGeneratorService $gpxGeneratorService,
     ) {
     }
 
@@ -30,7 +30,7 @@ class DefaultController extends AbstractController
     #[Route('/unpublished', name: 'app_get_unpublished', format: 'json')]
     public function getUnpublished(Request $request): Response
     {
-        $api              = $this->geocachingService->checkAndRefreshToken()->getGeocachingClientApi();
+        $api                = $this->geocachingService->getGeocachingClientApi();
         $unpublishedService = new UnpublishedService($api);
 
         if ($request->getContent() === '') {
@@ -64,9 +64,9 @@ class DefaultController extends AbstractController
         $geocodes = $data['geocodes'];
         $gpxSplit = (int) ($data['gpxSplit'] ?? 0);
 
-        $api              = $this->geocachingService->checkAndRefreshToken()->getGeocachingClientApi();
+        $api                = $this->geocachingService->getGeocachingClientApi();
         $unpublishedService = new UnpublishedService($api);
-        $geocacheData     = $unpublishedService->getGeocaches($geocodes);
+        $geocacheData       = $unpublishedService->getGeocaches($geocodes);
 
         /** @var User $user */
         $user   = $this->getUser();

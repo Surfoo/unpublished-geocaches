@@ -26,6 +26,7 @@ initTheme()
 
 const geocachesRetrieved = []
 const fetchingUnpublishedCachesElm = document.getElementById("fetching-unpublished-caches")
+const noGeocachesMessageElm = document.getElementById("no-geocaches-message")
 const searchGeocodesElm = document.getElementById("search-geocodes")
 const selectAllElm = document.getElementById("select-all")
 
@@ -85,6 +86,14 @@ const filterData = (data) => {
 const displayGeocaches = () => {
     selectAllElm.checked = false
     fetchingUnpublishedCachesElm.style.display = "none"
+
+    if (geocachesRetrieved.length === 0) {
+        noGeocachesMessageElm.style.display = "block"
+        document.getElementById("table-unpublished-caches").style.display = "none"
+        return
+    }
+
+    noGeocachesMessageElm.style.display = "none"
     document.getElementById("table-unpublished-caches").style.display = "block"
     document.querySelector("#table-caches tbody").innerHTML = ""
     geocachesRetrieved.forEach((g, index) => {

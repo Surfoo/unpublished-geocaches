@@ -52,7 +52,7 @@ class GpxGeneratorService
                 'time'      => $time,
             ]);
 
-            $xml = new \DOMDocument();
+            $xml                     = new \DOMDocument();
             $xml->preserveWhiteSpace = false;
             $xml->formatOutput       = true;
             $xml->loadXML($gpxContent);

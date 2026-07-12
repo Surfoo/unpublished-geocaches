@@ -14,7 +14,7 @@
         </div>
         {% endif %}
 
-        <textarea id="geocodes" class="form-control mb-2" placeholder="GC2X3Y6, GC7NX8F..."></textarea>
+        <textarea id="geocodes" class="form-control mb-2" placeholder="Type geocodes here..."></textarea>
         <button type="submit" class="btn btn-primary" id="search-geocodes">
             <i class="bi bi-plus-lg"></i> Add to list
         </button>
@@ -24,7 +24,7 @@
 
     <div id="unpublishedCachesBlock">
         <div class="section-label">Your geocaches</div>
-        <div class="section-title">Cache list <span id="totalGeocaches"></span></div>
+        <div class="section-title">Geocache list <span id="totalGeocaches"></span></div>
 
         <div id="block_select">
             <span>
@@ -35,6 +35,10 @@
 
         <div id="fetching-unpublished-caches">
             <img src="{{ asset('loader.gif') }}" alt="" width="16"> Fetching your unpublished caches…
+        </div>
+
+        <div id="no-geocaches-message" class="alert alert-info" role="alert" style="display: none;">
+            No geocaches found.
         </div>
 
         <div id="table-unpublished-caches">

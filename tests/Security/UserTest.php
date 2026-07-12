@@ -48,16 +48,15 @@ class UserTest extends TestCase
         $this->assertFalse($user->isPremium());
     }
 
-    public function testEraseCredentialsClearsToken(): void
+    public function testSerializeRoundTripKeepsCredentials(): void
     {
         $user = new User();
         $user->setUserId(1);
         $user->setCredentials($this->makeToken());
-        $this->assertNotNull($user->getCredentials());
 
-        $user->eraseCredentials();
+        $unserialized = unserialize(serialize($user));
 
-        $this->assertNull($user->getCredentials());
+        $this->assertSame('tok123', $unserialized->getCredentials()->getToken());
     }
 
     public function testSetCredentialsStoresToken(): void

@@ -4,6 +4,7 @@ namespace App\Security;
 
 use Geocaching\Enum\MembershipType;
 use League\OAuth2\Client\Token\AccessToken;
+use League\OAuth2\Client\Token\AccessTokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class User implements UserInterface
@@ -11,11 +12,12 @@ class User implements UserInterface
     private int $userId;
     private string $username;
     private string $referenceCode;
-    private ?string $avatarUrl;
+    private ?string $avatarUrl = null;
     private string $membershipLevelId;
     private \DateTimeInterface $joinedDateUtc;
     private ?AccessToken $credentials = null;
 
+    /** @var string[] */
     private array $roles = [];
 
     public function getUserId(): ?int
@@ -100,7 +102,7 @@ class User implements UserInterface
         return $this->credentials;
     }
 
-    public function setCredentials(AccessToken $accessToken): self
+    public function setCredentials(AccessTokenInterface $accessToken): self
     {
         $this->credentials = new AccessToken([
             'access_token'      => $accessToken->getToken(),
@@ -129,6 +131,9 @@ class User implements UserInterface
         return array_unique($roles);
     }
 
+    /**
+     * @param string[] $roles
+     */
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;
@@ -154,13 +159,5 @@ class User implements UserInterface
     public function getSalt(): ?string
     {
         return null;
-    }
-
-    /**
-     * @see UserInterface
-     */
-    public function eraseCredentials(): void
-    {
-        $this->credentials = null;
     }
 }

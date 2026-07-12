@@ -10,6 +10,9 @@ use Psr\Http\Message\StreamInterface;
 
 class UnpublishedServiceTest extends TestCase
 {
+    /**
+     * @param array<string, string[]> $headers
+     */
     private function makeResponse(int $status, string $body, array $headers = []): ResponseInterface
     {
         $stream = $this->createStub(StreamInterface::class);
@@ -20,7 +23,7 @@ class UnpublishedServiceTest extends TestCase
         $response->method('getStatusCode')->willReturn($status);
         $response->method('getBody')->willReturn($stream);
         $response->method('getHeader')->willReturnCallback(
-            fn(string $name) => $headers[$name] ?? []
+            fn (string $name) => $headers[$name] ?? []
         );
 
         return $response;
@@ -59,7 +62,7 @@ class UnpublishedServiceTest extends TestCase
     public function testGetGeocachesChunksLargeInputIntoTwoBatches(): void
     {
         // 55 geocodes → two batches (50 + 5), so getGeocaches called twice
-        $geocodes = array_map(fn(int $i) => sprintf('GC%05d', $i), range(1, 55));
+        $geocodes = array_map(fn (int $i) => sprintf('GC%05d', $i), range(1, 55));
 
         $sdk = $this->createMock(GeocachingSdk::class);
         $sdk->expects($this->exactly(2))

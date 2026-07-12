@@ -8,6 +8,18 @@
     "egulias/email-validator": {
         "version": "3.1.2"
     },
+    "friendsofphp/php-cs-fixer": {
+        "version": "3.95",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "3.39",
+            "ref": "97aaf9026490db73b86c23d49e5774bc89d2b232"
+        },
+        "files": [
+            ".php-cs-fixer.dist.php"
+        ]
+    },
     "guzzlehttp/guzzle": {
         "version": "7.4.1"
     },
@@ -61,6 +73,9 @@
     },
     "phpstan/phpdoc-parser": {
         "version": "1.2.0"
+    },
+    "phpstan/phpstan": {
+        "version": "2.2.5"
     },
     "phpunit/php-code-coverage": {
         "version": "9.2.10"

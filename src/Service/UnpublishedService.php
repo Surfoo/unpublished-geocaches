@@ -3,53 +3,52 @@
 namespace App\Service;
 
 use Geocaching\GeocachingSdk;
-use GuzzleHttp\Psr7\Response;
-use Http\Client\Common\Exception\ClientErrorException;
-use Http\Client\Common\Exception\HttpClientNoMatchException;
-use Http\Client\Exception\HttpException;
 use Psr\Http\Message\ResponseInterface;
-use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
-use Throwable;
 
 class UnpublishedService
 {
-    const MAX_REQUESTS_PER_MINUTE = 30;
+    public const MAX_REQUESTS_PER_MINUTE = 30;
 
-    private GeocachingSdk $api;
-
-    /**
-     * @param GeocachingSdk $sdk
-     */
-    public function __construct(GeocachingSdk $api)
+    public function __construct(private readonly GeocachingSdk $api)
     {
-        $this->api = $api;
     }
 
+    /**
+     * @return array<int, mixed>
+     */
     public function getUnpublishedGeocaches(int $chunk = 100): array
     {
         return $this->handleSearchGeocaches('isPublished:false', $chunk);
     }
 
+    /**
+     * @param string[] $geocodes
+     *
+     * @return array<int, mixed>
+     */
     public function getGeocaches(array $geocodes, bool $lite = false): array
     {
         return $this->handleGetGeocaches($geocodes, $lite);
     }
 
+    /**
+     * @return array<int, mixed>
+     */
     protected function handleSearchGeocaches(string $query, int $chunk): array
     {
         $geocaches = [];
 
-        $totalCount = (int) ($this->handleRequestSearchGeocaches($query, 0, 0))->getHeader('x-total-count')[0];
+        $totalCount    = (int) $this->handleRequestSearchGeocaches($query, 0, 0)->getHeader('x-total-count')[0];
         $countRequests = ceil($totalCount / $chunk);
 
         $i = 0;
         while (count($geocaches) < $totalCount) {
-            $result    = $this->handleRequestSearchGeocaches($query, $chunk, $chunk * $i);
-            if(!$this->isOk($result->getStatusCode())) {
-                throw new \Exception("Bad Request");
+            $result = $this->handleRequestSearchGeocaches($query, $chunk, $chunk * $i);
+            if (!$this->isOk($result->getStatusCode())) {
+                throw new \Exception('Bad Request');
             }
             $geocaches = array_merge($geocaches, json_decode($result->getBody()));
-            $i++;
+            ++$i;
             if ($countRequests > self::MAX_REQUESTS_PER_MINUTE) {
                 sleep(2);
             }
@@ -58,9 +57,14 @@ class UnpublishedService
         return $geocaches;
     }
 
+    /**
+     * @param string[] $geocodes
+     *
+     * @return array<int, mixed>
+     */
     protected function handleGetGeocaches(array $geocodes, bool $lite = false): array
     {
-        $take = 50;
+        $take            = 50;
         $geocodesChunked = array_chunk($geocodes, $take);
         $countRequests   = count($geocodesChunked);
 
@@ -68,8 +72,8 @@ class UnpublishedService
 
         foreach ($geocodesChunked as $geocodes) {
             $result = $this->handleRequestGetGeocaches(implode(',', $geocodes), $take, $lite);
-            if(!$this->isOk($result->getStatusCode())) {
-                throw new \Exception("Bad Request");
+            if (!$this->isOk($result->getStatusCode())) {
+                throw new \Exception('Bad Request');
             }
             $data = array_merge($data, json_decode($result->getBody()));
             if ($countRequests > self::MAX_REQUESTS_PER_MINUTE) {
@@ -83,12 +87,12 @@ class UnpublishedService
     protected function handleRequestSearchGeocaches(string $query, int $take, int $skip): ResponseInterface
     {
         return $this->api->searchGeocaches(
-            ['lite'  => true,
-             'q'      => $query,
-             'sort'   => 'name',
-             'take'   => $take,
-             'skip'   => $skip,
-             'fields' => 'referenceCode,name,url,geocacheType'
+            ['lite'      => true,
+                'q'      => $query,
+                'sort'   => 'name',
+                'take'   => $take,
+                'skip'   => $skip,
+                'fields' => 'referenceCode,name,url,geocacheType',
             ]
         );
     }
@@ -98,18 +102,18 @@ class UnpublishedService
         if ($lite) {
             $fields = 'referenceCode,name,url,geocacheType';
         } else {
-            $fields = 'referenceCode,publishedDate,ownerAlias,'.
-                      'OwnerCode,owner[username],name,difficulty,'.
-                      'terrain,favoritePoints,placedDate,geocacheType,'.
-                      'geocacheSize,status,location,postedCoordinates,'.
-                      'shortDescription,longDescription,hints,attributes,'.
+            $fields = 'referenceCode,publishedDate,ownerAlias,' .
+                      'OwnerCode,owner[username],name,difficulty,' .
+                      'terrain,favoritePoints,placedDate,geocacheType,' .
+                      'geocacheSize,status,location,postedCoordinates,' .
+                      'shortDescription,longDescription,hints,attributes,' .
                       'relatedWebPage,url,containsHtml,additionalWaypoints';
         }
 
         return $this->api->getGeocaches(
             ['referenceCodes' => $geocodes,
-             'take'           => $take,
-             'fields'         => $fields
+                'take'        => $take,
+                'fields'      => $fields,
             ]
         );
     }

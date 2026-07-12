@@ -14,9 +14,9 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 )]
 class CleanupCommand extends Command
 {
-    const MAX_RETENTION = 3600 * 24;
+    public const MAX_RETENTION = 3600 * 24;
 
-    public function __construct(private ParameterBagInterface $params)
+    public function __construct(private readonly ParameterBagInterface $params)
     {
         parent::__construct();
     }
@@ -25,13 +25,13 @@ class CleanupCommand extends Command
     {
         $now   = time();
         $files = array_merge(
-                    glob($this->params->get('kernel.project_dir') . '/waypoints/*.gpx'),
-                    glob($this->params->get('kernel.project_dir') . '/public/gpx/*.gpx')
-                );
+            glob($this->params->get('kernel.project_dir') . '/waypoints/*.gpx'),
+            glob($this->params->get('kernel.project_dir') . '/public/gpx/*.gpx')
+        );
 
         foreach ($files as $file) {
             if ($now > filemtime($file) + self::MAX_RETENTION && unlink($file)) {
-                $output->writeln("Deleted " . $file);
+                $output->writeln('Deleted ' . $file);
             }
         }
 

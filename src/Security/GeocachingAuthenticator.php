@@ -6,6 +6,8 @@ use Geocaching\Enum\MembershipType;
 use Geocaching\Utils;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use KnpU\OAuth2ClientBundle\Security\Authenticator\OAuth2Authenticator;
+use League\OAuth2\Client\Provider\Geocaching as GeocachingProvider;
+use League\OAuth2\Client\Provider\GeocachingResourceOwner;
 use League\OAuth2\Client\Token\AccessToken;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -23,9 +25,9 @@ use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPasspor
 class GeocachingAuthenticator extends OAuth2Authenticator
 {
     public function __construct(
-        private ClientRegistry $clientRegistry,
-        private RouterInterface $router,
-        private RequestStack $requestStack,
+        private readonly ClientRegistry $clientRegistry,
+        private readonly RouterInterface $router,
+        private readonly RequestStack $requestStack,
         private readonly LoggerInterface $apiLogger,
     ) {
     }
@@ -50,16 +52,21 @@ class GeocachingAuthenticator extends OAuth2Authenticator
 
         $session->set('user', $user);
 
-        return new SelfValidatingPassport(new UserBadge($credentials->getToken(), fn() => $user));
+        return new SelfValidatingPassport(new UserBadge($credentials->getToken(), fn () => $user));
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
+        $user = $token->getUser();
+        if (!$user instanceof User) {
+            return null;
+        }
+
         $this->apiLogger->info('onAuthenticationSuccess', [
-            'referenceCode'     => $token->getUser()->getReferenceCode(),
-            'userId'            => $token->getUser()->getUserId(),
-            'username'          => $token->getUser()->getUserIdentifier(),
-            'membershipLevelId' => $token->getUser()->getMembershipLevelId(),
+            'referenceCode'     => $user->getReferenceCode(),
+            'userId'            => $user->getUserId(),
+            'username'          => $user->getUserIdentifier(),
+            'membershipLevelId' => $user->getMembershipLevelId(),
         ]);
 
         return null;
@@ -82,13 +89,15 @@ class GeocachingAuthenticator extends OAuth2Authenticator
 
     private function getUser(AccessToken $credentials): User
     {
-        $client   = $this->clientRegistry->getClient('geocaching_main');
+        $client = $this->clientRegistry->getClient('geocaching_main');
+        /** @var GeocachingProvider $provider */
         $provider = $client->getOAuth2Provider();
 
         if (!in_array('avatarUrl', $provider->getResourceOwnerFields(), true)) {
             $provider->setResourceOwnerFields([...$provider->getResourceOwnerFields(), 'avatarUrl']);
         }
 
+        /** @var GeocachingResourceOwner $geocachingResourceOwner */
         $geocachingResourceOwner = $client->fetchUserFromToken($credentials);
 
         $user = new User();
@@ -99,32 +108,27 @@ class GeocachingAuthenticator extends OAuth2Authenticator
              ->setCredentials($credentials)
              ->setAvatarUrl($geocachingResourceOwner->getAvatarUrl())
              ->setMembershipLevelId($geocachingResourceOwner->getMembershipLevelId())
-            ;
+        ;
 
-        switch ((int) $user->getMembershipLevelId()) {
-            case MembershipType::PREMIUM->id():
-                $user->setRoles(['ROLE_PREMIUM']);
-                break;
-            case MembershipType::BASIC->id():
-                $user->setRoles(['ROLE_BASIC']);
-                break;
-            default:
-                $this->apiLogger->warning('Unknown membership level', [
-                    'membershipLevelId' => $user->getMembershipLevelId(),
-                    'username'          => $user->getUserIdentifier(),
-                ]);
-        }
+        match ((int) $user->getMembershipLevelId()) {
+            MembershipType::PREMIUM->id() => $user->setRoles(['ROLE_PREMIUM']),
+            MembershipType::BASIC->id()   => $user->setRoles(['ROLE_BASIC']),
+            default                       => $this->apiLogger->warning('Unknown membership level', [
+                'membershipLevelId' => $user->getMembershipLevelId(),
+                'username'          => $user->getUserIdentifier(),
+            ]),
+        };
 
         return $user;
     }
-//    public function start(Request $request, AuthenticationException $authException = null): Response
-//    {
-//        /*
-//         * If you would like this class to control what happens when an anonymous user accesses a
-//         * protected page (e.g. redirect to /login), uncomment this method and make this class
-//         * implement Symfony\Component\Security\Http\EntryPoint\AuthenticationEntrypointInterface.
-//         *
-//         * For more details, see https://symfony.com/doc/current/security/experimental_authenticators.html#configuring-the-authentication-entry-point
-//         */
-//    }
+    //    public function start(Request $request, AuthenticationException $authException = null): Response
+    //    {
+    //        /*
+    //         * If you would like this class to control what happens when an anonymous user accesses a
+    //         * protected page (e.g. redirect to /login), uncomment this method and make this class
+    //         * implement Symfony\Component\Security\Http\EntryPoint\AuthenticationEntrypointInterface.
+    //         *
+    //         * For more details, see https://symfony.com/doc/current/security/experimental_authenticators.html#configuring-the-authentication-entry-point
+    //         */
+    //    }
 }

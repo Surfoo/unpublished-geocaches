@@ -19,8 +19,8 @@ class GpxGeneratorServiceTest extends TestCase
 
     protected function tearDown(): void
     {
-        array_map('unlink', glob($this->tmpDir . '/waypoints/*.gpx') ?: []);
-        array_map('unlink', glob($this->tmpDir . '/gpx/*.gpx') ?: []);
+        array_map(unlink(...), glob($this->tmpDir . '/waypoints/*.gpx') ?: []);
+        array_map(unlink(...), glob($this->tmpDir . '/gpx/*.gpx') ?: []);
         rmdir($this->tmpDir . '/waypoints');
         rmdir($this->tmpDir . '/gpx');
         rmdir($this->tmpDir);
@@ -36,7 +36,7 @@ class GpxGeneratorServiceTest extends TestCase
                 return '<wpt ref="' . ($vars['referenceCode'] ?? 'GCTEST') . '"/>';
             }
             $waypoints = implode('', array_map(
-                fn(string $f) => file_get_contents($tmpDir . '/waypoints/' . $f),
+                fn (string $f) => file_get_contents($tmpDir . '/waypoints/' . $f),
                 $vars['waypoints'] ?? []
             ));
 
@@ -48,9 +48,9 @@ class GpxGeneratorServiceTest extends TestCase
 
     public function testGenerateReturnsSingleLinkWhenNoSplit(): void
     {
-        $service    = $this->makeService();
-        $geocaches  = [(object) ['referenceCode' => 'GC12345', 'name' => 'Test Cache']];
-        $result     = $service->generate($geocaches, 'testuser', 'userref01', 0);
+        $service   = $this->makeService();
+        $geocaches = [(object) ['referenceCode' => 'GC12345', 'name' => 'Test Cache']];
+        $result    = $service->generate($geocaches, 'testuser', 'userref01', 0);
 
         $this->assertCount(1, $result['links']);
         $this->assertSame('Download GPX', $result['links'][0]['label']);
